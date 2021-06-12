@@ -198,7 +198,10 @@ echo "<div class=\"card-body card-block\">";
     echo "<div class=\"col col-md-2\"><label for=\"workorder_user_id\" class=\" form-control-label\">".gettext("Employee:")."</label></div>";
 
     echo "<div class=\"col-12 col-md-3\">";
-    echo "<select name=\"workorder_user_id\" id=\"workorder_user_id\" class=\"form-control\" required onChange=\"check_time_period()\">\n";
+    echo "<select name=\"workorder_user_id\" id=\"workorder_user_id\" class=\"form-control\" required onChange=\"
+    ajax_call('show_worktimebar',document.getElementById('workorder_work_start_date').value,this.value,'','','".URL."index.php','for_ajaxcall');\n
+    check_time_period();\n
+    \">\n";
     $SQL="SELECT user_id,firstname,surname FROM users WHERE active=1 AND user_level<4";
     $SQL.=" ORDER BY surname";
     if (LM_DEBUG)

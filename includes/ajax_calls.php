@@ -2912,7 +2912,7 @@ require_once(INCLUDES_PATH."worktimebar.php");
 
 if ($_GET['param4']!="modify")
 {
- $SQL="SELECT workorder_work_end_time FROM workorder_works WHERE workorder_works.deleted<>1 AND workorder_user_id=".(int) $_GET['param3']." AND DATE(workorder_work_start_time)='".$dba->escapeStr($_GET['param2'])."' ORDER BY workorder_work_end_time DESC LIMIT 0,1";
+ $SQL="SELECT workorder_work_end_time FROM workorder_works WHERE workorder_works.deleted<>1 AND workorder_user_id=".(int) $_GET['param3']." AND DATE(workorder_work_start_time)='".$dba->escapeStr($_GET['param2'])."' AND workorder_partner_id=0 ORDER BY workorder_work_end_time DESC LIMIT 0,1";
        
         $row=$dba->getRow($SQL);
         if (!empty($row))
