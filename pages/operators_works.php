@@ -338,7 +338,8 @@ echo "<th>".gettext("Note")."</th></tr>";
 
 echo "</thead>";
 echo "<tbody>";
-
+if (!empty($users_assets))
+{
 $SQL="SELECT operator_works.workrequest_id, operator_work_id,operator_works.main_asset_id,operator_works.asset_id,operator_work_time,operator_works.operator_user_id,workrequest_short_".$lang." FROM operator_works LEFT JOIN workrequests ON workrequests.workrequest_id=operator_works.workrequest_id WHERE deleted<>1";
 
 if (isset($_SESSION['main_asset_id']) && $_SESSION['main_asset_id']>=0)
@@ -405,7 +406,7 @@ if (!lm_isset_int('asset_id')>0 || (lm_isset_int('asset_id')>0 && isset($_POST['
     
  echo "<td>".$row['operator_work_'.$lang]."</td>";
  echo "</tr>\n";
-}}
+}}}
 echo "</tbody></table>";
 
 include(INCLUDES_PATH."pagination.php");

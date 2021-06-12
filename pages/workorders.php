@@ -897,6 +897,7 @@ if ((!lm_isset_int('asset_id')>0 || isset($_POST['modify_workorder']) || isset($
                     };\"";
                     echo " style='display:inline;width:200px;'>\n";
             echo "<option value='all'>".gettext("All assets");
+            if (!empty($result1)){
             foreach($result1 as $row1){
             echo "<option value='".$row1['main_asset_id']."'";
             if (isset($_SESSION['main_asset_id']) && $row1['main_asset_id']==$_SESSION['main_asset_id'] )
@@ -906,7 +907,7 @@ if ((!lm_isset_int('asset_id')>0 || isset($_POST['modify_workorder']) || isset($
             echo gettext("Refurbish");
             else
             echo $row1['asset_name_'.$lang]."\n";
-            }
+            }}
             echo "</select>\n"; 
 
         echo "</th>";
