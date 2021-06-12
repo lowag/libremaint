@@ -436,10 +436,10 @@ CREATE TABLE `main_asset_categories` (
   `main_asset_category_en` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
   `main_asset_category_hu` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`main_asset_category_id`),
-  UNIQUE KEY `asset_category_id_UNIQUE` (`main_asset_category_id`),
   UNIQUE KEY `asset_category_en_UNIQUE` (`main_asset_category_en`),
-  UNIQUE KEY `asset_category_hu_UNIQUE` (`main_asset_category_hu`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  UNIQUE KEY `asset_category_hu_UNIQUE` (`main_asset_category_hu`),
+  UNIQUE KEY `main_asset_category_id_UNIQUE` (`main_asset_category_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -448,7 +448,7 @@ CREATE TABLE `main_asset_categories` (
 
 LOCK TABLES `main_asset_categories` WRITE;
 /*!40000 ALTER TABLE `main_asset_categories` DISABLE KEYS */;
-INSERT INTO `main_asset_categories` VALUES (1,'Production machines_HU','Gyártógépek_HU'),(2,'Lifting equipments','Emelőgépek'),(3,'Auxiliary machines','Segédberendezések'),(4,'Vehicles','Járművek'),(5,'Estates','Ingatlanok'),(6,'Measuring tools','Mérőeszközök'),(7,'HVAC equipments','Hűtés-fűtés'),(8,'Cleaning equipments','Takarítógépek'),(10,'Infrastucture_HU','Infrastuktúra_HU'),(11,'Production machines_RO','Gyártógépek_RO'),(12,'Production_machines_CZ','Gyártógépek_CZ');
+INSERT INTO `main_asset_categories` VALUES (1,'Production machines','Gyártógépek'),(2,'Lifting equipments','Emelőgépek'),(3,'Auxiliary machines','Segédberendezések'),(4,'Vehicles','Járművek'),(5,'Estates','Ingatlanok'),(6,'Measuring tools','Mérőeszközök'),(7,'HVAC equipments','Hűtés-fűtés'),(8,'Cleaning equipments','Takarítógépek'),(9,'Infrastucture','Infrastuktúra');
 /*!40000 ALTER TABLE `main_asset_categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1286,4 +1286,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-06-12  6:52:00
+-- Dump completed on 2021-06-12 16:12:49
