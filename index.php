@@ -6,6 +6,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 session_set_cookie_params(360000,"/");
 session_start();
+
+if(session_status() === PHP_SESSION_DISABLED) {
+    die("Sessions are disabled in your php installation");
+}
+else if (session_status() === PHP_SESSION_NONE) {
+    die("Failed to start the session");
+}
+
 if (isset($_GET['ajax']) 
 || (isset($_GET['page']) && $_GET['page']=='pdf_create')
 || isset($_POST['received_message1']) || isset($_POST['access_query']) || isset($_POST['operating']))
