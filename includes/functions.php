@@ -25,8 +25,8 @@ $_SESSION['username']=$row['username'];
 $_SESSION['user_level']=$row['user_level'];
 $_SESSION['tit_id']=get_random_string(10);
 foreach ($priviliges as $p){
-if ($p!="break" && $row[$p]==1)
-$_SESSION[$p]=1;
+    if ($p!="break" && ($row[$p] & 1))
+    $_SESSION[$p]=1;
  
 }     
     if ($_SESSION['logged']==1){ //check whether session is working 
@@ -39,6 +39,7 @@ $_SESSION[$p]=1;
   
 }
 else{
+lm_logout();
 sleep(2);
 return false;
 }

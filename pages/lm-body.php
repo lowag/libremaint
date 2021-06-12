@@ -1,7 +1,7 @@
 <?php
 $valid_page=false; //see lm-footer.php for make the proper menu item toggled
 
-if ((isset($_POST['username']) && isset($_POST['password']) && lm_auth($_POST['username'],$_POST['password'])) || (isset($_SESSION) && $_SESSION['logged']==1 && !isset($_GET['logout']))){
+if ((isset($_POST['username']) && isset($_POST['password']) && lm_auth($_POST['username'],$_POST['password'])) || (isset($_SESSION['logged']) && $_SESSION['logged']==1 && !isset($_GET['logout']))){
 
 if (lm_isset_str('page')!='pdf_create')
     {
