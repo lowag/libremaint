@@ -932,7 +932,7 @@ CREATE TABLE `user_levels` (
   `user_level_en` varchar(45) CHARACTER SET utf8 NOT NULL,
   `user_level_hu` varchar(45) CHARACTER SET utf8 DEFAULT NULL,
   PRIMARY KEY (`user_level_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -941,6 +941,7 @@ CREATE TABLE `user_levels` (
 
 LOCK TABLES `user_levels` WRITE;
 /*!40000 ALTER TABLE `user_levels` DISABLE KEYS */;
+INSERT INTO `user_levels` VALUES (1,'system admin','rendszeradminisztrátor'),(2,'manager','vezető'),(3,'technician','karbantartó'),(4,'operator','gépkezelő'),(5,'technologist','technológus');
 /*!40000 ALTER TABLE `user_levels` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1286,4 +1287,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-06-12 16:12:49
+-- Dump completed on 2021-06-12 19:08:28
