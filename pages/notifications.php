@@ -753,16 +753,19 @@ echo "</th>";
     if (isset($_SESSION['main_asset_id']) && $_SESSION['main_asset_id']>0)
         echo " STYLE=\"background-color:orange\"";
     echo ">".gettext("Asset");
+    if (!empty($users_assets)){
     $SQL="SELECT distinct(main_asset_id), asset_name_".$lang." FROM notifications LEFT JOIN assets on assets.asset_id=notifications.main_asset_id";
     $SQL.=" AND main_asset_id IN ('".join("','",$users_assets)."')";
 
     $SQL.=" ORDER BY asset_name_".$lang;
     $result=$dba->Select($SQL);
+    }
     echo " <select name=\"main_asset_id\" id=\"main_asset_id\" class=\"form-control\"";
             echo " onChange=\"location.href='index.php?page=notifications&main_asset_id='+this.value\"";
             echo " style='display:inline;width:200px;'>\n";
     echo "<option value='all'>".gettext("All assets");
     $has=false;
+    if (!empty($result)){
     foreach($result as $row){
     echo "<option value='".$row['main_asset_id']."'";
     
@@ -772,7 +775,7 @@ echo "</th>";
     }
     echo ">";
      echo $row['asset_name_'.$lang]."\n";
-    }
+    }}
     echo "</select>\n";        
     echo "</th>";
 
@@ -787,7 +790,7 @@ echo "<th>".gettext("Notification")."</th></tr>";
 $pagenumber=lm_isset_int('pagenumber');
 if ($pagenumber<1)
 $pagenumber=1;
-
+if (!empty($users_assets)){
 $SQL="SELECT user_id,notification_time,asset_id,main_asset_id,";
 if ($_SESSION['CAN_WRITE_LANG1'])
 $SQL.="notification_short_".LANG1.",";
@@ -816,9 +819,10 @@ $number_all=$dba->affectedRows();
 $from=($pagenumber-1)*ROWS_PER_PAGE;
 $SQL.=" limit $from,".ROWS_PER_PAGE;
 $result=$dba->Select($SQL);
+}
 if (LM_DEBUG)
 error_log($SQL,0);
-
+if (!empty($result)){
 foreach ($result as $row)
 {
     $from++;
@@ -940,7 +944,7 @@ echo "<td onClick=\"javascript:ajax_call('show_notification_detail','".$row['not
 
 
 }
-
+}
 echo "</tbody></table>";
 
 echo "<div id=\"create_workorder_div\" STYLE=\"display:none;\"><button type=\"button\" id=\"create_workorder_button\" name=\"create_workorder_button\" class=\"btn btn-danger btn-sm\" ";

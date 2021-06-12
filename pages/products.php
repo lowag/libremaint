@@ -540,7 +540,7 @@ if (LM_DEBUG)
     }
     echo "</select>\n"; 
     
-    if ($_SESSION['category_id']>0)
+    if (isset($_SESSION['category_id']) && $_SESSION['category_id']>0)
     {
     $SQL="SELECT category_id, category_name_".$lang." FROM categories WHERE category_parent_id='".$_SESSION['category_id']."' ORDER BY category_name_".$lang;
     $result=$dba->Select($SQL);
@@ -576,7 +576,7 @@ if ($pagenumber<1)
 $pagenumber=1;
 
 $SQL="Select * FROM products LEFT JOIN categories ON products.category_id=categories.category_id";
-if ($_SESSION['category_id']>0){
+if (isset($_SESSION['category_id']) && $_SESSION['category_id']>0){
 $SQL.=" WHERE products.category_id=".$_SESSION['category_id'];}
 
 if (isset($_SESSION['subcategory_id']) && $_SESSION['subcategory_id']>0)

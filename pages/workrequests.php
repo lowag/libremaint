@@ -927,6 +927,7 @@ echo "<th>".gettext("Date")."</th>";
             echo " onChange=\"location.href='index.php?page=workrequests&main_asset_id='+this.value\"";
             echo " style='display:inline;width:200px;'>\n";
     echo "<option value='all'>".gettext("All assets");
+    if (!empty($result)){
     foreach($result as $row){
     echo "<option value='".$row['main_asset_id']."'";
     if (isset($_SESSION['main_asset_id']) && $row['main_asset_id']==$_SESSION['main_asset_id'])
@@ -936,7 +937,7 @@ echo "<th>".gettext("Date")."</th>";
             echo gettext("Refurbish");
             else
             echo $row['asset_name_'.$lang]."\n";
-    }
+    }}
     echo "</select>\n";        
     echo "</th>";
 

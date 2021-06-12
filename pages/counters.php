@@ -95,9 +95,9 @@ echo "<script>\n";
 echo "$(\"#counter_form\").validate()\n";
 echo "</script>\n";
 }//if (isset($_GET["new_value"]))
-if ((isset($_GET['only_last']) & $_GET['only_last']==1) || !isset($_GET['only_last']))
+if ((isset($_GET['only_last']) && $_GET['only_last']==1) || !isset($_GET['only_last']))
     $_SESSION['show_all_counter_value']=1;
-else if (isset($_GET['only_last']) & $_GET['only_last']==0)
+else if (isset($_GET['only_last']) && $_GET['only_last']==0)
     unset($_SESSION['show_all_counter_value']);
     
 if (isset($_SESSION['show_all_counter_value']))
@@ -191,7 +191,8 @@ error_log($SQL,0);
 echo "<th></th><th>Date</th><th>".gettext("Location")."</th>";
 echo "<th>".gettext("Value")."</th>";
 echo "<th>".gettext("Unit")."</th></tr>\n";
-$i=1;    
+$i=1; 
+if (!empty($result)){
     foreach ($result as $row){
     echo "<tr><td>".$i."</td>";
     echo "<td>".date("Y.m.d", strtotime($row["counter_value_time"]))."</td>";
@@ -210,7 +211,7 @@ $i=1;
         echo substr($n,0,-7);
     echo "</td>";
     echo "<td>".get_unit_from_id($row['counter_unit'])."</td></tr>\n";
-    }
+    }}
 
 }
 

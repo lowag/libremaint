@@ -382,13 +382,15 @@ echo gettext("pc");
  }//$_SESSION['user_level']>3
  ?>
 <div class="content mt-3">
-<div class="col-sm-6 col-lg-6">
-  <canvas id="bar-chart-not" width="500" height="500"></canvas>
-  <script>
+
 <?php
 $SQL="select CONCAT(surname,' ', firstname) as name , count(notification_id) as n from notifications left join users on notifications.user_id=users.user_id group by notifications.user_id ORDER BY n DESC" ; 
-$result=$dba->Select($SQL);  
+$result=$dba->Select($SQL);
+if ($dba->affectedRows()>0){
   ?>
+  <div class="col-sm-6 col-lg-6">
+  <canvas id="bar-chart-not" width="500" height="500"></canvas>
+  <script>
   new Chart(document.getElementById("bar-chart-not"), {
     type: 'bar',
     data: {
@@ -439,6 +441,7 @@ $result=$dba->Select($SQL);
 
   </div>
 <?php
+}
 if (file_exists(INCLUDES_PATH."spec_graphs.php"))
 require(INCLUDES_PATH."spec_graphs.php"); 
 ?>
@@ -455,9 +458,7 @@ require(INCLUDES_PATH."spec_graphs.php");
 
 
 
-<div class="col-sm-6 col-lg-3">
-  <canvas id="pie-chart2" width="500" height="500"></canvas>
-<script>
+
 <?php
 //$SQL="select SUM(TIME_TO_SEC(workorder_work_end_time  - workorder_work_start_time)/3600) as workhour, priority FROM workorder_works LEFT JOIN workorders ON workorders.workorder_id=workorder_works.workorder_id WHERE `workorder_work_end_time` >now() - INTERVAL 30 day GROUP BY priority ORDER BY workhour DESC" ; 
 
@@ -466,8 +467,11 @@ $SQL="select SUM(TIME_TO_SEC(workorder_worktime)/3600) as workhour, priority FRO
 
 
 $result=$dba->Select($SQL);
-
+if ($dba->affectedRows()>0){
 ?>
+<div class="col-sm-6 col-lg-3">
+  <canvas id="pie-chart2" width="500" height="500"></canvas>
+<script>
 new Chart(document.getElementById("pie-chart2"), {
     type: 'pie',
     data: {
@@ -508,20 +512,21 @@ new Chart(document.getElementById("pie-chart2"), {
     }
 });</script>
 </div>
+<?php } ?>
 
 
 
 
-<div class="col-sm-6 col-lg-3">
-  <canvas id="pie-chart3" width="500" height="500"></canvas>
-<script>
 <?php
 //$SQL="select SUM(TIME_TO_SEC(workorder_work_end_time  - workorder_work_start_time)/3600) as workhour, request_type FROM workorder_works LEFT JOIN workorders ON workorders.workorder_id=workorder_works.workorder_id WHERE `workorder_work_end_time` >now() - INTERVAL 30 day GROUP BY request_type ORDER BY workhour DESC" ; 
 
 $SQL="select SUM(TIME_TO_SEC(workorder_worktime)/3600) as workhour, request_type FROM workorder_works LEFT JOIN workorders ON workorders.workorder_id=workorder_works.workorder_id WHERE workorder_works.deleted<>1 AND `workorder_work_end_time` >(now() - INTERVAL 30 day) GROUP BY request_type ORDER BY workhour DESC" ; 
 $result=$dba->Select($SQL);
-
+if ($dba->affectedRows()>0){
 ?>
+<div class="col-sm-6 col-lg-3">
+  <canvas id="pie-chart3" width="500" height="500"></canvas>
+<script>
 new Chart(document.getElementById("pie-chart3"), {
     type: 'pie',
     data: {
@@ -567,10 +572,8 @@ new Chart(document.getElementById("pie-chart3"), {
 
 
 </div>
+<?php }?>
 
-<div class="col-sm-6 col-lg-3">
-  <canvas id="pie-chart" width="500" height="600"></canvas>
-<script>
 <?php
 //$SQL="select SUM(TIME_TO_SEC(workorder_work_end_time  - workorder_work_start_time)/3600) as workhour, main_asset_id FROM workorder_works WHERE `workorder_work_end_time` >now() - INTERVAL 30 day GROUP BY main_asset_id ORDER BY workhour DESC" ; 
 
@@ -578,8 +581,11 @@ $SQL="select SUM(TIME_TO_SEC(workorder_worktime)/3600) as workhour, main_asset_i
 
 
 $result=$dba->Select($SQL);
-
+if ($dba->affectedRows()>0){
 ?>
+<div class="col-sm-6 col-lg-3">
+  <canvas id="pie-chart" width="500" height="600"></canvas>
+<script>
 new Chart(document.getElementById("pie-chart"), {
     type: 'pie',
     data: {
@@ -634,7 +640,7 @@ new Chart(document.getElementById("pie-chart"), {
 });
 </script>
 </div>
-
+<?php } ?>
 
 
 

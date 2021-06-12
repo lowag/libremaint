@@ -498,7 +498,7 @@ echo "</div>\n";
 ?>
 
 <?php
-if ((isset($_GET['new']) && $row['asset_parent_id']==0) || (isset($_GET['modify']) && $asset_row['asset_parent_id']==0)){
+if ((isset($_GET['new']) && isset($row['asset_parent_id']) && $row['asset_parent_id']==0) || ((isset($_GET['modify']) && isset($asset_row['asset_parent_id']) && $asset_row['asset_parent_id']==0))){
 ?>
 <div class="row form-group">
 <div class="col col-md-3"><label for="grouped_asset" class="form-control-label"><?php echo gettext("Grouped:");?></label></div>
@@ -515,7 +515,7 @@ echo " selected";
 echo ">".gettext("Yes")."</option>\n";
 echo "</select></div>\n</div>\n";
 } else {
-
+if (isset($row['asset_id'])){
 $asset_path=get_whole_path("asset",$row['asset_id'],1);
 $SQL="SELECT asset_id,asset_name_".$lang." FROM assets WHERE asset_parent_id=".$asset_path[0]." AND grouped_asset=1 ORDER BY asset_name_".$lang;
 $groups=$dba->Select($SQL);
@@ -535,7 +535,7 @@ echo " selected";
 echo ">".$group['asset_name_'.$lang];
 }
 echo "</select></div>\n</div>\n";
-}else
+}}else
 echo "<INPUT TYPE='hidden' name='grouped_asset_id' id='grouped_asset_id' value=''>";
 }
 
@@ -674,13 +674,15 @@ $SQL="SELECT location_id, location_name_".$lang." FROM locations WHERE location_
 $result=$dba->Select($SQL);
 echo "<SELECT name='locations' id='locations' onChange=\"location.href='index.php?page=assets&asset_location_id='+this.value\">\n";
 echo "<option value=''>".gettext("All locations");
+if (!empty($result))
+{
 foreach ($result as $row){
     echo "<option value='".$row['location_id']."'";
         if (isset($_SESSION['asset_location_id']) && $_SESSION['asset_location_id']==$row['location_id'])
         echo " selected";
         
     echo ">".$row['location_name_'.$lang]."\n";
-    }
+    }}
 echo "</select>";
 echo "</div>\n";
 

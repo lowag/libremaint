@@ -548,12 +548,14 @@ if (!lm_isset_int('asset_id')>0 || (lm_isset_int('asset_id')>0 && isset($_POST['
         $S="SELECT users_assets FROM users WHERE user_id=".$_SESSION['user_id'];
         $r=$dba->getRow($S);
         $users_assets=json_decode($r['users_assets'],true);
-
+        if (!empty($users_assets))
+        {
         $SQL="SELECT asset_id, asset_name_".$lang." FROM assets";
         $SQL.=" WHERE asset_id IN ('".join("','",$users_assets)."')";
         $SQL.=" ORDER BY asset_name_".$lang;
           
             $result1=$dba->Select($SQL);
+            }
             echo " <select name=\"fmain_asset_id\" id=\"fmain_asset_id\" class=\"form-control\"";
                     echo " onChange=\"{if (this.value!='')
                     location.href='index.php?page=works&main_asset_id='+this.value;
@@ -561,6 +563,7 @@ if (!lm_isset_int('asset_id')>0 || (lm_isset_int('asset_id')>0 && isset($_POST['
                     location.href='index.php?page=works'};\"";
                     echo " style='display:inline;width:200px;'>\n";
             echo "<option value='all'>".gettext("All assets");
+            if (!empty($result1)){
             foreach($result1 as $row1){
             echo "<option value='".$row1['asset_id']."'";
             if (isset($_SESSION['main_asset_id']) && $row1['asset_id']==$_SESSION['main_asset_id'] )
@@ -570,7 +573,7 @@ if (!lm_isset_int('asset_id')>0 || (lm_isset_int('asset_id')>0 && isset($_POST['
             echo gettext("Refurbish");
             else
             echo $row1['asset_name_'.$lang]."\n";
-            }
+            }}
             echo "</select>\n"; 
 
         echo "</th>";
@@ -626,7 +629,7 @@ $SQL.=",workorder_work_".LANG1.",workorder_work_".LANG2;
 $SQL.=" FROM workorder_works LEFT JOIN workorders ON workorders.workorder_id=workorder_works.workorder_id WHERE workorder_works.deleted<>1";
 
 
-
+if (!empty($users_assets))
 $SQL.=" AND workorders.main_asset_id IN ('".join("','",$users_assets)."')";
 
 
@@ -651,6 +654,7 @@ if (LM_DEBUG)
 error_log($SQL,0);
 
 $now=new datetime('now');
+if (!empty($result)){
 foreach ($result as $row){
 
         echo "<tr>\n";
@@ -729,7 +733,7 @@ if (!lm_isset_int('asset_id')>0 || (lm_isset_int('asset_id')>0 && isset($_POST['
  echo ">".$row['workorder_short_'.$lang]."</td>";
  echo "<td>".$row['workorder_work_'.$lang]."</td>";
  echo "</tr>\n";
-}
+}}
 echo "</tbody></table>";
 
 include(INCLUDES_PATH."pagination.php");

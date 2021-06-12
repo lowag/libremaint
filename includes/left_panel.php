@@ -52,7 +52,7 @@ echo "</a>\n";
     echo $page[0];
     echo "\n</a></li>\n";
     
-    if (isset($_SESSION[$page[6]])){
+    if (isset($page[6]) && isset($_SESSION[$page[6]])){
     echo "<li><i class=\"fa fa-puzzle-piece\"></i><a href=\"".$page[5]."\">";
     if ($req_page==$page[1]){
     echo "<span style=\"color:orange \">";

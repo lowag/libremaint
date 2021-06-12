@@ -159,7 +159,7 @@ error_log("page:".$pagenumber." ".$SQL,0);
 
 
 
-
+if (!empty($result)){
 foreach ($result as $row)
 {
 $from++;
@@ -168,7 +168,7 @@ echo "<tr><td>".$row['message_id'];
 echo "<td>".$row['message_'.$lang]."</td>\n";
 echo "</tr>\n";
 
-}
+}}
 echo "</tbody></table></div>";
 include(INCLUDES_PATH."pagination.php");
 
@@ -255,13 +255,14 @@ $users_assets=json_decode($row['users_assets'], true);
 $SQL="SELECT * FROM received_messages LEFT JOIN iot_sensors ON received_messages.sensor_id=iot_sensors.sensor_id WHERE 1=1";
 $SQL.=" AND main_asset_id IN (";
 $need_a_comma=false;
+if (!empty($users_assets)){
 foreach ($users_assets as $key=>$value){
 if ($need_a_comma)
 $SQL.=",";
 $need_a_comma=true;
 $SQL.=$value;
 
-}
+}}
 $SQL.=")";
 
 if (isset($_SESSION['message_type']) && $_SESSION['message_type']>0)
@@ -280,7 +281,7 @@ error_log("page:".$pagenumber." ".$SQL,0);
 
 //print_r($users_assets);
 
-
+if (!empty($result)){
 foreach ($result as $row)
 {
 if (in_array(get_whole_path_ids('asset',$row['asset_id'],1)[0],$users_assets)){
@@ -342,7 +343,7 @@ echo "</td></tr>\n";
 
 
 }
-
+}
 echo "</tbody></table></div>";
 include(INCLUDES_PATH."pagination.php");
 }

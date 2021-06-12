@@ -241,7 +241,7 @@ $SQL.=" limit $from,".ROWS_PER_PAGE;
 $result=$dba->Select($SQL);
 if (LM_DEBUG)
 error_log("page:".$pagenumber." ".$SQL,0);
-
+if (!empty($result)){
 foreach ($result as $row)
 {
 $from++;
@@ -279,7 +279,7 @@ echo "</td>\n";
 echo "<td>".$row['connection_review_'.$lang]."</td>\n";
 echo "</tr>\n";
 
-}
+}}
 echo "</tbody></table></div>";
 include(INCLUDES_PATH."pagination.php");
 }

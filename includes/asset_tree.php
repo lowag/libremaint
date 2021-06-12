@@ -28,7 +28,7 @@ echo ">".$row['main_asset_category_'.$lang];
 
 $SQL = "SELECT asset_id FROM assets WHERE main_asset_category_id=".$row['main_asset_category_id'];
 // $SQL = "SELECT asset_id FROM assets WHERE main_asset_category_id=4";
-    if ($_SESSION['asset_location_id']>0){
+    if (isset($_SESSION['asset_location_id'])){
     $location_ids=get_locations_bellow_id($_SESSION['asset_location_id']);
 
     $SQL.=" AND asset_location IN (".implode(",",$location_ids).")";

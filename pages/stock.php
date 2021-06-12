@@ -312,7 +312,7 @@ echo "<th>".gettext("Product");
     }
     echo "</select>\n"; 
     
-    if ($_SESSION['category_id']>0)
+    if (isset($_SESSION['category_id']) && $_SESSION['category_id']>0)
     {
     $SQL="SELECT distinct(stock.product_subcategory_id) as category_id,category_name_".$lang." FROM stock LEFT JOIN categories on categories.category_id=stock.product_subcategory_id WHERE stock_quantity>0";
     
@@ -347,13 +347,14 @@ $SQL.="AND product_category_id=".$_SESSION['category_id'];
 
 $SQL.=" ORDER BY location_name_".$lang;
 $result=$dba->Select($SQL);
-
+if ($dba->affectedRows()>0)
+{
 foreach ($result as $row){
     echo "<option value='".$row['stock_location_id']."'";
     if (isset($_SESSION['stock_location_id']) && $row['stock_location_id']==$_SESSION['stock_location_id'])
     echo " selected";
     echo ">".$row['location_name_'.$lang];
-}
+}}
 echo "</options></select>";
 echo "</th>";
 echo "<th>".gettext("Quantity")."</th>";
@@ -381,12 +382,12 @@ $SQL="SELECT stock_id,stock.product_id,stock_location_id,stock_location_asset_id
 if (isset($_GET['product_id']) && (int)$_GET['product_id']>0){
 $SQL.=" AND stock.product_id=".(int) $_GET['product_id'];
 }else{
-if ($_SESSION['category_id']>0)
+if (isset($_SESSION['category_id']) && $_SESSION['category_id']>0)
 $SQL.=" AND stock.product_category_id='".$_SESSION['category_id']."'";
-if ($_SESSION['subcategory_id']>0)
+if (isset($_SESSION['subcategory_id']) && $_SESSION['subcategory_id']>0)
 $SQL.=" AND stock.product_subcategory_id='".$_SESSION['subcategory_id']."'";
 
-if ($_SESSION['stock_location_id']>0)
+if (isset($_SESSION['stock_location_id']) && $_SESSION['stock_location_id']>0)
 $SQL.=" AND stock_location_id='".$_SESSION['stock_location_id']."'";
 
 if ($_SESSION['only_in_stock']==1)

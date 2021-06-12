@@ -955,7 +955,7 @@ if (WHAT_IS_IMPORTANT_NOW)
                         $SQL.=" AND asset_id=".$asset_id;
 
                     
-                        if ($row['main_asset_id']==0)
+                        if (isset($row['main_asset_id']) && $row['main_asset_id']==0)
                             $SQL.=" AND  product_id_to_refurbish>0";
 
                         

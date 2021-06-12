@@ -202,6 +202,7 @@ echo " <select name=\"partner_id\" id=\"partner_id\" class=\"form-control\"";
                     };\"";
                     echo " style='display:inline;width:200px;'>\n";
             echo "<option value='all'>".gettext("Contacts");
+            if (!empty($result1)){
             foreach($result1 as $row1){
             echo "<option value='".$row1['partner_id']."'";
             if (isset($_GET['partner_id']) && $row1['partner_id']==(int)$_GET['partner_id'] )
@@ -209,7 +210,7 @@ echo " <select name=\"partner_id\" id=\"partner_id\" class=\"form-control\"";
             echo ">";
             
             echo $row1['partner_name']."\n";
-            }
+            }}
             echo "</select>\n"; 
 
 
@@ -218,6 +219,7 @@ echo "</th><th>".gettext("Email")."</th><th>".gettext("Phone")."</th><th>".gette
 </thead>
 <tbody>
 <?php
+if (!empty($result)){
 foreach ($result as $row)
 {
 $from++;
@@ -253,7 +255,7 @@ echo "<td>".$row['partner_tags']."</td>\n";
 echo "</tr>\n";
 
 
-}
+}}
 echo "</tbody></table></div>";
 include(INCLUDES_PATH."pagination.php");
 
