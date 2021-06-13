@@ -17,6 +17,8 @@ $SQL="select * FROM users WHERE username='".$username."'";
 if (LM_DEBUG)
 error_log($SQL,0);
 $row=$dba->getRow($SQL);
+
+
 if (password_verify($password,$row['password'])){
 clearstatcache(); 
 $_SESSION['logged']=1;
@@ -24,11 +26,16 @@ $_SESSION['user_id']=$row['user_id'];
 $_SESSION['username']=$row['username'];
 $_SESSION['user_level']=$row['user_level'];
 $_SESSION['tit_id']=get_random_string(10);
+$i=0;
+$j=0;
 foreach ($priviliges as $p){
-    if ($p!="break" && ($row[$p] & 1))
+    if ($p!="break" && ($row[$p]==1)){
     $_SESSION[$p]=1;
- 
-}     
+    $i++;
+    }
+$j++; 
+}
+
     if ($_SESSION['logged']==1){ //check whether session is working 
         time_to_make_maintenance();
         return true;

@@ -47,10 +47,10 @@ $user_id=$dba->insertedId();
         if ($_POST['user_level']<3)
         {
         
-        $SQL=" select column_name from information_schema.columns where table_schema = 'libremaint' and table_name='users' and column_type = 'bit(1)'";
+        $SQL=" select column_name from information_schema.columns where table_schema = 'libremaint' and table_name='users' and (column_name LIKE 'ADD_%' OR column_name LIKE 'SEE_%' OR column_name LIKE 'RECORD_%' OR column_name LIKE 'DELETE_%' OR column_name LIKE 'MODIFY_%' OR column_name LIKE 'PUT_%' OR column_name LIKE 'TAKE_%' OR column_name LIKE 'STOCK_%')";
         $result=$dba->Select($SQL);
         foreach($result as $row){
-        $SQL="UPDATE users SET ".$row['column_name']."=b'1' WHERE user_id=".$user_id;
+        $SQL="UPDATE users SET ".$row['column_name']."=1 WHERE user_id=".$user_id;
         $dba->Query($SQL);
         }
         }
@@ -62,9 +62,14 @@ $user_id=$dba->insertedId();
             $result=$dba->Select($SQL);
             $i=$dba->affectedRows();
          */
+         $SQL=" select 1 from information_schema.columns where table_schema = 'libremaint' and table_name='workorders' and column_name='employee_id".$user_id."'";
+         $result=$dba->Select($SQL);
+         if ($dba->affectedRows()==0)
+            {
             $SQL="ALTER TABLE workorders add column employee_id".$user_id." tinyint(2) UNSIGNED not null default 0 AFTER employee_id".--$user_id;
             if(!$dba->Query($SQL)) 
             lm_info(gettext("Failed to create new field ").$SQL."\n ".$dba->err_msg);
+            }
         }
         else
         lm_info(gettext("Failed to save new user ").$dba->err_msg);
@@ -93,12 +98,12 @@ $SQL="UPDATE users SET ";
     $SQL.=",";
     if (isset($_POST[$p]) && $_POST[$p]==1)
     {
-    $SQL.="`".$p."`=b'1'";
+    $SQL.="`".$p."`=1";
         
     }
     else
     {
-    $SQL.="`".$p."`=b'0'";
+    $SQL.="`".$p."`=0";
     
     }
     $i++;
