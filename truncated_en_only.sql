@@ -351,7 +351,7 @@ CREATE TABLE `info_files` (
   `info_file_sha` varchar(255) COLLATE utf8_hungarian_ci NOT NULL,
   `uploaded_by` tinyint(3) unsigned DEFAULT NULL,
   `upload_time` datetime DEFAULT NULL,
-  `confidential` bit(1) DEFAULT NULL,
+  `confidential` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`info_file_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1138,7 +1138,7 @@ CREATE TABLE `workorder_works` (
   `workorder_status` tinyint(2) unsigned NOT NULL,
   `workorder_user_id` smallint(3) unsigned NOT NULL,
   `workorder_id` int(10) unsigned NOT NULL,
-  `workorder_partner_id` smallint(3) unsigned DEFAULT NULL,
+  `workorder_partner_id` smallint(3) unsigned DEFAULT '0',
   `asset_id` smallint(3) unsigned NOT NULL,
   `deleted` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `after_work_machine_can_run` tinyint(1) unsigned NOT NULL DEFAULT '1',
@@ -1287,4 +1287,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-06-12 19:08:28
+-- Dump completed on 2021-06-14 19:06:30
