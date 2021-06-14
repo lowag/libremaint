@@ -91,6 +91,9 @@ $SQL.=",after_work_machine_can_run=".(int) $_POST['after_work_machine_can_run'];
 
 if (isset($_POST['workorder_partner_id']))
 $SQL.=",workorder_partner_id='".$workorder_row['workorder_partner_id']."'";
+else
+$SQL.=",workorder_partner_id='0'";
+
 $SQL.=" WHERE workorder_work_id='". (int) $_POST['workorder_work_id']."'";
  if (LM_DEBUG)
         error_log($SQL,0);

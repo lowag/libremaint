@@ -35,7 +35,7 @@ if ($_SESSION['user_level']<4){
                         <h4 class="mb-0">
                             <span class="count">
 <?php 
-$SQL="SELECT count(workrequest_id) as count FROM workrequests WHERE workrequest_status=1 AND for_operators<>0";
+$SQL="SELECT count(workrequest_id) as count FROM workrequests WHERE workrequest_status=1 AND for_operators<>1";
 $row=$dba->getRow($SQL);
 echo $row['count']." ";
 if ($row['count']>1)

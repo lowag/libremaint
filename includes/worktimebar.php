@@ -3,7 +3,7 @@
      $workdate= $dba->escapeStr($_GET['param2']); 
 
  
-      $SQL="SELECT asset_id,workorder_work_start_time, workorder_work_end_time,ROUND(TIME_TO_SEC(workorder_worktime)/60) as minutes FROM workorder_works WHERE workorder_works.deleted<>1 AND workorder_partner_id is null AND ";
+      $SQL="SELECT asset_id,workorder_work_start_time, workorder_work_end_time,ROUND(TIME_TO_SEC(workorder_worktime)/60) as minutes FROM workorder_works WHERE workorder_works.deleted<>1 AND workorder_partner_id=0 AND ";
       $SQL.="DATE(workorder_work_start_time)='".$workdate."' AND workorder_user_id=".(int) $_GET['param3']." ORDER BY workorder_work_start_time";
       $res=$dba->Select($SQL);
  if (LM_DEBUG)

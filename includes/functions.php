@@ -1188,7 +1188,7 @@ function is_it_valid_worktime_period($start_time,$end_time,$user_id,$workorder_i
 global $dba;
 
 $SQL="SELECT count(*)=0 as valid FROM workorder_works WHERE workorder_works.deleted<>1 AND (workorder_work_start_time<'".$end_time."') ";
-$SQL.="AND (workorder_work_end_time >'".$start_time."') AND workorder_partner_id=null AND workorder_user_id=".$user_id;
+$SQL.="AND (workorder_work_end_time >'".$start_time."') AND workorder_partner_id=0 AND workorder_user_id=".$user_id;
 
 if ($workorder_id>0)
 $SQL.=" AND workorder_id<>".$workorder_id;
