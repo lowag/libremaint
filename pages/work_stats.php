@@ -125,7 +125,10 @@ $result3=$dba->Select($SQL3);
 
 echo "<form action=\"index.php\" method=\"post\" target=\"_blank\" enctype=\"multipart/form-data\" class=\"form-horizontal\" id=\"work_form\" name=\"work_form\" >";
 echo "<input type=\"hidden\" id='page' name='page' value='pdf_create'>\n";
+if (isset($_POST['request_type']))
 echo "<input type=\"hidden\" id='request_type' name='request_type' value='".$_POST['request_type']."'>\n";
+else
+echo "<input type=\"hidden\" id='request_type' name='request_type' value=''>\n";
 echo "<input type=\"hidden\" id='start_date' name='start_date' value='".$_POST['start_date']."'>\n";
 echo "<input type=\"hidden\" id='end_date' name='end_date' value='".$_POST['end_date']."'>\n";
 echo "<input type=\"hidden\" id='chart1' name='chart1' value=''>\n";

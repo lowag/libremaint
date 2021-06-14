@@ -966,7 +966,7 @@ if (isset($_SESSION['workrequest_status']) && $_SESSION['workrequest_status']>0)
 $SQL.=" AND workrequest_status='".$_SESSION['workrequest_status']."'";
 
 if ($_SESSION['list_workorder_types']==1)
-    $SQL.=" AND for_operators<>1";
+    $SQL.=" AND for_operators=0";
 else if ($_SESSION['list_workorder_types']==2)
     $SQL.=" AND for_operators=1";
     
@@ -977,6 +977,7 @@ $number_all=$dba->affectedRows();
 $from=($pagenumber-1)*ROWS_PER_PAGE;
 $SQL.=" limit $from,".ROWS_PER_PAGE;
 $result=$dba->Select($SQL);
+
 if (LM_DEBUG)
 error_log($SQL,0);
 if ($number_all>0){
@@ -1096,12 +1097,14 @@ if (LANG2_AS_SECOND_LANG && $_SESSION['user_level']<3 && isset($_SESSION['CAN_WR
     echo "<td>";
     if (!empty($row['last_ready_date'])){
     echo date($lang_date_format, strtotime($row['last_ready_date']));
+    
     $SQL="SELECT SEC_TO_TIME( SUM( TIME_TO_SEC( `workorder_worktime` ) ) ) as worktime FROM workorder_works LEFT JOIN workorders ON workorder_works.workorder_id=workorders.workorder_id WHERE workrequest_id=".$row['workrequest_id']." GROUP BY workorders.workorder_id ORDER BY workorders.workorder_id DESC LIMIT 0,4";
     
     $result2=$dba->Select($SQL);
+    if (!empty($result2)){
     foreach ($result2 as $row2){
     echo " ".date("H:i", strtotime($row2['worktime']))." | ";
-    }}
+    }}}
     echo "</td>";
     echo "<td>";
    if ($row['repetitive']>0)

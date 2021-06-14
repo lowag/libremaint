@@ -2910,20 +2910,27 @@ else if (isset($_GET['param1']) && $_GET['param1']=="show_worktimebar"){
 require_once(INCLUDES_PATH."worktimebar.php");
 
 
-if ($_GET['param4']!="modify")
+if ($_GET['param4']!="modify" && isset($_GET['param3']) && (int) $_GET['param3']>0 && isset($_GET['param2']) && is_date_mysql_format($dba->escapeStr($_GET['param2'])))
 {
+//finding last finished work 
  $SQL="SELECT workorder_work_end_time FROM workorder_works WHERE workorder_works.deleted<>1 AND workorder_user_id=".(int) $_GET['param3']." AND DATE(workorder_work_start_time)='".$dba->escapeStr($_GET['param2'])."' AND workorder_partner_id=0 ORDER BY workorder_work_end_time DESC LIMIT 0,1";
-       
+       if (LM_DEBUG)
+            error_log($SQL,0);
         $row=$dba->getRow($SQL);
         if (!empty($row))
         echo "<script>document.getElementById('workorder_work_start_time').value='".date("H:i", strtotime($row['workorder_work_end_time']))."';</script>";
         else
         {
         $SQL="SELECT ".date("l", $dba->escapeStr($_GET['param2']))."_start as start FROM users WHERE user_id=".(int) $_GET['param3'];
+        if (LM_DEBUG)
+            error_log($SQL,0);
         $row=$dba->getRow($SQL);
+        if (!empty($row))
+        {
         echo "<script>document.getElementById('workorder_work_start_time').value='".date("H:i", strtotime($row['start']))."';\n";
         echo "document.getElementById('workorder_work_end_time').value='".date("H:i", strtotime($row['start']."+10 minutes"))."';\n";
         echo "window.check_time_period();</script>\n";
+        }
         }
 
 }        
