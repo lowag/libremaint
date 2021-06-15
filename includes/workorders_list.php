@@ -101,8 +101,17 @@
                         }
                         echo "</td>";
                             echo "<td>";
-                             if (isset($_SESSION['SEE_WORKORDER_DETAIL']))
-                        echo "<a href=\"javascript:ajax_call('show_workorder_detail','".$row1["workorder_id"]."','".$row1['asset_id']."','','','".URL."index.php','for_ajaxcall')\" title=\"".gettext("Show details")."\"><i class='fa fa-info-circle'></i> ".$row1['workorder_short_'.$lang]."</a> ";
-                        else
+                             if (isset($_SESSION['SEE_WORKORDER_DETAIL'])){
+                        echo "<a href=\"javascript:ajax_call('show_workorder_detail','".$row1["workorder_id"]."','".$row1['asset_id']."','','','".URL."index.php','for_ajaxcall')\" title=\"".gettext("Show details")."\"><i class='fa fa-info-circle'></i> ";
+                        if ($row1['notification_id'])
+                        echo gettext("From notification").": ";
+                        echo $row1['workorder_short_'.$lang]."</a> ";
+                        
+                        }
+                        else{
+                            if ($row1['notification_id'])
+                                echo gettext("From notification").": ";
                             echo $row1['workorder_short_'.$lang];
+                            
+                            }
                             echo "</td></tr>\n";?>
