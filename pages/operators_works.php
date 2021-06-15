@@ -340,7 +340,7 @@ echo "</thead>";
 echo "<tbody>";
 if (!empty($users_assets))
 {
-$SQL="SELECT operator_works.workrequest_id, operator_work_id,operator_works.main_asset_id,operator_works.asset_id,operator_work_time,operator_works.operator_user_id,workrequest_short_".$lang." FROM operator_works LEFT JOIN workrequests ON workrequests.workrequest_id=operator_works.workrequest_id WHERE deleted<>1";
+$SQL="SELECT operator_works.workrequest_id, operator_work_id,operator_works.main_asset_id,operator_works.asset_id,operator_work_time,operator_works.operator_user_id,operator_work,workrequest_".$lang.",workrequest_short_".$lang." FROM operator_works LEFT JOIN workrequests ON workrequests.workrequest_id=operator_works.workrequest_id WHERE deleted<>1";
 
 if (isset($_SESSION['main_asset_id']) && $_SESSION['main_asset_id']>=0)
 $SQL.=" AND operator_works.main_asset_id='".$_SESSION['main_asset_id']."'";
@@ -366,7 +366,7 @@ foreach ($result as $row){
         echo "<tr>\n";
         echo "<td ";
         echo "><div class='d-flex justify-content-between'>".++$from;
-        if ($row['workrequest']!="")
+        if ($row['workrequest_'.$lang]!="")
         echo " <a href=\"javascript:ajax_call('show_workrequest_detail',".$row["workrequest_id"].",'','','','".URL."index.php','for_ajaxcall')\" title=\"show workrequest details\"><i class=\"fa fa-info-circle\"></i></a> ";
 $allow_to_modify_date = new DateTime($row['operator_work_time']); // Y-m-d
     $allow_to_modify_date->add(new DateInterval('P'.DAYS_ALLOW_TO_MODIFY_WORKS.'D'));
@@ -404,7 +404,7 @@ if (!lm_isset_int('asset_id')>0 || (lm_isset_int('asset_id')>0 && isset($_POST['
     
     echo "<td>".get_username_from_id($row["operator_user_id"])."</td>"; 
     
- echo "<td>".$row['operator_work_'.$lang]."</td>";
+ echo "<td>".$row['operator_work']."</td>";
  echo "</tr>\n";
 }}}
 echo "</tbody></table>";

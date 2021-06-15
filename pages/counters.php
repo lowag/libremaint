@@ -179,7 +179,7 @@ $page=lm_isset_int('page');
 if ($page<1)
 $page=1;
 $from=0;
-$SQL="SELECT counter_value,counter_values.counter_id,counter_value_time,asset_id FROM counter_values LEFT JOIN counters ON counters.counter_id=counter_values.counter_id ORDER BY counter_value_time DESC";
+$SQL="SELECT counter_value,counter_values.counter_id,counter_value_time,asset_id,counter_unit FROM counter_values LEFT JOIN counters ON counters.counter_id=counter_values.counter_id ORDER BY counter_value_time DESC";
 $result_all=$dba->Select($SQL);
 
 $from=($page-1)*ROWS_PER_PAGE;
@@ -210,6 +210,7 @@ if (!empty($result)){
         }
         echo substr($n,0,-7);
     echo "</td>";
+    echo "<td>".$row['counter_value']."</td>\n";
     echo "<td>".get_unit_from_id($row['counter_unit'])."</td></tr>\n";
     }}
 

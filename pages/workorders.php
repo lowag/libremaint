@@ -1026,7 +1026,7 @@ if (!empty($result)){
     $SQL="SELECT workorder_id,main_asset_id,asset_id,main_location_id,location_id,workorder_short_".$lang;
     if (LANG2_AS_SECOND_LANG && isset($_SESSION['CAN_WRITE_LANG2']))
     $SQL.=",workorder_short_".LANG2;
-    $SQL.=",workorder_time,workorder_status,request_type,workrequest_id,workorder_partner_id,product_id_to_refurbish,priority";
+    $SQL.=",workorder_time,workorder_status,request_type,workrequest_id,workorder_partner_id,product_id_to_refurbish,priority,notification_id";
                         $SQL1="SELECT COLUMN_NAME as info FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name ='workorders'
                         AND table_schema = '".DATABASE."' AND column_name LIKE 'info_id%'";
                         $result1=$dba->Select($SQL1);
