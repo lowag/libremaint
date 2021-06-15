@@ -865,7 +865,7 @@ echo "</strong></div>";
 echo "<div class=\"card-body\">";
  echo "<form action=\"index.php\" method=\"post\" enctype=\"multipart/form-data\">";
 ?>
-<table id="workrequest-table" class="table table-striped table-bordered">
+<table id="workrequest-table" class="table table-striped table-bordered table-hover">
 <thead>
 <tr>
 
@@ -1047,7 +1047,7 @@ foreach ($result as $row)
       echo " onChange=\"enable_create_workorder_button()\" id=\"wr_".$row['main_asset_id']."\"";
       echo " name=\"workrequest_id[]\" value=\"".$row['workrequest_id']."\">";                        
     }
-    echo "</td><td>\n";
+    echo "</td><td onClick=\"javascript:ajax_call('show_workrequest_detail','".$row['workrequest_id']."','','','','".URL."index.php','for_ajaxcall')\">\n";
 if (LANG2_AS_SECOND_LANG && $_SESSION['user_level']<3 && isset($_SESSION['CAN_WRITE_LANG2']) && $row['workrequest_short_'.LANG2]=="")
     echo " * "; //translation needed
     
@@ -1055,7 +1055,7 @@ if (LANG2_AS_SECOND_LANG && $_SESSION['user_level']<3 && isset($_SESSION['CAN_WR
     
   /*  if ((!lm_isset_int('asset_id')>0 && !isset($_POST['valid'])) || isset($_POST["workrequest_".$lang]))
     {*/
-        echo "<td>";
+        echo "<td onClick=\"javascript:ajax_call('show_workrequest_detail','".$row['workrequest_id']."','','','','".URL."index.php','for_ajaxcall')\">";
         
         if ($row['asset_id']>0)
         {
@@ -1077,7 +1077,7 @@ if (LANG2_AS_SECOND_LANG && $_SESSION['user_level']<3 && isset($_SESSION['CAN_WR
      //}
         echo "</td>\n";
     
-    echo "<td>";
+    echo "<td onClick=\"javascript:ajax_call('show_workrequest_detail','".$row['workrequest_id']."','','','','".URL."index.php','for_ajaxcall')\">";
     if ($row['repetitive']==3){
     echo get_service_interval_date($row["service_interval_date"]);
     echo " / ".$row["service_interval_hours"]." ".gettext("hours");
@@ -1094,7 +1094,7 @@ if (LANG2_AS_SECOND_LANG && $_SESSION['user_level']<3 && isset($_SESSION['CAN_WR
     else
     echo gettext("No interval");
     echo "</td>";
-    echo "<td>";
+    echo "<td onClick=\"javascript:ajax_call('show_workrequest_detail','".$row['workrequest_id']."','','','','".URL."index.php','for_ajaxcall')\">";
     if (!empty($row['last_ready_date'])){
     echo date($lang_date_format, strtotime($row['last_ready_date']));
     
@@ -1106,11 +1106,11 @@ if (LANG2_AS_SECOND_LANG && $_SESSION['user_level']<3 && isset($_SESSION['CAN_WR
     echo " ".date("H:i", strtotime($row2['worktime']))." | ";
     }}}
     echo "</td>";
-    echo "<td>";
+    echo "<td onClick=\"javascript:ajax_call('show_workrequest_detail','".$row['workrequest_id']."','','','','".URL."index.php','for_ajaxcall')\">";
    if ($row['repetitive']>0)
     echo date("H:i", strtotime($row['labour_norm']));
     echo "</td>";
-    echo "<td>";
+    echo "<td onClick=\"javascript:ajax_call('show_workrequest_detail','".$row['workrequest_id']."','','','','".URL."index.php','for_ajaxcall')\">";
     echo $row['workrequest_short_'.$lang]."</td></tr>\n";
 
 
