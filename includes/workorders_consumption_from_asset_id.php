@@ -1,15 +1,21 @@
 <div class="card">
 <?php
 if (isset($_SESSION['SEE_WORKS'])){
+
 $SQL="SELECT asset_id FROM assets WHERE main_asset_category_id>0 AND asset_id=".(int) $_GET['param2'];
 $result=$dba->Select($SQL);
 if ($dba->affectedRows()==1)
 $this_is_a_main_asset=1; //top of the tree
-$SQL="SELECT workorder_short_".$lang.",workorder_works.asset_id,workorder_works.workorder_id, workorder_work_id,workorder_work_start_time,workorder_work_end_time,workorder_work_".$lang.",workorder_user_id,workorder_works.workorder_partner_id FROM workorder_works LEFT JOIN workorders ON workorders.workorder_id=workorder_works.workorder_id WHERE workorder_works.deleted<>1 AND";
+
+$SQL="SELECT workorder_worktime, workorder_short_".$lang.",workorder_works.asset_id,workorder_works.workorder_id, workorder_work_id,workorder_work_start_time,workorder_work_end_time,workorder_work_".$lang.",workorder_user_id,workorder_works.workorder_partner_id FROM workorder_works LEFT JOIN workorders ON workorders.workorder_id=workorder_works.workorder_id WHERE workorder_works.deleted<>1 AND";
 if (isset($this_is_a_main_asset))
 $SQL.=" workorder_works.main_asset_id=".(int) $_GET['param2'];
-else
-$SQL.=" workorder_works.asset_id=".(int) $_GET['param2'];
+else{
+//all_the_assets_under_this asset
+;
+$children=
+$SQL.=" workorder_works.asset_id IN (".(int) $_GET['param2'].",". implode(',', get_whole_path_ids_children("asset",(int) $_GET['param2'],1)) . ")";
+}
 $SQL.=" ORDER BY workorder_work_end_time DESC";
 $result=$dba->Select($SQL);
 if (LM_DEBUG)
@@ -25,11 +31,11 @@ echo "<thead><tr>\n";
 
 
 echo "<th></th>";
-if (isset($this_is_a_main_asset))
+
 echo "<th>".gettext("Asset")."</th>";
 echo "<th>".gettext("Start")."</th>";
 echo "<th>".gettext("End")."</th>";
-
+echo "<th>".gettext("Time")."</th><th>Minutes</th>";
 if ($_SESSION['user_level']<3 || isset($_GET['user_id'])){
 echo "<th>".gettext("Employee")."</th>";
 echo "<th>".gettext("Partner")."</th>";
@@ -58,7 +64,7 @@ echo "<td>".$i++." ";
          echo "\" title=\"".gettext("alter work")."\"> <i class=\"fa fa-wrench\"></i></a> ";
          }                            
 echo "</td>";
-if (isset($this_is_a_main_asset)){
+if (!isset($this_is_a_main_asset)){
     echo "<td>";
     
     $n="";
@@ -78,6 +84,12 @@ if (date("Y.m.d", strtotime($row['workorder_work_start_time']))==date("Y.m.d", s
 echo "<td>".date("H:i", strtotime($row['workorder_work_end_time']))."</td>";
 else
 echo "<td>".date($lang_date_format." H:i", strtotime($row['workorder_work_end_time']))."</td>";
+$str_time=date("H:i", strtotime($row['workorder_worktime']));
+echo "<td>".$str_time."</td>";
+sscanf($str_time, "%d:%d", $hours, $minutes);
+
+echo "<td>".($hours * 60 + $minutes)."</td>";
+
 if ($_SESSION['user_level']<3 || isset($_GET['user_id'])){
     echo "<td>".get_username_from_id($row["workorder_user_id"])."</td>"; 
     echo "<td>";

@@ -470,6 +470,7 @@ return array_reverse($resp);
 function get_whole_path_ids($name,$id,$i):array{
 global $dba;
 static $res;
+//all ids above the tree
 //$name: asset,location
 //$id: asset_id,location_id
 if ($i==1)
@@ -490,6 +491,30 @@ if ($row[$name."_parent_id"]!=0){
 return array_reverse($res);
 }
 
+function get_whole_path_ids_children($name,$id,$i):array{
+global $dba;
+static $res;
+//all ids under the tree
+//$name: asset,location
+//$id: asset_id,location_id
+if ($i==1)
+$res=array();
+
+$SQL="SELECT ".$name."_id FROM ".$name."s WHERE ".$name."_parent_id=".$id;
+$result=$dba->Select($SQL);
+if (LM_DEBUG)
+error_log($SQL,0);
+if ($dba->affectedRows()>0)
+{
+foreach ($result as $row){
+array_push($res,$row[$name."_id"]);
+//$resp=$row[$name."_name_".$lang];
+
+    get_whole_path_ids_children($name,$row[$name."_id"],0);
+    
+}}
+return array_reverse($res);
+}
 
 function get_whole_path_for_select($name,$id,$n):array{
 global $dba,$lang;
