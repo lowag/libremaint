@@ -244,7 +244,7 @@ echo "<div class=\"card-body card-block\">";
             echo ">";
             echo "<span> ".get_partner_name_from_id($row['workorder_partner_id'])."</span>\n</div></div>\n";
             }else
-            echo "<input type='hidden' name='workorder_partner_id' id='workorder_partner_id' value='null'>\n";
+            echo "<input type='hidden' name='workorder_partner_id' id='workorder_partner_id' value='0'>\n";
             
         }
         echo "<div class=\"row form-group\">\n";
