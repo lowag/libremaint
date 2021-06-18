@@ -915,7 +915,11 @@ if ((!lm_isset_int('asset_id')>0 || isset($_POST['modify_workorder']) || isset($
 $e=0;
 $user_column_to_hide=$employees;
 foreach ($employees as $user_id){
-    echo "<th class='user_".$user_id."'>".get_username_from_id($user_id)."</th>";
+    if (count($employees)>3)
+        echo "<th class=\"user_".$user_id."\" style=\"vertical-align:middle;text-align:right;-webkit-transform: rotate(-90deg);-moz-transform: rotate(-90deg);-ms-transform: rotate(-90deg);
+     -o-transform: rotate(-90deg);\">".get_username_from_id($user_id)."</th>";
+    else
+        echo "<th class='user_".$user_id."'>".get_username_from_id($user_id)."</th>";
     $e++;
     }
 echo "<th class='partner_col'>".gettext("Company")."</th>";
