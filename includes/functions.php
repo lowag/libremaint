@@ -990,6 +990,7 @@ if ($all_employees_have_finished==true)
         error_log($SQL,0);
         }
         $asset_tree_has_changed[]=get_whole_path('asset',$workorder_row['asset_id'],1)[0];
+        $asset_id=$workorder_row['asset_id'];
         include(INCLUDES_PATH."asset_tree.php"); //rebuild asset_tree
         }//if ($workorder_row['replace_to_product_id']>0){
            

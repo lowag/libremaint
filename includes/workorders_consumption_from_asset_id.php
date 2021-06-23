@@ -12,8 +12,7 @@ if (isset($this_is_a_main_asset))
 $SQL.=" workorder_works.main_asset_id=".(int) $_GET['param2'];
 else{
 //all_the_assets_under_this asset
-;
-$children=
+
 $SQL.=" workorder_works.asset_id IN (".(int) $_GET['param2'].",". implode(',', get_whole_path_ids_children("asset",(int) $_GET['param2'],1)) . ")";
 }
 $SQL.=" ORDER BY workorder_work_end_time DESC";
@@ -87,7 +86,7 @@ echo "<td>".date($lang_date_format." H:i", strtotime($row['workorder_work_end_ti
 $str_time=date("H:i", strtotime($row['workorder_worktime']));
 echo "<td>".$str_time."</td>";
 sscanf($str_time, "%d:%d", $hours, $minutes);
-
+$m=$hours * 60 + $minutes;
 echo "<td>".($hours * 60 + $minutes)."</td>";
 
 if ($_SESSION['user_level']<3 || isset($_GET['user_id'])){

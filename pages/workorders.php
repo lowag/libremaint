@@ -46,7 +46,7 @@ error_log($SQL,0);
     if (LANG2_AS_SECOND_LANG && isset($_SESSION['CAN_WRITE_LANG2']))
     $SQL.=",workorder_work_".LANG2;
 
-    if ($workorder_row['workorder_partner_id']>0)
+    
     $SQL.=",workorder_partner_id";
 
     $SQL.=") VALUES ";
@@ -76,6 +76,8 @@ error_log($SQL,0);
     
     if ($workorder_row['workorder_partner_id']>0)
     $SQL.=",".(int) $_POST['workorder_partner_id'];
+    else
+    $SQL.=",0";
 
     $SQL.=")";
     
@@ -173,8 +175,9 @@ if (isset($_POST['page']) && isset($_POST["workorder_".$lang]) && is_it_valid_su
             }
        
         }
-    $SQL.=" replace_to_product_id='".(int) $_POST["replace_to_product_id"]."',";
-    $SQL.=" work_details_required=".(int) $_POST['work_details_required'];
+    $SQL.=" replace_to_product_id='".(int) $_POST["replace_to_product_id"]."'";
+    if (isset($_POST['work_details_required']))
+    $SQL.=", work_details_required=".(int) $_POST['work_details_required'];
     $SQL.=" WHERE workorder_id='".(int) $_POST['workorder_id']."'";
     if (LM_DEBUG)
     error_log($SQL,0);
@@ -293,37 +296,6 @@ $asset_id=$_GET['asset_id'];
 ?>
 
 <?php 
-
-$SQL="SELECT workorder_short_".$lang.",asset_id,workorder_id FROM workorders WHERE main_asset_id=".get_whole_path_ids('asset',$asset_id,1)[0]." AND workorder_status<5";
-$result=$dba->Select($SQL);
-if ($dba->affectedRows()){
-        echo "<div class=\"card\">\n<div class=\"card-header\">\n";
-        echo gettext("Active workorders for this asset");
-        echo "</div>\n";
-
-        if ($asset_id==$row['asset_id'])
-        echo "<ul class='alert-danger'>";
-        foreach ($result as $row){
-        if ($asset_id==$row['asset_id'])
-        echo "<li class='alert-danger'>";
-        else
-        echo '<li>';
-        $n="";
-        foreach (get_whole_path("asset",$row['asset_id'],1) as $k){
-        if ($n=="") // the first element is the main asset_id -> ignore it
-        $n=" ";
-        else
-        $n.=$k."-><wbr>";}
-
-        if ($n!="")
-        echo substr($n,0,-7);
-
-
-        echo ' '.$row['workorder_short_'.$lang].'</li>';
-
-        }
-        echo '</ul></div>';
-}
 ?>
 <div class="card">
 <div class="card-header">
@@ -336,6 +308,37 @@ $SQL="SELECT * FROM workorders WHERE workorder_id='".(int) $_GET['workorder_id']
 $row=$dba->getRow($SQL);
 $asset_id=$row['asset_id'];
 }
+
+$SQL="SELECT workorder_short_".$lang.",asset_id,workorder_id FROM workorders WHERE main_asset_id=".get_whole_path_ids('asset',$asset_id,1)[0]." AND workorder_status<5";
+$result=$dba->Select($SQL);
+if ($dba->affectedRows()){
+        echo "<div class=\"card\">\n<div class=\"card-header\">\n";
+        echo gettext("Active workorders for this asset");
+        echo "</div>\n";
+
+       
+        foreach ($result as $r){
+        if ($asset_id==$r['asset_id'])
+        echo "<li class='alert-danger'>";
+        else
+        echo '<li>';
+        $n="";
+        foreach (get_whole_path("asset",$r['asset_id'],1) as $k){
+        if ($n=="") // the first element is the main asset_id -> ignore it
+        $n=" ";
+        else
+        $n.=$k."-><wbr>";}
+
+        if ($n!="")
+        echo substr($n,0,-7);
+
+
+        echo ' '.$r['workorder_short_'.$lang].'</li>';
+
+        }
+        echo '</ul></div>';
+}
+
 
 if ($asset_id>0){
 echo gettext("to");
@@ -413,7 +416,7 @@ echo "<div class=\"row form-group\">\n";
         echo "<div class=\"col-12 col-md-3\">";
         echo "<input type='checkbox' id='work_details_required' name='work_details_required' value='1'";
         if (isset($_GET['modify']) && $row['work_details_required']==1)
-        echo " checked";
+        echo " checked value=1";
         echo "></div></div>";        
 
 echo "<div class=\"row form-group\">";
@@ -611,7 +614,7 @@ echo "<div class=\"col col-md-3\">";
     echo "<select name=\"replace_to_product_id\" id=\"replace_to_product_id\" class=\"form-control\">";
     echo "<option value='0'>".gettext("No");
     foreach ($products_can_connect as $pr){
-        if ($pr!=$row1['asset_product_id'])
+        if ($pr!=$row1['asset_product_id'])//not equal with the asset_id built in
         {
         echo "<option value='".$pr."'";
         if (isset($_GET['modify']) && $pr==$row['replace_to_product_id'])
@@ -681,6 +684,8 @@ if (isset($_GET['location_id']))
 $location_id=$_GET['location_id'];
 else if (isset($row['location_id']) && $row['location_id']>0)
 $location_id=$row['location_id'];
+else
+$location_id=0;
 echo "<INPUT TYPE=\"hidden\" name=\"location_id\" id=\"location_id\" VALUE=\"".$location_id."\">";
 echo "<div class=\"card-footer\"><button type=\"submit\" class=\"btn btn-primary btn-sm\">\n";
 echo "<i class=\"fa fa-dot-circle-o\"></i> Submit </button>\n";
@@ -778,7 +783,7 @@ if (!isset($_POST['workorder_user_id']))
     if ($asset_id>=0)
     $_SESSION['asset_id']=$asset_id;
     }
-if ($_SESSION['asset_id']>0 && !isset($_GET['new']) && !isset($_POST['modify_workorder']) && !isset($_POST['new_workorder']) && !isset($_POST["workorder_work_".$lang]))
+if (isset($_SESSION['asset_id']) && $_SESSION['asset_id']>0 && !isset($_GET['new']) && !isset($_POST['modify_workorder']) && !isset($_POST['new_workorder']) && !isset($_POST["workorder_work_".$lang]))
     {
     $SQL.=" AND workorders.asset_id=".$_SESSION['asset_id'];
     }
@@ -915,7 +920,7 @@ if ((!lm_isset_int('asset_id')>0 || isset($_POST['modify_workorder']) || isset($
 $e=0;
 $user_column_to_hide=$employees;
 foreach ($employees as $user_id){
-    if (count($employees)>3)
+    if (count($employees)>5)
         echo "<th class=\"user_".$user_id."\" style=\"vertical-align:middle;text-align:right;-webkit-transform: rotate(-90deg);-moz-transform: rotate(-90deg);-ms-transform: rotate(-90deg);
      -o-transform: rotate(-90deg);\">".get_username_from_id($user_id)."</th>";
     else
@@ -956,7 +961,7 @@ if (WHAT_IS_IMPORTANT_NOW)
                         $SQL.=" FROM workorders";
                         $SQL.=" WHERE 1=1";
 
-                        if (!isset($_POST['modify_workorder']) && !isset($_POST["workorder_work_user_id"]) && $asset_id>0 && !isset($_GET['new']) )
+                        if (!isset($_POST['modify_workorder']) && !isset($_POST["workorder_work_user_id"]) && isset($asset_id) && $asset_id>0 && !isset($_GET['new']) )
                         $SQL.=" AND asset_id=".$asset_id;
 
                     
@@ -1052,7 +1057,7 @@ if (!empty($result)){
                         $SQL.=" FROM workorders";
                         $SQL.=" WHERE 1=1";
 
-                        if (!isset($_POST['modify_workorder']) && !isset($_POST["workorder_work_user_id"]) && $asset_id>0 && !isset($_GET['new']) )
+                        if (!isset($_POST['modify_workorder']) && !isset($_POST["workorder_work_user_id"]) && isset($asset_id) && $asset_id>0 && !isset($_GET['new']) )
                         $SQL.=" AND asset_id=".$asset_id;
 
                     
