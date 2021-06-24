@@ -12,8 +12,11 @@ if (isset($this_is_a_main_asset))
 $SQL.=" workorder_works.main_asset_id=".(int) $_GET['param2'];
 else{
 //all_the_assets_under_this asset
-
-$SQL.=" workorder_works.asset_id IN (".(int) $_GET['param2'].",". implode(',', get_whole_path_ids_children("asset",(int) $_GET['param2'],1)) . ")";
+$children=implode(',', get_whole_path_ids_children("asset",(int) $_GET['param2'],1));
+$SQL.=" workorder_works.asset_id IN (".(int) $_GET['param2'];
+if (!empty($children))
+$SQL.=",". $children;
+$SQL.= ")";
 }
 $SQL.=" ORDER BY workorder_work_end_time DESC";
 $result=$dba->Select($SQL);
