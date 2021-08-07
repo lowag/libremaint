@@ -1,0 +1,26 @@
+ALTER TABLE `libremaint`.`cooling` 
+ADD COLUMN `asset_id` VARCHAR(45) NOT NULL DEFAULT '88' AFTER `cool_off`;
+
+ALTER TABLE `libremaint`.`cooling` 
+CHANGE COLUMN `cool_on` `workorder_work_start_time` DATETIME NOT NULL ,
+CHANGE COLUMN `cool_off` `workorder_work_end_time` DATETIME NULL DEFAULT NULL ;
+ALTER TABLE `libremaint`.`cooling` 
+CHANGE COLUMN `cooling_id` `operating_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT , RENAME TO  `libremaint`.`operating` ;
+ALTER TABLE `libremaint`.`operating` 
+CHANGE COLUMN `asset_id` `asset_id` VARCHAR(45) COLLATE 'utf8mb4_unicode_ci' NOT NULL ;
+ALTER TABLE `libremaint`.`operating` 
+RENAME TO  `libremaint`.`operatings` ;
+
+SELECT DATE(workorder_work_start_time)
+        ,TIME_FORMAT(SEC_TO_TIME(TIME_TO_SEC(
+            SUM(TIMEDIFF(workorder_work_end_time,workorder_work_start_time))
+          )), '%H:%i') AS Total
+FROM (
+  SELECT DISTINCT DATE(t.workorder_work_start_time)
+        ,(SELECT MIN(workorder_work_start_time) FROM workorder_works
+          WHERE workorder_work_end_time BETWEEN t.workorder_work_start_time AND t.workorder_work_end_time) AS workorder_work_start_time
+        ,(SELECT MAX(workorder_work_end_time) FROM workorder_works
+          WHERE workorder_work_start_time BETWEEN t.workorder_work_start_time AND t.workorder_work_end_time) AS workorder_work_end_time
+  FROM workorder_works t
+  ) AS o
+GROUP BY DATE(workorder_work_start_time);

@@ -1,0 +1,71 @@
+Installation (e.g. on a Debian based system)
+
+1. Install LAMP server
+	sudo apt install apache2
+	sudo apt install mysql-server mysql-client
+	sudo apt install php libapache2-mod-php php-mysql php-gd gettext php-imagick php-mbstring
+	sudo nano /etc/apache2/sites-enabled/000-default.conf  change ServerRoot from /var/www/html to /var/www
+	sudo service apache2 stop && service apache2 start
+2. Setup database
+	sudo mysql -u root -p
+	create database libremaint;
+	create user 'your_username_on_the_system'@'localhost' IDENTIFIED BY 'a_secret_password';
+	GRANT ALL ON *.* TO 'your_username_on_the_system'@'localhost';
+3. Clone
+	sudo cd /var/www (or ServerRoot is set)
+	git clone https://github.com/lowag/libremaint.git
+4. Setup Libremaint
+	sudo cd libremaint/config
+	sudo cp lm-config_orig.php lm-config.php 
+	and edit webserver address and database properties
+	sudo cp lm-settings_orig.php lm-settings.php
+	sudo cd ..
+	sudo mkdir assets
+	sudo mkdir -p info_files/thumbs/
+	sudo chown -R www-data:www-data /var/www/libremaint
+	sudo mysql -p libremaint < libremaint/truncated_en_only.sql
+5. Getting start
+	5.1 Login
+	Open your prefered browser and in the address bar type in http://localhost/libremaint
+	The default username/password id admin/admin. You can change password by click on top-right corner.
+	
+	5.2 Adding main location
+	Since the database is almost empty first you need to add location(s) where your asset(s) is/are. Click on left menu's 'Locations' then 'New location'
+	Leave 'Parent location' blank type a location name (e.g. 'Main str. Factory') then submit it. You can reach main locations by clicking 'Locations' on 	the left side. 
+	
+	5.3 Adding sublocations
+	Every locations have sublocations. e.g.: 
+	Main str. Factory 
+		> yard
+		> building A
+			> cellar
+				> changing room
+				> bathroom
+			> Ground level
+				> room1
+					> workshop	
+				> room2
+		> building B
+	You can add a child location by click on its parent's question mark you find at the end of the parent's name and choose 'New location'.
+	
+	5.4 Adding users	
+	Click on left menu's 'Users' then 'New user'. Fill the form then submit. The username must be unique. The default password is the username. The user 	can change it after the first login. After creating user you need to set its privileges. Left menu 'Users' then click the left user icon on the 	user's row.
+	With the 'bell' icon you can check assets user belong to. Operators can send notifications regarding these assets. The managers can receive these. If 	there is any IOT installed and an error occured managers can receice automatic messages to their phones by Telegram service.
+	With the 'door' icon you can choose assets where user can use their RFID card (e.g. open a door). The assets must signed as an 'Entry point'.   
+	With clock 'clock' icon you can set the user's office hours. It makes enter the worktime easier for the employees. The managers can receive messages 	to their phones in these times.
+ 
+	5.5 Adding assets
+	The method is similar to locations. Every asset consist of parts. e.g.:
+	Vehicles > Car 1
+			>all wheel bolts (it is signed as 'grouped' when creating)
+			>wheels
+				>FL wheel
+					>wheel bolts (its signed 'all wheel bolts' at 'grouped' item when creating)
+				>FR wheel
+					>wheel bolts (its signed 'all wheel bolts' at 'grouped' item when creating)	
+				>RL wheel
+					>wheel bolts (its signed 'all wheel bolts' at 'grouped' item when creating)
+				>RR wheel	 
+					>wheel bolts (its signed 'all wheel bolts' at 'grouped' item when creating) 
+	If you set a part as 'main part' you can add workorder(s) or workrequest(s) for it.		
+	

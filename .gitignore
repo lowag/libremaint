@@ -1,0 +1,12 @@
+/config/for_install
+/images/logo2.png
+/config/lm-config.php
+/assets/**
+/info_files/**
+/config/lm-settings.php
+/includes/access_query.php
+/includes/spec_graphs.php
+lm-debug.log
+todo
+/.**
+
