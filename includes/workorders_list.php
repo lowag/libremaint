@@ -103,7 +103,7 @@
                             echo "<td>";
                              if (isset($_SESSION['SEE_WORKORDER_DETAIL'])){
                         echo "<a href=\"javascript:ajax_call('show_workorder_detail','".$row1["workorder_id"]."','".$row1['asset_id']."','','','".URL."index.php','for_ajaxcall')\" title=\"".gettext("Show details")."\"><i class='fa fa-info-circle'></i> ";
-                        if (isset($row1['notification_id']))
+                        if (isset($row1['notification_id']) && $row1['notification_id']>0)
                         echo gettext("From notification").": ";
                         echo $row1['workorder_short_'.$lang]."</a> ";
                         
