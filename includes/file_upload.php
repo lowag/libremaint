@@ -131,6 +131,10 @@ else if ($table=="stock_movements"){
 $SQL="SELECT product_id FROM stock_movements WHERE stock_movement_id='".(int) $id."'";
   $row=$dba->getRow($SQL);
   $newfilename="move_".mb_substr(get_product_name_from_id($row['product_id'],$lang), 0, 15,"utf8")."_".get_random_string(5);}
+else if ($table=="pinboard"){
+$SQL="SELECT pin_short_".$lang." FROM pinboard WHERE pin_id='".(int) $id."'";
+  $row=$dba->getRow($SQL);
+  $newfilename=mb_substr($row['pin_short_'.$lang], 0, 15,"utf8")."_".get_random_string(5);}
 
 else
     $newfilename=$filename."_".get_random_string(5);

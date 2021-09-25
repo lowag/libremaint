@@ -597,7 +597,7 @@ else if (isset($_GET["new"]) || isset($_SESSION['MODIFY_NOTIFICATION']) || $own_
             },
             notification_type:{
             required:true
-            }";
+            },";
             if ($_SESSION['CAN_WRITE_LANG1'])
             echo ",
             notification_short_".LANG1.": {
@@ -606,7 +606,7 @@ else if (isset($_GET["new"]) || isset($_SESSION['MODIFY_NOTIFICATION']) || $own_
             },
             notification_".LANG1.": {
             maxlength: ".$dba->get_max_fieldlength('notifications','notification_'.LANG1)."
-            }";
+            },";
             if (LANG2_AS_SECOND_LANG && $_SESSION['CAN_WRITE_LANG2']){
             echo ",notification_short_".LANG2.": {
             required: true,
@@ -630,7 +630,7 @@ else if (isset($_GET["new"]) || isset($_SESSION['MODIFY_NOTIFICATION']) || $own_
 <div class="card-header">
 <?php 
 echo "<h2 style='display:inline;'>".gettext("Notifications")." </h2>";
-$SQL="";
+
 $main_asset_id=lm_isset_int('main_asset_id');
 if ($main_asset_id>0){
 $_SESSION['main_asset_id']=$main_asset_id;

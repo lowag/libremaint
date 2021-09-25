@@ -32,6 +32,7 @@ define('ENTRY_ACCESS_CONTROL',1);
 define('IOT_SUPPORT',1);
 define('TAM_TAI',1); //technical avaibility machine, technical avaibility infrastucture, used in report generation in work_stat_by_assets.php 
 define('OPERATOR_NOTIFICATIONS_SUPPORT',1);
+define('PINBOARD',1);
 define('MESSAGE_TO_NOTIFIERS',ABSPATH.'msg_to_notifiers.txt');
 $req_classes=array("Imagick");
 $req_extensions=array("mysqli","gettext","gd");

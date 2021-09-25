@@ -1,4 +1,16 @@
 <?php
+if (PINBOARD && $_SESSION["SEE_PINBOARD"])
+{
+echo "<div>\n<nav>\n";
+echo "<div class='nav nav-tabs' id='nav-tab' role='tablist'>\n";
+echo "<a class='nav-item nav-link active' data-toggle='tab' href='' role='tab' aria-controls='nav-home' aria-selected='true'>".gettext("Dashboard")."</a>\n";
+echo "<a class='nav-item nav-link' href='index.php?page=pinboard' role='tab' aria-controls='nav-profile' aria-selected='false'>".gettext("Pinboard")."</a>\n";
+echo "</div></nav></div>\n";
+}
+?>
+
+<?php
+ 
 if ($_SESSION['user_level']<4){
 
 ?> 
@@ -194,7 +206,6 @@ echo "</span>";
   #
   */
   else{
-  
   ?> 
 <div class="content mt-3">
 

@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.34, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.35, for Linux (x86_64)
 --
 -- Host: localhost    Database: libremaint
 -- ------------------------------------------------------
--- Server version	5.7.34-0ubuntu0.18.04.1
+-- Server version	5.7.35-0ubuntu0.18.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -28,10 +28,10 @@ CREATE TABLE `_workorder_works` (
   `main_asset_id` smallint(3) unsigned NOT NULL,
   `workorder_work_start_time` datetime NOT NULL,
   `workorder_work_end_time` datetime NOT NULL,
-  `unplanned_shutdown` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `after_work_machine_can_run` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  `unplanned_shutdown` tinyint(1) NOT NULL DEFAULT '0',
+  `after_work_machine_can_run` tinyint(1) NOT NULL DEFAULT '1',
   `workorder_user_id` smallint(3) unsigned NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -76,7 +76,7 @@ CREATE TABLE `assets` (
   `connection_type2` smallint(3) unsigned DEFAULT NULL,
   `main_asset_category_id` smallint(3) unsigned DEFAULT NULL,
   `asset_note` varchar(500) COLLATE utf8_hungarian_ci DEFAULT NULL,
-  `asset_note_conf` varchar(200) COLLATE utf8_hungarian_ci DEFAULT NULL,
+  `asset_note_conf` varchar(500) CHARACTER SET utf8 DEFAULT NULL,
   `assets_entry_users` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
   `assets_users` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
   `main_part` tinyint(1) unsigned DEFAULT NULL,
@@ -183,7 +183,7 @@ CREATE TABLE `categories` (
   `category_name_hu` varchar(45) COLLATE utf8_hungarian_ci DEFAULT NULL,
   PRIMARY KEY (`category_id`),
   UNIQUE KEY `category_id_UNIQUE` (`category_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=120 DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=122 DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -192,7 +192,7 @@ CREATE TABLE `categories` (
 
 LOCK TABLES `categories` WRITE;
 /*!40000 ALTER TABLE `categories` DISABLE KEYS */;
-INSERT INTO `categories` VALUES (1,'Electric motor',0,'Villanymotor'),(2,NULL,1,'szervo'),(3,'Sensor',0,'Szenzor'),(4,'proximity',3,'közelítés'),(5,'Roll',0,'Henger'),(6,'Bearing',0,'Csapágy'),(7,'deep groove ball',6,'Mélyhornyú golyós'),(8,'Pressure sensor',3,'nyomásérzékelő'),(9,'pressure switch',3,'nyomáskapcsoló'),(10,'linear transducer',3,'útmérő'),(11,'3 phase motor',1,'3 fázisú,aszinkron'),(12,'dc',1,'egyenáramú'),(13,'Linear actuator',0,'Lineáris mozgató'),(15,'Pneumatic',13,'Pneumatikus'),(16,'Cylindrical roller',6,'Hengergörgős'),(17,'Pin roller',6,'Tűgörgős'),(18,'Hydraulic',13,'Hidraulikus'),(19,'Coupling',0,'Tengelykapcsoló'),(20,'Bolt, screw',0,'Csavar'),(21,'Hexagon socket head cap',20,'Inbusz'),(22,'Hexagon head',20,'Hatlapfejű'),(23,'Wheel',0,'Kerék'),(24,'Pneumatic',0,'Pneumatika'),(25,'valve',24,'szelep'),(26,'pressure regulator',24,'nyomásszabályzó'),(27,'fitting',24,'csatlakozó'),(28,'Timing pulley',0,'Szíjtárcsa'),(29,'Belt',0,'Hajtószíj'),(30,'metric rubber timing belt',29,'metrikus gumi fogasszíj'),(31,'metric PU timing belt',29,'metrikus PU fogasszíj'),(32,'imperial rubber timing belt',29,'collos gumi fogasszíj'),(33,'Taper lock bush',0,'Kúpos szorítóhüvely'),(34,'Bracket',0,'Tartó'),(35,'bell housing',34,'szivattyúbak'),(36,'Lifter',0,'Emelő'),(37,'Inverter',0,'Frekvenciaváltó'),(38,'Pump',0,'Szivattyú'),(39,'hydraulic',38,'hidraulika'),(40,'Filter',0,'Szűrő'),(41,'house',40,'ház'),(42,'element',40,'betét'),(43,'encoder',3,'enkóder'),(44,'with gearbox',1,'hajtóműves'),(45,'buffer ring',19,'csillag'),(46,'Gearbox',0,'Hajtómű'),(47,'Seal',0,'Tömítés'),(48,'Rotary seal',47,'Szimering'),(49,'Fan',0,'Ventillátor'),(50,'Controller',0,'Vezérlő'),(51,'water pump',38,'vízszivattyú'),(52,'Flow',3,'Térfogatáram'),(53,'safety chuck',34,'befogó pofa'),(54,'o-ring',47,'o-gyűrű'),(55,'screw drive',13,'golyósorsós'),(56,'System enclosure',0,'Kapcsolószekrény'),(57,'Switch',0,'Kapcsoló'),(58,'Main switch',57,'Főkapcsoló'),(59,'Air compressor',0,'Kompresszor'),(60,'Refrigerator',0,'Hűtő'),(61,'engraved',5,'raszter'),(62,'chrome plaited',5,'krómbevonatú'),(63,'polymer coated',5,'polimer bevonatú'),(64,'moiton sensor',3,'mozgásérzékelő'),(65,'HMI',0,'HMI'),(66,'photoelectric',3,'fotoelektromos'),(67,'repait kit',13,'javítókészlet'),(68,'gas-steam-water',0,'gáz-gőz-víz'),(69,'pressure valve',68,'nyomásszelep'),(70,'Chain',0,'Lánc'),(71,'Electric part',0,'Elektromos alkatrész'),(72,'variable resistor',71,'változtatható ellenállás'),(73,'Tank',0,'Tartály'),(74,'pressure tank',73,'nyomástartály'),(75,'angle',3,'szöghelyzet'),(76,'roller chain',70,'görgős lánc'),(77,'PLC',50,'PLC'),(78,'Burner controller',50,'Égőszabályzó'),(79,'transformer',71,'trafó'),(80,'Lighting fittings',0,'Világítótest'),(81,'other',47,'egyéb'),(82,'operating unit',57,'műkődtető'),(83,'distance',3,'távolság'),(84,'fitting',68,'csatlakozó'),(85,'holder',3,'tartó'),(86,'self aligning',6,'önbeálló'),(87,'Hydraulic',0,'Hidraulika'),(88,'cylinder',87,'munkahenger'),(89,'level',73,'szintjelző'),(90,'adhesive pump',38,'ragasztószivattyú'),(91,'E27 socket',80,'E27 foglalat'),(92,'energy',70,'energia'),(93,'shaft repair sleeve',47,'tengelyjavító persely'),(94,'V-belt',29,'ékszíj'),(95,'tube t5',80,'fénycső T5'),(96,'solid state relay',57,'szilárdtestrelé'),(97,'linear',6,'lineáris'),(98,'Cable',0,'Kábel'),(99,'connector',98,'szerelt'),(100,'Y bearing unit',6,'Y csapágyegység'),(101,'E14 socket',80,'E14 foglalat'),(102,'connector',71,'csatlakozó'),(103,'GR10q compact tube',80,'GR10q kompakt fénycső'),(104,'pneumatic actuator',68,'pneumatikus működtető'),(105,'rotary joint',68,'forgó csatlakozó'),(106,'cylinder',24,'munkahenger'),(107,'accumulator',87,'akkumulátor'),(108,'spiral',5,'spirál'),(109,'steel',5,'acél'),(110,'silicon pump',38,'szilikonszivattyú'),(111,'flat belt',29,'laposszíj'),(112,'Angular contact ball',6,'Ferde hatásvonalú'),(113,'other',24,'egyéb'),(114,'expansion shaft',5,'expanziós tengely'),(115,'force sensor',3,'erőmérő'),(116,'safety',57,'biztonsági'),(117,'chainwheel',70,'lánckerék'),(118,'temperature controller',50,'hőmérséklet szabályzó'),(119,'round belt',29,'gömbszíj');
+INSERT INTO `categories` VALUES (1,'Electric motor',0,'Villanymotor'),(2,NULL,1,'szervo'),(3,'Sensor',0,'Szenzor'),(4,'proximity',3,'közelítés'),(5,'Roll',0,'Henger'),(6,'Bearing',0,'Csapágy'),(7,'deep groove ball',6,'Mélyhornyú golyós'),(8,'Pressure sensor',3,'nyomásérzékelő'),(9,'pressure switch',3,'nyomáskapcsoló'),(10,'linear transducer',3,'útmérő'),(11,'3 phase motor',1,'3 fázisú,aszinkron'),(12,'dc',1,'egyenáramú'),(13,'Linear actuator',0,'Lineáris mozgató'),(15,'Pneumatic',13,'Pneumatikus'),(16,'Cylindrical roller',6,'Hengergörgős'),(17,'Pin roller',6,'Tűgörgős'),(18,'Hydraulic',13,'Hidraulikus'),(19,'Coupling',0,'Tengelykapcsoló'),(20,'Bolt, screw',0,'Csavar'),(21,'Hexagon socket head cap',20,'Inbusz'),(22,'Hexagon head',20,'Hatlapfejű'),(23,'Wheel',0,'Kerék'),(24,'Pneumatic',0,'Pneumatika'),(25,'valve',24,'szelep'),(26,'pressure regulator',24,'nyomásszabályzó'),(27,'fitting',24,'csatlakozó'),(28,'Timing pulley',0,'Szíjtárcsa'),(29,'Belt',0,'Hajtószíj'),(30,'metric rubber timing belt',29,'metrikus gumi fogasszíj'),(31,'metric PU timing belt',29,'metrikus PU fogasszíj'),(32,'imperial rubber timing belt',29,'collos gumi fogasszíj'),(33,'Taper lock bush',0,'Kúpos szorítóhüvely'),(34,'Bracket',0,'Tartó'),(35,'bell housing',34,'szivattyúbak'),(36,'Lifter',0,'Emelő'),(37,'Inverter',0,'Frekvenciaváltó'),(38,'Pump',0,'Szivattyú'),(39,'hydraulic',38,'hidraulika'),(40,'Filter',0,'Szűrő'),(41,'house',40,'ház'),(42,'element',40,'betét'),(43,'encoder',3,'enkóder'),(44,'with gearbox',1,'hajtóműves'),(45,'buffer ring',19,'csillag'),(46,'Gearbox',0,'Hajtómű'),(47,'Seal',0,'Tömítés'),(48,'Rotary seal',47,'Szimering'),(49,'Fan',0,'Ventillátor'),(50,'Controller',0,'Vezérlő'),(51,'water pump',38,'vízszivattyú'),(52,'Flow',3,'Térfogatáram'),(53,'safety chuck',34,'befogó pofa'),(54,'o-ring',47,'o-gyűrű'),(55,'screw drive',13,'golyósorsós'),(56,'System enclosure',0,'Kapcsolószekrény'),(57,'Switch',0,'Kapcsoló'),(58,'Main switch',57,'Főkapcsoló'),(59,'Air compressor',0,'Kompresszor'),(60,'Refrigerator',0,'Hűtő'),(61,'engraved',5,'raszter'),(62,'chrome plaited',5,'krómbevonatú'),(63,'polymer coated',5,'polimer bevonatú'),(64,'moiton sensor',3,'mozgásérzékelő'),(65,'HMI',0,'HMI'),(66,'photoelectric',3,'fotoelektromos'),(67,'repait kit',13,'javítókészlet'),(68,'gas-steam-water',0,'gáz-gőz-víz'),(69,'pressure valve',68,'nyomásszelep'),(70,'Chain',0,'Lánc'),(71,'Electric part',0,'Elektromos alkatrész'),(72,'variable resistor',71,'változtatható ellenállás'),(73,'Tank',0,'Tartály'),(74,'pressure tank',73,'nyomástartály'),(75,'angle',3,'szöghelyzet'),(76,'roller chain',70,'görgős lánc'),(77,'PLC',50,'PLC'),(78,'Burner controller',50,'Égőszabályzó'),(79,'transformer',71,'trafó'),(80,'Lighting fittings',0,'Világítótest'),(81,'other',47,'egyéb'),(82,'operating unit',57,'műkődtető'),(83,'distance',3,'távolság'),(84,'fitting',68,'csatlakozó'),(85,'holder',3,'tartó'),(86,'self aligning',6,'önbeálló'),(87,'Hydraulic',0,'Hidraulika'),(88,'cylinder',87,'munkahenger'),(89,'level',73,'szintjelző'),(90,'adhesive pump',38,'ragasztószivattyú'),(91,'E27 socket',80,'E27 foglalat'),(92,'energy',70,'energia'),(93,'shaft repair sleeve',47,'tengelyjavító persely'),(94,'V-belt',29,'ékszíj'),(95,'tube t5',80,'fénycső T5'),(96,'solid state relay',57,'szilárdtestrelé'),(97,'linear',6,'lineáris'),(98,'Cable',0,'Kábel'),(99,'connector',98,'szerelt'),(100,'Y bearing unit',6,'Y csapágyegység'),(101,'E14 socket',80,'E14 foglalat'),(102,'connector',71,'csatlakozó'),(103,'GR10q compact tube',80,'GR10q kompakt fénycső'),(104,'pneumatic actuator',68,'pneumatikus működtető'),(105,'rotary joint',68,'forgó csatlakozó'),(106,'cylinder',24,'munkahenger'),(107,'accumulator',87,'akkumulátor'),(108,'spiral',5,'spirál'),(109,'steel',5,'acél'),(110,'silicon pump',38,'szilikonszivattyú'),(111,'flat belt',29,'laposszíj'),(112,'Angular contact ball',6,'Ferde hatásvonalú'),(113,'other',24,'egyéb'),(114,'expansion shaft',5,'expanziós tengely'),(115,'force sensor',3,'erőmérő'),(116,'safety',57,'biztonsági'),(117,'chainwheel',70,'lánckerék'),(118,'temperature controller',50,'hőmérséklet szabályzó'),(119,'round belt',29,'gömbszíj'),(120,'Kenéstechnika',0,'Lubrication'),(121,'cooling oil',120,'hűtőolaj');
 /*!40000 ALTER TABLE `categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -250,6 +250,7 @@ CREATE TABLE `connections` (
 
 LOCK TABLES `connections` WRITE;
 /*!40000 ALTER TABLE `connections` DISABLE KEYS */;
+INSERT INTO `connections` VALUES (1,'Olbrich engraved','Olbrich raszter',2,1,'',''),(2,'Olbrich pull roll','Olbrich nyomó',1,1,'',''),(3,'ICO coater pull','ICO bevonó nyomó',2,1,'',''),(4,'Polytype calander rubber','Polytype kasírozó gumi',2,1,'',''),(5,'Olbrich rewinder rubber coated nip','Olbrich feltekercselő gumi nip',2,1,'',''),(6,'Nordmeccanica engraved','Lakozzó raszter',2,1,'',''),(7,'CSN pump','CSN szivattyú',2,2,'',''),(8,'ATEC W0','ATEC W0',1,1,'',''),(9,'traditional tube 1500mm T5 ','hagyományos fénycső T5 1500mm',1,3,'',''),(10,'LED one-side T5 1500mm','LED egyoldalas T5 1500mm',1,3,'',''),(11,'LED both-side T5 1500mm','LED kétoldalas T5 1500mm',1,3,'',''),(12,'M12 4 pin','M12 4 tüske',1,4,'EC 61076-2-101','EC 61076-2-101'),(13,'GR10q socket 16W','GR10q foglalat 16W',1,3,'',''),(14,'ATEC W2','ATEC W2',1,1,'',''),(15,'Olbrich unwinder satelite','Olbrich letekercselő szatelit',1,1,'dia.159x1420 shaft:25','átm.159x1420 tengely:25'),(16,'Olbrich unwinder spiral roll','Olbrich letekercselő spirálhenger',1,1,'dia.160x1450','átm.160x1450'),(17,'Olbrich dancer','Olbrich lengőhenger',1,1,'dia.200x1805','átm.200x1805'),(18,'Olbrich glue','Olbrich ragasztó',1,1,'200x1450','200x1450'),(19,'Olbrich 120mm driving roll','Olbrich 120mm vezetőhenger',1,1,'120mmx1350','120mmx1350'),(20,'traditional tube 1200mm T5','hagyományos fénycső T5 1200mm',2,3,'',''),(21,'átírható','átírható',1,1,'',''),(22,'Olbrich 160mm driving roll','Olbrich 160mm vezetőhenger',2,1,'160mmx1350/1600','160mmx1350/1600'),(23,'Polytype electric motor','Polytype villanymotor',2,5,'',''),(24,'Alpha layon','Alpha layon',1,1,'',''),(25,'inductive, 4mm M12 2M PNP NO ','induktív, 4mm M12 2M PNP NO ',1,6,'',''),(26,'Atec Hotmelt calander','Atec Hotmelt kasírozó',1,1,'','');
 /*!40000 ALTER TABLE `connections` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -347,7 +348,7 @@ CREATE TABLE `info_files` (
   `info_file_name` varchar(45) COLLATE utf8_hungarian_ci NOT NULL,
   `info_file_review_en` varchar(45) COLLATE utf8_hungarian_ci DEFAULT NULL,
   `info_file_review_hu` varchar(45) COLLATE utf8_hungarian_ci DEFAULT NULL,
-  `req_user_level` tinyint(3) unsigned NOT NULL,
+  `req_user_level` tinyint(3) unsigned NOT NULL DEFAULT '4',
   `info_file_sha` varchar(255) COLLATE utf8_hungarian_ci NOT NULL,
   `uploaded_by` tinyint(3) unsigned DEFAULT NULL,
   `upload_time` datetime DEFAULT NULL,
@@ -436,10 +437,10 @@ CREATE TABLE `main_asset_categories` (
   `main_asset_category_en` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
   `main_asset_category_hu` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`main_asset_category_id`),
+  UNIQUE KEY `asset_category_id_UNIQUE` (`main_asset_category_id`),
   UNIQUE KEY `asset_category_en_UNIQUE` (`main_asset_category_en`),
-  UNIQUE KEY `asset_category_hu_UNIQUE` (`main_asset_category_hu`),
-  UNIQUE KEY `main_asset_category_id_UNIQUE` (`main_asset_category_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  UNIQUE KEY `asset_category_hu_UNIQUE` (`main_asset_category_hu`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -448,7 +449,7 @@ CREATE TABLE `main_asset_categories` (
 
 LOCK TABLES `main_asset_categories` WRITE;
 /*!40000 ALTER TABLE `main_asset_categories` DISABLE KEYS */;
-INSERT INTO `main_asset_categories` VALUES (1,'Production machines','Gyártógépek'),(2,'Lifting equipments','Emelőgépek'),(3,'Auxiliary machines','Segédberendezések'),(4,'Vehicles','Járművek'),(5,'Estates','Ingatlanok'),(6,'Measuring tools','Mérőeszközök'),(7,'HVAC equipments','Hűtés-fűtés'),(8,'Cleaning equipments','Takarítógépek'),(9,'Infrastucture','Infrastuktúra');
+INSERT INTO `main_asset_categories` VALUES (1,'Production machines_HU','Gyártógépek_HU'),(2,'Lifting equipments','Emelőgépek'),(3,'Auxiliary machines','Segédberendezések'),(4,'Vehicles','Járművek'),(5,'Estates','Ingatlanok'),(6,'Measuring tools','Mérőeszközök'),(7,'HVAC equipments','Hűtés-fűtés'),(8,'Cleaning equipments','Takarítógépek'),(10,'Infrastucture_HU','Infrastuktúra_HU'),(11,'Production machines_RO','Gyártógépek_RO'),(12,'Production_machines_CZ','Gyártógépek_CZ');
 /*!40000 ALTER TABLE `main_asset_categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -490,7 +491,7 @@ CREATE TABLE `messages` (
   `unit_id` tinyint(2) unsigned DEFAULT NULL,
   PRIMARY KEY (`message_id`),
   UNIQUE KEY `message_id_UNIQUE` (`message_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -499,6 +500,7 @@ CREATE TABLE `messages` (
 
 LOCK TABLES `messages` WRITE;
 /*!40000 ALTER TABLE `messages` DISABLE KEYS */;
+INSERT INTO `messages` VALUES (1,'general error','általános hiba',NULL),(2,'online','kapcsolatban',NULL),(3,'High temperature','Magas hőmérséklet',NULL),(4,'Low temperature','Alacsony hőmérséklet',NULL);
 /*!40000 ALTER TABLE `messages` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -537,36 +539,6 @@ CREATE TABLE `notifications` (
 LOCK TABLES `notifications` WRITE;
 /*!40000 ALTER TABLE `notifications` DISABLE KEYS */;
 /*!40000 ALTER TABLE `notifications` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `notifications_message`
---
-
-DROP TABLE IF EXISTS `notifications_message`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `notifications_message` (
-  `not_message_id` int(10) NOT NULL,
-  `notification_id` int(10) NOT NULL,
-  `not_message_en` varchar(300) DEFAULT NULL,
-  `not_message_time` timestamp NULL DEFAULT NULL,
-  `user_id` tinyint(3) NOT NULL,
-  `has_read` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`not_message_id`),
-  UNIQUE KEY `notification_id_UNIQUE` (`notification_id`),
-  UNIQUE KEY `not_message_id_UNIQUE` (`not_message_id`),
-  UNIQUE KEY `not_message_time_UNIQUE` (`not_message_time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `notifications_message`
---
-
-LOCK TABLES `notifications_message` WRITE;
-/*!40000 ALTER TABLE `notifications_message` DISABLE KEYS */;
-/*!40000 ALTER TABLE `notifications_message` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -642,7 +614,7 @@ CREATE TABLE `operator_works` (
   `asset_id` smallint(3) unsigned NOT NULL,
   `operator_user_id` smallint(3) unsigned NOT NULL,
   `workrequest_id` int(10) unsigned NOT NULL,
-  `deleted` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`operator_work_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -668,6 +640,8 @@ CREATE TABLE `partners` (
   `partner_name` varchar(65) NOT NULL,
   `partner_address` varchar(150) DEFAULT NULL,
   `contact1_surname` varchar(45) DEFAULT NULL,
+  `contact5_firstname` varchar(45) DEFAULT NULL,
+  `contact5_firstname_is_first` tinyint(1) unsigned DEFAULT NULL,
   `contact4_firstname` varchar(45) DEFAULT NULL,
   `contact4_firstname_is_first` tinyint(1) unsigned DEFAULT NULL,
   `contact3_firstname` varchar(45) DEFAULT NULL,
@@ -676,25 +650,30 @@ CREATE TABLE `partners` (
   `contact2_firstname_is_first` tinyint(1) unsigned DEFAULT NULL,
   `contact1_firstname` varchar(45) DEFAULT NULL,
   `contact1_firstname_is_first` tinyint(1) unsigned DEFAULT NULL,
+  `contact5_title` tinyint(1) DEFAULT NULL,
   `contact4_title` tinyint(1) DEFAULT NULL,
   `contact3_title` tinyint(1) DEFAULT NULL,
   `contact2_title` tinyint(1) DEFAULT NULL,
   `contact1_title` tinyint(1) DEFAULT NULL,
+  `contact5_email` varchar(45) DEFAULT NULL,
   `contact4_email` varchar(45) DEFAULT NULL,
   `contact3_email` varchar(45) DEFAULT NULL,
   `contact2_email` varchar(45) DEFAULT NULL,
   `contact1_email` varchar(45) DEFAULT NULL,
-  `contact4_phone` varchar(15) DEFAULT NULL,
-  `contact3_phone` varchar(15) DEFAULT NULL,
+  `contact5_phone` varchar(20) DEFAULT NULL,
+  `contact4_phone` varchar(20) DEFAULT NULL,
+  `contact3_phone` varchar(20) DEFAULT NULL,
   `contact2_phone` varchar(20) DEFAULT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '1',
   `contact1_phone` varchar(20) DEFAULT NULL,
+  `contact5_position` varchar(45) DEFAULT NULL,
   `contact4_position` varchar(45) DEFAULT NULL,
   `contact3_position` varchar(45) DEFAULT NULL,
   `contact2_position` varchar(45) DEFAULT NULL,
   `contact1_position` varchar(45) DEFAULT NULL,
   `partner_created` datetime NOT NULL,
   `partner_tags` varchar(200) DEFAULT NULL,
+  `contact5_surname` varchar(45) DEFAULT NULL,
   `contact4_surname` varchar(45) DEFAULT NULL,
   `contact3_surname` varchar(45) DEFAULT NULL,
   `contact2_surname` varchar(45) DEFAULT NULL,
@@ -711,6 +690,68 @@ CREATE TABLE `partners` (
 LOCK TABLES `partners` WRITE;
 /*!40000 ALTER TABLE `partners` DISABLE KEYS */;
 /*!40000 ALTER TABLE `partners` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `pinboard`
+--
+
+DROP TABLE IF EXISTS `pinboard`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pinboard` (
+  `pin_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `pin_short_en` varchar(50) COLLATE utf8_bin DEFAULT NULL,
+  `pin_short_hu` varchar(50) COLLATE utf8_bin DEFAULT NULL,
+  `pin_en` varchar(45) COLLATE utf8_bin DEFAULT NULL,
+  `pin_hu` varchar(45) COLLATE utf8_bin DEFAULT NULL,
+  `pin_type` tinyint(1) unsigned NOT NULL,
+  `pin_status` tinyint(1) unsigned NOT NULL,
+  `user_id` int(10) unsigned NOT NULL,
+  `pin_time` varchar(45) COLLATE utf8_bin DEFAULT NULL,
+  `info_file_id1` smallint(6) unsigned DEFAULT NULL,
+  PRIMARY KEY (`pin_id`),
+  UNIQUE KEY `pin_id_UNIQUE` (`pin_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `pinboard`
+--
+
+LOCK TABLES `pinboard` WRITE;
+/*!40000 ALTER TABLE `pinboard` DISABLE KEYS */;
+/*!40000 ALTER TABLE `pinboard` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `pinboards_messages`
+--
+
+DROP TABLE IF EXISTS `pinboards_messages`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pinboards_messages` (
+  `pin_message_id` int(10) NOT NULL,
+  `pin_id` int(10) NOT NULL,
+  `pin_message_en` varchar(300) DEFAULT NULL,
+  `pin_message_time` timestamp NULL DEFAULT NULL,
+  `user_id` tinyint(3) NOT NULL,
+  `has_read` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`pin_message_id`),
+  UNIQUE KEY `notification_id_UNIQUE` (`pin_id`),
+  UNIQUE KEY `not_message_id_UNIQUE` (`pin_message_id`),
+  UNIQUE KEY `not_message_time_UNIQUE` (`pin_message_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `pinboards_messages`
+--
+
+LOCK TABLES `pinboards_messages` WRITE;
+/*!40000 ALTER TABLE `pinboards_messages` DISABLE KEYS */;
+/*!40000 ALTER TABLE `pinboards_messages` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -966,123 +1007,123 @@ CREATE TABLE `users` (
   `user_created` datetime NOT NULL DEFAULT '2000-01-01 12:00:00',
   `last_login` datetime NOT NULL DEFAULT '2000-01-01 12:00:00',
   `active` tinyint(1) unsigned NOT NULL,
-  `ADD_WORKORDER` tinyint(1) unsigned DEFAULT '0',
-  `SEE_WORKORDERS` tinyint(1) unsigned DEFAULT '0',
-  `SEE_WORKORDER_DETAIL` tinyint(1) unsigned DEFAULT '0',
-  `MODIFY_WORKORDER` tinyint(1) unsigned DEFAULT '0',
-  `DELETE_WORKORDER` tinyint(1) unsigned DEFAULT '0',
-  `ADD_FILE_TO_WORKORDER` tinyint(1) unsigned DEFAULT '0',
-  `SEE_FILE_OF_WORKORDER` tinyint(1) unsigned DEFAULT '0',
-  `SEE_CONF_FILE_OF_WORKORDER` tinyint(1) unsigned DEFAULT '0',
-  `DELETE_FILE_OF_WORKORDER` tinyint(1) unsigned DEFAULT '0',
-  `SEE_STATS_OF_WORKORDERS` tinyint(1) unsigned DEFAULT '0',
-  `ADD_WORK` tinyint(1) unsigned DEFAULT '0',
-  `SEE_WORKS` tinyint(1) unsigned DEFAULT '0',
-  `SEE_WORK_DETAIL` tinyint(1) unsigned DEFAULT '0',
-  `MODIFY_WORK` tinyint(1) unsigned DEFAULT '0',
-  `DELETE_WORK` tinyint(1) unsigned DEFAULT '0',
-  `ADD_FILE_TO_WORK` tinyint(1) unsigned DEFAULT '0',
-  `SEE_FILE_OF_WORK` tinyint(1) unsigned DEFAULT '0',
-  `SEE_CONF_FILE_OF_WORK` tinyint(1) unsigned DEFAULT '0',
-  `DELETE_FILE_OF_WORK` tinyint(1) unsigned DEFAULT '0',
-  `SEE_STATS_OF_WORKS` tinyint(1) unsigned DEFAULT '0',
-  `SEE_OPERATORS_WORKS` tinyint(1) unsigned DEFAULT '0',
-  `RECORD_OPERATOR_WORK` tinyint(1) unsigned DEFAULT '0',
-  `MODIFY_OPERATOR_WORK` tinyint(1) unsigned DEFAULT '0',
-  `DELETE_OPERATOR_WORK` tinyint(1) unsigned DEFAULT '0',
-  `ADD_WORKREQUEST` tinyint(1) unsigned DEFAULT '0',
-  `SEE_WORKREQUESTS` tinyint(1) unsigned DEFAULT '0',
-  `SEE_WORKREQUEST_DETAIL` tinyint(1) unsigned DEFAULT '0',
-  `MODIFY_WORKREQUEST` tinyint(1) unsigned DEFAULT '0',
-  `DELETE_WORKREQUEST` tinyint(1) unsigned DEFAULT '0',
-  `ADD_FILE_TO_WORKREQUEST` tinyint(1) unsigned DEFAULT '0',
-  `SEE_FILE_OF_WORKREQUEST` tinyint(1) unsigned DEFAULT '0',
-  `SEE_CONF_FILE_OF_WORKREQUEST` tinyint(1) unsigned DEFAULT '0',
-  `DELETE_FILE_OF_WORKREQUEST` tinyint(1) unsigned DEFAULT '0',
-  `SEE_STATS_OF_WORKREQUESTS` tinyint(1) unsigned DEFAULT '0',
-  `ADD_ASSET` tinyint(1) unsigned DEFAULT '0',
-  `SEE_ASSETS` tinyint(1) unsigned DEFAULT '0',
-  `SEE_ASSET_DETAIL` tinyint(1) unsigned DEFAULT '0',
-  `MODIFY_ASSET` tinyint(1) unsigned DEFAULT '0',
-  `DELETE_ASSET` tinyint(1) unsigned DEFAULT '0',
-  `ADD_FILE_TO_ASSET` tinyint(1) unsigned DEFAULT '0',
-  `SEE_FILE_OF_ASSET` tinyint(1) unsigned DEFAULT '0',
-  `SEE_CONF_FILE_OF_ASSET` tinyint(1) unsigned DEFAULT '0',
-  `DELETE_FILE_OF_ASSET` tinyint(1) unsigned DEFAULT '0',
-  `ADD_LOCATION` tinyint(1) unsigned DEFAULT '0',
-  `SEE_LOCATIONS` tinyint(1) unsigned DEFAULT '0',
-  `SEE_LOCATION_DETAIL` tinyint(1) unsigned DEFAULT '0',
-  `MODIFY_LOCATION` tinyint(1) unsigned DEFAULT '0',
-  `DELETE_LOCATION` tinyint(1) unsigned DEFAULT '0',
-  `ADD_FILE_TO_LOCATION` tinyint(1) unsigned DEFAULT '0',
-  `SEE_FILE_OF_LOCATION` tinyint(1) unsigned DEFAULT '0',
-  `SEE_CONF_FILE_OF_LOCATION` tinyint(1) unsigned DEFAULT '0',
-  `DELETE_FILE_OF_LOCATION` tinyint(1) unsigned DEFAULT '0',
-  `ADD_USER` tinyint(1) unsigned DEFAULT '0',
-  `SEE_USERS` tinyint(1) unsigned DEFAULT '0',
-  `SEE_USER_DETAIL` tinyint(1) unsigned DEFAULT '0',
-  `MODIFY_USER` tinyint(1) unsigned DEFAULT '0',
-  `DELETE_USER` tinyint(1) unsigned DEFAULT '0',
-  `ADD_FILE_TO_USER` tinyint(1) unsigned DEFAULT '0',
-  `SEE_FILE_OF_USER` tinyint(1) unsigned DEFAULT '0',
-  `SEE_CONF_FILE_OF_USER` tinyint(1) unsigned DEFAULT '0',
-  `DELETE_FILE_OF_USER` tinyint(1) unsigned DEFAULT '0',
-  `SEE_STATS_OF_USERS` tinyint(1) unsigned DEFAULT '0',
-  `PUT_PRODUCT_INTO_STOCK` tinyint(1) unsigned DEFAULT '0',
-  `TAKE_PRODUCT_FROM_STOCK` tinyint(1) unsigned DEFAULT '0',
-  `DELETE_PRODUCT` tinyint(1) unsigned DEFAULT '0',
-  `SEE_STOCK` tinyint(1) unsigned DEFAULT '0',
-  `STOCK-TAKING` tinyint(1) unsigned DEFAULT '0',
-  `SEE_PRODUCT_MOVING` tinyint(1) unsigned DEFAULT '0',
-  `ADD_CATEGORY` tinyint(1) unsigned DEFAULT '0',
-  `SEE_CATEGORY` tinyint(1) unsigned DEFAULT '0',
-  `MODIFY_CATEGORY` tinyint(1) unsigned DEFAULT '0',
-  `DELETE_CATEGORY` tinyint(1) unsigned DEFAULT '0',
-  `ADD_PRODUCT` tinyint(1) unsigned DEFAULT '0',
-  `SEE_PRODUCTS` tinyint(1) unsigned DEFAULT '0',
-  `SEE_PRODUCT_DETAIL` tinyint(1) unsigned DEFAULT '0',
-  `MODIFY_PRODUCT` tinyint(1) unsigned DEFAULT '0',
-  `ADD_FILE_TO_PRODUCT` tinyint(1) unsigned DEFAULT '0',
-  `SEE_FILE_OF_PRODUCT` tinyint(1) unsigned DEFAULT '0',
-  `SEE_CONF_FILE_OF_PRODUCT` tinyint(1) unsigned DEFAULT '0',
-  `DELETE_FILE_OF_PRODUCT` tinyint(1) unsigned DEFAULT '0',
-  `SEE_PRICES` tinyint(1) unsigned DEFAULT '0',
-  `ADD_PARTNER` tinyint(1) unsigned DEFAULT '0',
-  `SEE_PARTNERS` tinyint(1) unsigned DEFAULT '0',
-  `SEE_PARTNER_DETAIL` tinyint(1) unsigned DEFAULT '0',
-  `MODIFY_PARTNER` tinyint(1) unsigned DEFAULT '0',
-  `DELETE_PARTNER` tinyint(1) unsigned DEFAULT '0',
-  `SEE_FILE_OF_PARTNER` tinyint(1) unsigned DEFAULT '0',
-  `SEE_CONF_FILE_OF_PARTNER` tinyint(1) unsigned DEFAULT '0',
-  `DELETE_FILE_OF_PARTNER` tinyint(1) unsigned DEFAULT '0',
-  `ADD_COUNTER` tinyint(1) unsigned DEFAULT '0',
-  `SEE_COUNTER` tinyint(1) unsigned DEFAULT '0',
-  `ADD_COUNTER_VALUE` tinyint(1) unsigned DEFAULT '0',
-  `MODIFY_COUNTER_VALUE` tinyint(1) unsigned DEFAULT '0',
-  `DELETE_COUNTER` tinyint(1) unsigned DEFAULT '0',
-  `DELETE_COUNTER_VALUE` tinyint(1) unsigned DEFAULT '0',
-  `ADD_PRODUCT_WORKORDER` tinyint(1) unsigned DEFAULT '0',
-  `WRITE_MESSAGE` tinyint(1) unsigned DEFAULT '0',
-  `SEE_MESSAGE` tinyint(1) unsigned DEFAULT '0',
-  `CHECK_MESSAGE` tinyint(1) unsigned DEFAULT '0',
-  `ADD_MESSAGE_TEXT` tinyint(1) unsigned DEFAULT '0',
-  `ADD_FILE_TO_MESSAGE` tinyint(1) unsigned DEFAULT '0',
-  `SEE_FILE_OF_PRODUCT_MOVING` tinyint(1) unsigned DEFAULT '0',
-  `ADD_FILE_TO_PRODUCT_MOVING` tinyint(1) unsigned DEFAULT '0',
-  `ADD_CONNECTION_TO_ASSET` tinyint(1) unsigned DEFAULT '0',
-  `ADD_NEW_CONNECTION_TYPE` tinyint(1) unsigned DEFAULT '0',
-  `SEE_CONNECTION_TYPE` tinyint(1) unsigned DEFAULT '0',
-  `SEE_CONNECTION_OF_ASSET` tinyint(1) unsigned DEFAULT '0',
-  `SEE_CONNECTION_OF_PRODUCT` tinyint(1) unsigned DEFAULT '0',
-  `ADD_CONNECTION_TO_PRODUCT` tinyint(1) unsigned DEFAULT '0',
-  `CAN_WRITE_LANG1` tinyint(1) unsigned DEFAULT '0',
-  `CAN_WRITE_LANG2` tinyint(1) unsigned DEFAULT '0',
-  `ADD_NOTIFICATION` tinyint(1) unsigned DEFAULT '0',
-  `SEE_NOTIFICATIONS` tinyint(1) unsigned DEFAULT '0',
-  `SEE_NOTIFICATION_DETAILS` tinyint(1) unsigned DEFAULT '0',
-  `MODIFY_NOTIFICATION` tinyint(1) unsigned DEFAULT '0',
-  `DELETE_NOTIFICATION` tinyint(1) unsigned DEFAULT '0',
-  `SEE_STATS_OF_NOTIFICATIONS` tinyint(1) unsigned DEFAULT '0',
+  `ADD_WORKORDER` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_WORKORDERS` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_WORKORDER_DETAIL` tinyint(1) NOT NULL DEFAULT '0',
+  `MODIFY_WORKORDER` tinyint(1) NOT NULL DEFAULT '0',
+  `DELETE_WORKORDER` tinyint(1) NOT NULL DEFAULT '0',
+  `ADD_FILE_TO_WORKORDER` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_FILE_OF_WORKORDER` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_CONF_FILE_OF_WORKORDER` tinyint(1) NOT NULL DEFAULT '0',
+  `DELETE_FILE_OF_WORKORDER` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_STATS_OF_WORKORDERS` tinyint(1) NOT NULL DEFAULT '0',
+  `ADD_WORK` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_WORKS` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_WORK_DETAIL` tinyint(1) NOT NULL DEFAULT '0',
+  `MODIFY_WORK` tinyint(1) NOT NULL DEFAULT '0',
+  `DELETE_WORK` tinyint(1) NOT NULL DEFAULT '0',
+  `ADD_FILE_TO_WORK` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_FILE_OF_WORK` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_CONF_FILE_OF_WORK` tinyint(1) NOT NULL DEFAULT '0',
+  `DELETE_FILE_OF_WORK` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_STATS_OF_WORKS` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_OPERATORS_WORKS` tinyint(1) NOT NULL DEFAULT '0',
+  `RECORD_OPERATOR_WORK` tinyint(1) NOT NULL DEFAULT '0',
+  `MODIFY_OPERATOR_WORK` tinyint(1) NOT NULL DEFAULT '0',
+  `DELETE_OPERATOR_WORK` tinyint(1) NOT NULL DEFAULT '0',
+  `ADD_WORKREQUEST` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_WORKREQUESTS` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_WORKREQUEST_DETAIL` tinyint(1) NOT NULL DEFAULT '0',
+  `MODIFY_WORKREQUEST` tinyint(1) NOT NULL DEFAULT '0',
+  `DELETE_WORKREQUEST` tinyint(1) NOT NULL DEFAULT '0',
+  `ADD_FILE_TO_WORKREQUEST` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_FILE_OF_WORKREQUEST` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_CONF_FILE_OF_WORKREQUEST` tinyint(1) NOT NULL DEFAULT '0',
+  `DELETE_FILE_OF_WORKREQUEST` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_STATS_OF_WORKREQUESTS` tinyint(1) NOT NULL DEFAULT '0',
+  `ADD_ASSET` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_ASSETS` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_ASSET_DETAIL` tinyint(1) NOT NULL DEFAULT '0',
+  `MODIFY_ASSET` tinyint(1) NOT NULL DEFAULT '0',
+  `DELETE_ASSET` tinyint(1) NOT NULL DEFAULT '0',
+  `ADD_FILE_TO_ASSET` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_FILE_OF_ASSET` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_CONF_FILE_OF_ASSET` tinyint(1) NOT NULL DEFAULT '0',
+  `DELETE_FILE_OF_ASSET` tinyint(1) NOT NULL DEFAULT '0',
+  `ADD_LOCATION` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_LOCATIONS` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_LOCATION_DETAIL` tinyint(1) NOT NULL DEFAULT '0',
+  `MODIFY_LOCATION` tinyint(1) NOT NULL DEFAULT '0',
+  `DELETE_LOCATION` tinyint(1) NOT NULL DEFAULT '0',
+  `ADD_FILE_TO_LOCATION` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_FILE_OF_LOCATION` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_CONF_FILE_OF_LOCATION` tinyint(1) NOT NULL DEFAULT '0',
+  `DELETE_FILE_OF_LOCATION` tinyint(1) NOT NULL DEFAULT '0',
+  `ADD_USER` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_USERS` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_USER_DETAIL` tinyint(1) NOT NULL DEFAULT '0',
+  `MODIFY_USER` tinyint(1) NOT NULL DEFAULT '0',
+  `DELETE_USER` tinyint(1) NOT NULL DEFAULT '0',
+  `ADD_FILE_TO_USER` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_FILE_OF_USER` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_CONF_FILE_OF_USER` tinyint(1) NOT NULL DEFAULT '0',
+  `DELETE_FILE_OF_USER` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_STATS_OF_USERS` tinyint(1) NOT NULL DEFAULT '0',
+  `PUT_PRODUCT_INTO_STOCK` tinyint(1) NOT NULL DEFAULT '0',
+  `TAKE_PRODUCT_FROM_STOCK` tinyint(1) NOT NULL DEFAULT '0',
+  `DELETE_PRODUCT` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_STOCK` tinyint(1) NOT NULL DEFAULT '0',
+  `STOCK-TAKING` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_PRODUCT_MOVING` tinyint(1) NOT NULL DEFAULT '0',
+  `ADD_CATEGORY` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_CATEGORY` tinyint(1) NOT NULL DEFAULT '0',
+  `MODIFY_CATEGORY` tinyint(1) NOT NULL DEFAULT '0',
+  `DELETE_CATEGORY` tinyint(1) NOT NULL DEFAULT '0',
+  `ADD_PRODUCT` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_PRODUCTS` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_PRODUCT_DETAIL` tinyint(1) NOT NULL DEFAULT '0',
+  `MODIFY_PRODUCT` tinyint(1) NOT NULL DEFAULT '0',
+  `ADD_FILE_TO_PRODUCT` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_FILE_OF_PRODUCT` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_CONF_FILE_OF_PRODUCT` tinyint(1) NOT NULL DEFAULT '0',
+  `DELETE_FILE_OF_PRODUCT` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_PRICES` tinyint(1) NOT NULL DEFAULT '0',
+  `ADD_PARTNER` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_PARTNERS` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_PARTNER_DETAIL` tinyint(1) NOT NULL DEFAULT '0',
+  `MODIFY_PARTNER` tinyint(1) NOT NULL DEFAULT '0',
+  `DELETE_PARTNER` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_FILE_OF_PARTNER` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_CONF_FILE_OF_PARTNER` tinyint(1) NOT NULL DEFAULT '0',
+  `DELETE_FILE_OF_PARTNER` tinyint(1) NOT NULL DEFAULT '0',
+  `ADD_COUNTER` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_COUNTER` tinyint(1) NOT NULL DEFAULT '0',
+  `ADD_COUNTER_VALUE` tinyint(1) NOT NULL DEFAULT '0',
+  `MODIFY_COUNTER_VALUE` tinyint(1) NOT NULL DEFAULT '0',
+  `DELETE_COUNTER` tinyint(1) NOT NULL DEFAULT '0',
+  `DELETE_COUNTER_VALUE` tinyint(1) NOT NULL DEFAULT '0',
+  `ADD_PRODUCT_WORKORDER` tinyint(1) NOT NULL DEFAULT '0',
+  `WRITE_MESSAGE` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_MESSAGE` tinyint(1) NOT NULL DEFAULT '0',
+  `CHECK_MESSAGE` tinyint(1) NOT NULL DEFAULT '0',
+  `ADD_MESSAGE_TEXT` tinyint(1) NOT NULL DEFAULT '0',
+  `ADD_FILE_TO_MESSAGE` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_FILE_OF_PRODUCT_MOVING` tinyint(1) NOT NULL DEFAULT '0',
+  `ADD_FILE_TO_PRODUCT_MOVING` tinyint(1) NOT NULL DEFAULT '0',
+  `ADD_CONNECTION_TO_ASSET` tinyint(1) NOT NULL DEFAULT '0',
+  `ADD_NEW_CONNECTION_TYPE` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_CONNECTION_TYPE` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_CONNECTION_OF_ASSET` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_CONNECTION_OF_PRODUCT` tinyint(1) NOT NULL DEFAULT '0',
+  `ADD_CONNECTION_TO_PRODUCT` tinyint(1) NOT NULL DEFAULT '0',
+  `CAN_WRITE_LANG1` tinyint(1) NOT NULL DEFAULT '0',
+  `CAN_WRITE_LANG2` tinyint(1) NOT NULL DEFAULT '0',
+  `ADD_NOTIFICATION` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_NOTIFICATIONS` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_NOTIFICATION_DETAILS` tinyint(1) NOT NULL DEFAULT '0',
+  `MODIFY_NOTIFICATION` tinyint(1) NOT NULL DEFAULT '0',
+  `DELETE_NOTIFICATION` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_STATS_OF_NOTIFICATIONS` tinyint(1) NOT NULL DEFAULT '0',
   `users_assets` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin COMMENT 'it contains all assets user responsible for. json array which consist of asset_id-s from assets table',
   `users_entry_points` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin COMMENT 'it contains all doors where user can enter. json array which consist of asset_id-s from assets table',
   `telegram_chat_id` bigint(20) unsigned DEFAULT NULL,
@@ -1102,6 +1143,13 @@ CREATE TABLE `users` (
   `Sunday_start` time(4) DEFAULT '06:00:00.0000',
   `Sunday_end` time(4) DEFAULT '14:00:00.0000',
   `users_card_id` varchar(15) COLLATE utf8_hungarian_ci DEFAULT NULL,
+  `ADD_TO_PINBOARD` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_PINBOARD` tinyint(1) NOT NULL DEFAULT '0',
+  `UPLOAD_TO_PINBOARD` tinyint(1) NOT NULL DEFAULT '0',
+  `DELETE_FROM_PINBOARD` tinyint(1) NOT NULL DEFAULT '0',
+  `MODIFY_PIN` tinyint(1) NOT NULL DEFAULT '0',
+  `ADD_FILE_TO_PIN` tinyint(1) NOT NULL DEFAULT '0',
+  `SEE_FILE_OF_PIN` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `userid_UNIQUE` (`user_id`),
   UNIQUE KEY `username_UNIQUE` (`username`),
@@ -1116,7 +1164,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'admin','your_firstname','your_surname',NULL,'$2y$10$HP.CoyQi6HV4U16c7u5fxu/JcI.TLtfcpGrW2S32yhh/r9OBEUGc.',1,'','',0,'2021-06-12 06:42:24','2021-06-12 06:42:24',1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,'null','null',0,'en','06:00:00.0000','18:00:00.0000','06:00:00.0000','18:00:00.0000','06:00:00.0000','18:00:00.0000','06:00:00.0000','18:00:00.0000','06:00:00.0000','18:00:00.0000','06:00:00.0000','18:00:00.0000','06:00:00.0000','18:00:00.0000','null');
+INSERT INTO `users` VALUES (1,'admin','admin','admin',NULL,'$2y$10$F.mZbucA2NhYGEM5IGhi5ejdICHgnioeP5GFW5enk/hIhqyzm0drG',1,'','',0,'2021-09-25 17:38:28','2000-01-01 12:00:00',1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,NULL,NULL,NULL,'en','06:00:00.0000','14:00:00.0000','06:00:00.0000','14:00:00.0000','06:00:00.0000','14:00:00.0000','06:00:00.0000','14:00:00.0000','06:00:00.0000','14:00:00.0000','06:00:00.0000','14:00:00.0000','06:00:00.0000','14:00:00.0000',NULL,1,1,1,1,1,1,1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1138,11 +1186,11 @@ CREATE TABLE `workorder_works` (
   `workorder_status` tinyint(2) unsigned NOT NULL,
   `workorder_user_id` smallint(3) unsigned NOT NULL,
   `workorder_id` int(10) unsigned NOT NULL,
-  `workorder_partner_id` smallint(3) unsigned DEFAULT '0',
+  `workorder_partner_id` smallint(3) unsigned DEFAULT NULL,
   `asset_id` smallint(3) unsigned NOT NULL,
-  `deleted` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `after_work_machine_can_run` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `unplanned_shutdown` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0',
+  `after_work_machine_can_run` tinyint(1) NOT NULL DEFAULT '1',
+  `unplanned_shutdown` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`workorder_work_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1260,10 +1308,10 @@ CREATE TABLE `workrequests` (
   `replace_to_product_id` smallint(5) unsigned DEFAULT NULL,
   `counter_id` smallint(3) unsigned DEFAULT NULL,
   `product_id_to_refurbish` smallint(5) unsigned DEFAULT NULL,
-  `for_operators` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `on_the first_weekday` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `on_the first_monthday` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `auto_workorder` tinyint(1) unsigned DEFAULT '0',
+  `for_operators` tinyint(1) NOT NULL DEFAULT '0',
+  `on_the first_weekday` tinyint(1) NOT NULL DEFAULT '0',
+  `on_the first_monthday` tinyint(1) NOT NULL DEFAULT '0',
+  `auto_workorder` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`workrequest_id`),
   UNIQUE KEY `workrequest_id_UNIQUE` (`workrequest_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -1287,4 +1335,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-06-14 19:06:30
+-- Dump completed on 2021-09-25 17:40:07

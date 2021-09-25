@@ -17,7 +17,7 @@ if (isset($req_page)) //$req_page from lm-header.php
             switch($req_page){
             case "workorders": require_once( PAGES_PATH.'workorders.php' );
             if (!isset($_SESSION['workorder_status']))
-            $_SESSION['workorder_status']=1 ;
+            $_SESSION['workorder_status']=1;
             $valid_page=true;
             break;
             case "workrequests": require_once( PAGES_PATH.'workrequests.php' );$valid_page=true;break;
@@ -40,6 +40,7 @@ if (isset($req_page)) //$req_page from lm-header.php
             case "connections":require_once( PAGES_PATH.'connections.php' );$valid_page=true;break;
             case "connection_types":require_once( PAGES_PATH.'connection_types.php' );$valid_page=true;break;
             case "notifications":require_once( PAGES_PATH.'notifications.php' );$valid_page=true;break;
+            case "pinboard":require_once( PAGES_PATH.'pinboard.php' );$valid_page=true;break;
             default: require_once( PAGES_PATH.'dashboard.php' );
         }
     

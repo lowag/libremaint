@@ -621,6 +621,8 @@ echo "<span aria-hidden=\"true\">×</span>\n</button>";
        $SQL="SELECT * FROM users WHERE user_id='".(int) $_GET["param2"]."'";
        else if ($_GET['param3']=='stock_movements' && isset($_SESSION['SEE_FILE_OF_PRODUCT_MOVING']))
        $SQL="SELECT * FROM stock_movements WHERE stock_movement_id='".(int) $_GET["param2"]."'";
+       else if ($_GET['param3']=='pinboard' && isset($_SESSION['SEE_FILE_OF_PIN']))
+       $SQL="SELECT * FROM pinboard WHERE pin_id='".(int) $_GET["param2"]."'";
        
        else
        lm_die(gettext("You have no permission to see files!"));

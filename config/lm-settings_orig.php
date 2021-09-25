@@ -92,6 +92,8 @@ define('ACCEPTED_FILE_TYPES', [
  "break",
  "ADD_NOTIFICATION","MODIFY_NOTIFICATION","SEE_NOTIFICATIONS","SEE_NOTIFICATION_DETAILS","SEE_STATS_OF_NOTIFICATIONS","DELETE_NOTIFICATION",
  "break",
+ "ADD_TO_PINBOARD","MODIFY_PIN","SEE_PINBOARD","UPLOAD_TO_PINBOARD","DELETE_FROM_PINBOARD","ADD_FILE_TO_PIN","SEE_FILE_OF_PIN",
+ "break",
  "ADD_ASSET","SEE_ASSETS","SEE_ASSET_DETAIL","MODIFY_ASSET","DELETE_ASSET","ADD_FILE_TO_ASSET","SEE_FILE_OF_ASSET","SEE_CONF_FILE_OF_ASSET","DELETE_FILE_OF_ASSET","ADD_CONNECTION_TO_ASSET","SEE_CONNECTION_OF_ASSET",
  "break",
 "ADD_LOCATION","SEE_LOCATIONS","SEE_LOCATION_DETAIL","MODIFY_LOCATION","DELETE_LOCATION","ADD_FILE_TO_LOCATION","SEE_FILE_OF_LOCATION","SEE_CONF_FILE_OF_LOCATION","DELETE_FILE_OF_LOCATION",
@@ -191,7 +193,9 @@ $pages = array
   
   $notification_types=array(gettext("maintenance"),gettext("fix"),gettext("development"),gettext("safety"),gettext("material demand"));
   $notification_statuses=array(gettext("New"),gettext("Confirmed"),gettext("Work in progress"),gettext("Resolved"),gettext("Closed"),gettext("Deleted"));
-  
+  $pin_types=array(gettext("info"),gettext("looking for"),gettext("offers"));
+  $pin_statuses=array(gettext("New"),gettext("Expired"),gettext("Closed"),gettext("Deleted"));
+
   $connection_types=array(gettext("Male"),gettext("Female"),gettext("Same"));
 define('TITLES', [
     gettext('Mr.'),
