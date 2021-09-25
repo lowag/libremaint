@@ -15,11 +15,13 @@ $row=$dba->getRow($SQL);
 
 
 $connection_exist=0;
+if (!empty($row)){
 foreach($row as $key=>$value){
 		if (strstr($key,"connection_id") && $value>0){
 		$connection_exist++;
 		$connections.=get_connection_name_from_id($value)." ";
 		}}
+		}
 if ($connection_exist>0)
 echo "<b class='alert-success'>".gettext("Connections:")." ".$connections.'</b>';
 
@@ -38,7 +40,7 @@ echo "</table>";
 
 }
 
-$SQL="SELECT workorder_id, workorder_work_id,workorder_work_start_time,workorder_work_end_time,workorder_work_".$lang.",workorder_user_id,workorder_partner_id FROM workorder_works WHERE workorder_works.deleted<>1 AND workorder_id='". $workorder_id."'";
+$SQL="SELECT workorder_id, workorder_work_id,workorder_work_start_time,workorder_work_end_time,workorder_work_".$lang.",workorder_user_id,workorder_partner_id,workorder_status FROM workorder_works WHERE workorder_works.deleted<>1 AND workorder_id='". $workorder_id."'";
 $SQL.=" ORDER BY workorder_work_end_time DESC";
 $result=$dba->Select($SQL);
 if (LM_DEBUG)
@@ -64,12 +66,15 @@ echo "<tbody>";
 $now=new datetime('now');
 foreach ($result as $row){
 echo "<tr>\n";
-echo "<td>".$i++." ";
+echo "<td";
+if (5==$row['workorder_status'])
+                        echo " style=\"background-color:#b3f2b3;\"";
+echo ">".$i++." ";
         echo "<a href=\"javascript:ajax_call('show_workorder_detail','".$row['workorder_id']."','','','','".URL."index.php','for_ajaxcall')\" title=\"show workorder details\"><i class=\"fa fa-info-circle\"></i></a> ";
         $allow_to_modify_date = new DateTime($row['workorder_work_start_time']); // Y-m-d
         $allow_to_modify_date->add(new DateInterval('P'.DAYS_ALLOW_TO_MODIFY_WORKS.'D'));
     
-      if (isset($_SESSION["MODIFY_WORK"]) && ($allow_to_modify_date>$now || $SESSION['user_level']<3)){
+      if (isset($_SESSION["MODIFY_WORK"]) && ($allow_to_modify_date>$now || $_SESSION['user_level']<3)){
          echo "<a href=\"index.php?page=works&modify=1&workorder_work_id=".$row['workorder_work_id']."&workorder_id=".$row['workorder_id'];
          echo "\" title=\"".gettext("alter work")."\"> <i class=\"fa fa-wrench\"></i></a> ";
          }                            

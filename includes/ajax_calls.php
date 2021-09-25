@@ -1362,7 +1362,7 @@ echo "<div class=\"card\">";
        
         echo "<div class=\"row form-group\">\n";
         echo "<div class=\"col col-md-2\"><label for=\"workorder\" class=\"form-control-label\">".gettext("Workorder:")."</label></div>\n";
-        echo "<div class=\"col-12 col-md-3\">".$row["workorder"]."</div></div>\n";
+        echo "<div class=\"col-12 col-md-3\">".$row["workorder_".$lang]."</div></div>\n";
         
         if ($row["replace_to_product_id"]>0)
         {
@@ -1395,6 +1395,7 @@ echo "</div>\n";
 
 require(INCLUDES_PATH."workorder_consumption.php"); 
 echo "<div id='info_files'></div>";
+if (isset($row["asset_id"])) //when the workorder's type is "refurbish" there is no asset_id
 echo "<script>ajax_call('show_info_files','".$row['asset_id']."','assets','','','".URL."index.php','info_files');</script>";
 }
 
