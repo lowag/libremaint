@@ -3108,6 +3108,104 @@ else if (isset($_GET['param1']) && $_GET['param1']=="notification_messages")
 
 }
 
+else if (isset($_GET['param1']) && $_GET['param1']=="pin_messages")
+{
+    $SQL="SELECT pin_message_id,pin_message_".$lang.",user_id,pin_message_time,has_red FROM pinboards_messages WHERE pin_id=".(int) $_GET['param2']." ORDER BY pin_message_id";
+    $result=$dba->Select($SQL);
+    $dba->Query($SQL);
+            if (LM_DEBUG)
+            error_log($SQL,0);
+?>                  
+<div class="page-content page-container" id="page-content">
+    <div class="padding">
+        <div class="row container d-flex justify-content-center">
+            <div class="col-md-12">
+                <div class="box box-warning direct-chat direct-chat-warning">
+                    
+                    <div class="box-header with-border"><?php
+                      echo "<h3 class=\"box-title\">".gettext("Messages")."</h3>";
+                      echo "<div class=\"box-tools pull-right\"> <span data-toggle=\"tooltip\" title=\"\" class=\"badge bg-yellow\">";
+                      echo $dba->affectedRows();
+                      echo "</span> <button type=\"button\" class=\"btn btn-box-tool\" data-widget=\"remove\" onClick=\"document.getElementById('for_ajaxcall').innerHTML=''\"><i class=\"fa fa-times\"></i> </button> </div>
+                    </div>\n";
+                   echo "<div class=\"box-body\">";
+             $i=1;
+             if ($dba->affectedRows()>0){ 
+                     foreach ($result as $row){ 
+                      $user_id=0;
+                    if ($i){ 
+                   
+                    echo "<div class=\"direct-chat-messages\">\n";
+                    
+                    if (!empty($row['has_red']))
+                   $users_who_red=json_decode($row['has_red'],true); 
+                   else
+                   $users_who_red=array();
+                        if (is_array($users_who_red) && !in_array($_SESSION['user_id'],$users_who_red)) 
+                        {
+                        $users_who_red[]=(int) $_SESSION['user_id'];
+                        $users_who_red=json_encode(array_unique($users_who_red));
+                        $SQL="UPDATE pinboards_messages SET has_red='".$users_who_red."' WHERE pin_id=".(int)$_GET['param2'];
+                        $dba->Query($SQL);
+                       if (LM_DEBUG)
+                        error_log($SQL,0); 
+                        }
+                    $i=0;
+                    }
+                   
+                   
+                            if ($user_id==0 || $user_id==$row['user_id'])
+                           echo "<div class=\"direct-chat-msg\">\n";
+                           else
+                           echo "<div class=\"direct-chat-msg right\">\n";
+                           
+                                echo "<div class=\"direct-chat-info clearfix\">\n"; 
+                                if ($user_id==0 || $user_id==$row['user_id'])
+                                {
+                                echo "<span class=\"direct-chat-name pull-left\">";
+                                  echo "</span> <span class=\"direct-chat-timestamp pull-left\"> ";
+                                  }
+                                else
+                                {
+                                echo "<span class=\"direct-chat-name pull-right\">";
+                                  echo "</span> <span class=\"direct-chat-timestamp pull-right\"> ";}
+                                $user_id=$row['user_id'];
+                                
+                                echo get_user_full_name_from_id($row['user_id']);
+                              
+                                echo " ".date($lang_date_format." H:i", strtotime($row["pin_message_time"]));
+                                echo "</span> </div> <img class=\"direct-chat-img\" src=\"https://img.icons8.com/color/36/000000/administrator-male.png\" alt=\"message user image\">\n";
+                                echo "<div class=\"direct-chat-text\">";
+                                echo $row['not_message_'.$lang];
+                                echo "</div>\n";
+                            echo "</div>\n";
+                         }
+                         echo "</div>";
+                         }    
+                    
+                       
+                   echo "</div>\n";
+                  
+                                
+                   echo "<div class=\"box-footer\">";
+                      echo "<form action=\"#\" method=\"post\">\n";
+                         echo "<div class=\"input-group\"> <input type=\"text\" name=\"pin_message_".$lang."\" placeholder=\"";
+                         echo gettext("Type Message ...");
+                    echo "\" class=\"form-control\"> <span class=\"input-group-btn\"> <button type=\"submit\" class=\"btn btn-warning btn-flat\"> ".gettext("Send")." </button> </span> </div>\n";
+                    echo "<input type='hidden' name='page' id='page' value='pinboards'>\n";
+                    echo "<input type='hidden' name='pin_id' id='pin_id' value='".(int) $_GET['param2']."'>\n";
+                       echo "\n</form>";
+                        
+                  echo "\n</div>";
+                    
+               echo "</div>
+            </div>
+        </div>
+    </div>
+</div>\n";
+
+}
+
 
 else if (isset($_GET['param1']) && $_GET['param1']=="closing_notification" && $_SESSION['user_level']<3)
 {
