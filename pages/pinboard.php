@@ -252,7 +252,15 @@ else if (isset($_GET["new"]) || isset($_SESSION['MODIFY_PIN']) || $own_pin){
     }
     echo "<div class=\"row form-group\">\n";
     echo "<div class=\"col col-md-2\"><label for=\"info_file_name\" class=\"form-control-label\">".gettext("File:")."</label></div>\n";
-    echo "<div class=\"col-12 col-md-\"><input type=\"file\" id=\"info_file_name\" name=\"info_file_name[]\"  multiple></div></div>\n";
+    echo "<div class=\"col-12 col-md-\"><input type=\"file\" id=\"info_file_name\" name=\"info_file_name[]\"  multiple>";
+    
+    echo "<INPUT TYPE=\"hidden\" name=\"info_file_review_".LANG1."\" id=\"info_file_review_".LANG1."\" VALUE=\"\">";
+    echo "<INPUT TYPE=\"hidden\" name=\"info_file_review_".LANG2."\" id=\"info_file_review_".LANG2."\" VALUE=\"\">";
+    echo "<INPUT TYPE=\"hidden\" name=\"req_user_level\" id=\"req_user_level\" VALUE=\"4\">";
+    echo "<INPUT TYPE=\"hidden\" name=\"confidental\" id=\"confidental\" VALUE=\"0\">";
+
+
+    echo "</div></div>\n";
     
     if (isset($_GET["modify"])){
     echo "<INPUT TYPE=\"hidden\" name=\"pin_id\" id=\"pin_id\" VALUE=\"".$_GET['pin_id']."\">";
@@ -440,7 +448,7 @@ $SQL.="pin_short_".LANG1.",";
 if (LANG2_AS_SECOND_LANG && isset($_SESSION['CAN_WRITE_LANG2']))
 $SQL.="pin_short_".LANG2.",";
 
-$SQL.="pin_type,pin_id,pin_status FROM pinboard WHERE pin_status<6";
+$SQL.="pin_type,pin_id,pin_status,info_file_id1 FROM pinboard WHERE pin_status<6";
 
 if (isset($_SESSION['pin_status']) && $_SESSION['pin_status']>0)
 $SQL.=" AND pin_status='".$_SESSION['pin_status']."'";
@@ -521,7 +529,7 @@ if (!isset($row1) || $row1['num']==0)
                              
                            
                              if (isset($_SESSION["MODIFY_PIN"]) && $row['user_id']==$_SESSION['user_id'] || $_SESSION['user_level']<3){
-                             echo "<a class=\"nav-link\" href=\"index.php?set_pin_status=6&page=pinboard&pin_id=".$row['pin_id']."&valid=".$_SESSION["tit_id"]."\"><i class=\"fa fa-user\"></i> ";
+                             echo "<a class=\"nav-link\" href=\"index.php?set_pin_status=4&page=pinboard&pin_id=".$row['pin_id']."&valid=".$_SESSION["tit_id"]."\"><i class=\"fa fa-user\"></i> ";
                              echo gettext("Set it deleted")."</a>";
                              
                              

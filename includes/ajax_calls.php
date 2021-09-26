@@ -1647,6 +1647,53 @@ echo "</div>\n";
 
 }
 
+else if(isset($_GET['param1']) && $_GET['param1']=="show_pin_detail"){
+if (!$_SESSION['SEE_PINBOARD'])
+lm_die(gettext("You have no permission!"));
+$SQL="SELECT * FROM pinboard WHERE pin_id='".(int) $_GET['param2']."'";
+if (LM_DEBUG)
+        error_log("Pin detail: ".$SQL,0);
+$row=$dba->getRow($SQL);
+echo "<button type=\"button\" class=\"close\" aria-label=\"Close\" onClick=\"document.getElementById('for_ajaxcall').innerHTML=''\">";
+echo "<span aria-hidden=\"true\">×</span></button>";
+echo "<div class=\"card\">";
+    echo "<div class=\"card-header\">\n";
+    echo "<strong>".gettext("Show pin details...")." "."</strong>\n";
+    echo "</div>\n";
+    echo "<div class=\"card-body card-block\">";
+        
+        
+        echo "<div class=\"row form-group\">\n";
+        echo "<div class=\"col col-md-2\"><label for=\"pinned_by\" class=\"form-control-label\">".gettext("Pinned by:")."</label></div>\n";
+        echo "<div class=\"col-12 col-md-3\">".get_username_from_id($row["user_id"])."</div></div>\n";
+        
+        echo "<div class=\"row form-group\">\n";
+        echo "<div class=\"col col-md-2\"><label for=\"pin_time\" class=\"form-control-label\">".gettext("Pin time:")."</label></div>\n";
+        echo "<div class=\"col-12 col-md-3\">".$row["pin_time"]."</div></div>\n";
+        
+        echo "<div class=\"row form-group\">\n";
+        echo "<div class=\"col col-md-2\"><label for=\"pin_short_".$lang."\" class=\"form-control-label\">".gettext("Pin(short):")."</label></div>\n";
+        echo "<div class=\"col-12 col-md-3\">".$row["pin_short_".$lang]."</div></div>\n";
+        
+        echo "<div class=\"row form-group\">\n";
+        echo "<div class=\"col col-md-2\"><label for=\"pin\" class=\"form-control-label\">".gettext("Pin:")."</label></div>\n";
+        echo "<div class=\"col-12 col-md-3\">".$row["pin_".$lang]."</div></div>\n";
+        
+            
+
+        echo "<div class=\"row form-group\">\n";
+        echo "<div class=\"col col-md-2\"><label for=\"pin_type\" class=\"form-control-label\">".gettext("Type:")."</label></div>\n";
+        echo "<div class=\"col-12 col-md-3\">".$pin_types[--$row["pin_type"]]."</div></div>\n";
+            
+    echo "</div>\n";
+echo "</div>\n";
+echo "<div id='info_files'></div>";
+if (isset($row["pin_id"])) //when the workorder's type is "refurbish" there is no asset_id
+echo "<script>ajax_call('show_info_files','".$row['pin_id']."','pinboard','','','".URL."index.php','info_files');</script>";
+
+}
+
+
 else if(isset($_GET['param1']) && $_GET['param1']=="handle_connection"){
 echo "<button type=\"button\" class=\"close\" aria-label=\"Close\" onClick=\"document.getElementById('for_ajaxcall').innerHTML=''\">\n";
 echo "<span aria-hidden=\"true\">×</span>\n</button>";

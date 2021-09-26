@@ -1,5 +1,5 @@
 <?php
-if (PINBOARD && $_SESSION["SEE_PINBOARD"])
+if (PINBOARD && isset($_SESSION["SEE_PINBOARD"]))
 {
 echo "<div>\n<nav>\n";
 echo "<div class='nav nav-tabs' id='nav-tab' role='tablist'>\n";
