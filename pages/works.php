@@ -231,9 +231,9 @@ echo "<div class=\"card-body card-block\">";
   echo "<input type='hidden' name='workorder_user_id' id='workorder_user_id' value='".$_SESSION['user_id']."'>\n";
 
    if (isset($_GET["workorder_id"]) && (int) $_GET["workorder_id"]>0){
-            $SQL="SELECT workorder_partner_id FROM workorders WHERE workorder_id='".(int) $_GET["workorder_id"]."'";
+            $SQL="SELECT workorder_partner_id,workorder_partner_supervisor_user_id FROM workorders WHERE workorder_id='".(int) $_GET["workorder_id"]."'";
             $row=$dba->getRow($SQL);
-            if ($row['workorder_partner_id']>0 && $_SESSION['user_level']<3){
+            if (($row['workorder_partner_id']>0 && $_SESSION['user_level']<3) || $row['workorder_partner_supervisor_user_id']==$_SESSION['user_id']){
     echo "<div class=\"row form-group\">\n";
     echo "<div class=\"col col-md-2\"><label for=\"workorder_partner_id\" class=\"form-control-label\">".gettext("Work with partner:")."</label></div>\n";
         echo "<div class=\"col-12 col-md-3\">\n";
