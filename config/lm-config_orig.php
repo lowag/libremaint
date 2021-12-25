@@ -10,8 +10,9 @@ define('VENDORS_PATH', ABSPATH.'vendor/');
 define('INCLUDES_PATH', ABSPATH.'includes/');
 define('INCLUDES_LOC', URL.'includes/');
 define('PAGES_LOC', URL.'pages/');
-
+define('USER_PAGES_LOC', ABSPATH.'pages/user_pages/');
 define('PAGES_PATH', ABSPATH.'pages/');
+define('USER_PAGES_PATH', ABSPATH.'pages/user_pages/');
 define('ASSETS_PATH', ABSPATH.'assets/');
 define('TMP_PATH','/tmp/');
 
@@ -30,6 +31,7 @@ define('INFO_THUMB_PATH', INFO_PATH.'thumbs/');
 
 define('ENTRY_ACCESS_CONTROL',1);
 define('IOT_SUPPORT',1);
+define('S7_SUPPORT',0);
 define('TAM_TAI',1); //technical avaibility machine, technical avaibility infrastucture, used in report generation in work_stat_by_assets.php 
 define('OPERATOR_NOTIFICATIONS_SUPPORT',1);
 define('PINBOARD',1);

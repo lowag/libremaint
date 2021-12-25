@@ -112,10 +112,12 @@ define('ACCEPTED_FILE_TYPES', [
  "break",
  "WRITE_MESSAGE","SEE_MESSAGE","ADD_MESSAGE_TEXT","ADD_FILE_TO_MESSAGE",
  "break",
+ "SEE_MACHINES_DATA",
+ "break",
  "ADD_NEW_CONNECTION_TYPE","SEE_CONNECTION_TYPE",
  "break",
  "CAN_WRITE_LANG1","CAN_WRITE_LANG2"
-  );  
+  );   
  $asset_importance=array(gettext("Critic"),gettext("High"),gettext("Medium"),gettext("Low"));
  //}
 //echo count($priviliges);

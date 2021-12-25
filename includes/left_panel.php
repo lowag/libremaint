@@ -23,6 +23,36 @@
 <?php 
 
 #$pages array from config/lm-settings.php 
+
+
+if (S7_SUPPORT){
+    $SQL="SELECT users_assets FROM users WHERE user_id=".$_SESSION['user_id'];           
+ $result=$dba->Select($SQL); 
+ 
+  foreach($result as $row)           
+            {
+            if (!isset($row['users_assets']))
+            $users_assets=array();
+            else
+            $users_assets=json_decode($row['users_assets'],true);   
+            }
+            
+            
+     $addpages=array(gettext("Machines data"),"machines_data","SEE_MACHINES_DATA",gettext('MD'));
+ 
+    foreach (S7_ASSET_IDS as $s7_asset_id){
+        if (in_array($s7_asset_id,$users_assets)){
+        $machine_name=get_asset_name_from_id($s7_asset_id,$lang);
+        $addpages[]=$machine_name;
+        $addpages[]="index.php?page=".strtolower(removing_accents(preg_replace('/\s+/', '_',$machine_name)));
+        $addpages[]="SEE_MACHINES_DATA";
+        $addpages[]=preg_replace('~\b(\p{L})\p{L}*(\p{P}?)~u', '$1$2',$machine_name);
+        
+        }
+    }
+   $pages[]=$addpages;
+    }
+
 foreach ($pages as $page){
 if (isset($_SESSION[$page[2]])){
 echo "<li class=\"menu-item-has-children dropdown\" >\n";
