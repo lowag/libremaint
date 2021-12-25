@@ -50,8 +50,8 @@ echo "<script src=\"".VENDORS_LOC."jquery-ui/jquery-ui.min.js\"></script>\n";
     echo "<script src=\"".INCLUDES_LOC."for_fancytree.js\"></script>\n";
 
     }
-    
-    echo "<script src=\"".VENDORS_LOC."chart.js/dist/Chart.min.js\"></script>\n";
+    echo "<script src=\"".VENDORS_LOC."moment.js\"></script>\n";
+    echo "<script src=\"".VENDORS_LOC."chart.js/package/dist/chart.min.js\"></script>\n";
 
     
     echo "<script src=\"".VENDORS_LOC."popper.js/dist/umd/popper.min.js\"></script>\n";
