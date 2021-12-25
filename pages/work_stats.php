@@ -2,7 +2,7 @@
 <?php
 
 //<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-piechart-outlabels"></script>
-echo "<script src=\"".VENDORS_LOC."chartjs-plugin-piechart-outlabels/chartjs-plugin-piechart-outlabels.js\"></script>";
+//echo "<script src=\"".VENDORS_LOC."chartjs-plugin-piechart-outlabels/chartjs-plugin-piechart-outlabels.js\"></script>";
 //echo " <button type=\"button\" id=\"create_task_list_button\" name=\"create_task_list_button\" class=\"btn btn-danger btn-sm\" ";
       //  echo " onClick=\"window.open('index.php?page=pdf_create&title=work_stat_by_assets&period=last','_blank')\"";
         //echo ">".gettext("Last month's works")."</button>";
@@ -140,17 +140,13 @@ echo "<i class=\"fa fa-dot-circle-o\"></i>".gettext("Next")."</button></form>\n"
 ?>
 
 <div class="chart-container" style="position: relative; width:800px">
-<canvas id="pie-chart1"></canvas>
-<canvas id="pie-chart2"></canvas>
-<canvas id="pie-chart3"></canvas>
+<canvas width='100' id="pie-chart1">
+<canvas width='100' id="pie-chart2">
+<canvas width='100' id="pie-chart3">
 </div>
 <script>
 
 
-
-Chart.defaults.global.defaultFontSize=25;
-Chart.defaults.global.legend.display=false;
-Chart.defaults.global.tooltips.enabled=false;
 
 var options={
                     
@@ -173,7 +169,7 @@ var options={
     ;
 
 var my_chart1=new Chart(document.getElementById("pie-chart1"), {
-    type: 'outlabeledPie',
+    type: 'pie',
     data: {
     labels: [<?php
     $i=0;
@@ -213,7 +209,7 @@ var my_chart1=new Chart(document.getElementById("pie-chart1"), {
 */
     
 var my_chart2=new Chart(document.getElementById("pie-chart2"), {
-    type: 'outlabeledPie',
+    type: 'pie',
     data: {
     labels: [<?php
     $i=0;
@@ -251,7 +247,7 @@ var my_chart2=new Chart(document.getElementById("pie-chart2"), {
 --------------------------------------------------------------
 --------------------------------------------------------------*/
 var my_chart3=new Chart(document.getElementById("pie-chart3"), {
-    type: 'outlabeledPie',
+    type: 'pie',
     data: {
     labels: [<?php
     $i=0;

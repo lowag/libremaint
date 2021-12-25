@@ -228,6 +228,7 @@ echo "<div class=\"user-area dropdown float-right\">\n";
                             
                              echo "<a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">";
                              echo $from;
+                             echo " <i class=\"fa fa-bars\"></i>\n";
                              echo "</a>\n";
                              
                              
