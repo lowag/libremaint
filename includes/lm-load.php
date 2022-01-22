@@ -42,9 +42,9 @@ if (!isset($_SESSION["deps_has_checked"]))
      $deps.=$req_extension;
      }}
      if ($i==1)
-     $deps.=" php extension is missing"."<br/>";
+     $deps.=" php extension is missing. Please install it!"."<br/>";
      if ($i>1)   
-     $deps.=" php extensions are missing"."<br/>";
+     $deps.=" php extensions are missing. Please install them!"."<br/>";
      
      
      $i=0;
