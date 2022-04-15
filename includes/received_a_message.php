@@ -4,9 +4,10 @@ if ((isset($_POST['received_message1']) && (int) $_POST['sensor_id1']>0) || (int
 
 $post="";
 foreach($_POST as $key => $value) {
-$post.=$key.":".$value."\n";
+$post.=$key.":".$value." | ";
 }
 $file = fopen(INCLUDES_PATH."post.log", "a") or die("Unable to open file!");
+$post.="\n";
 fwrite($file, $post);
 fclose($file);
 $i=1;
@@ -94,8 +95,8 @@ while (isset($_POST['sensor_id'.$i])){
                 }
 $i++;                
 }        //while (isset($_POST['asset_id'.$i]))
-}//cooling
-else
+}
+else//cooling
 {
 $i=1;
 while (isset($_POST['operating'.$i])){
@@ -107,7 +108,7 @@ $dba->Query($SQL);
 }
 else if ((int) $_POST['operating'.$i]==0)
 {
-$SQL="SELECT operating_id,end_time FROM operatings WHERE asset_id=".(int)$_POST['asset_id'].$i." AND end_time is null ORDER BY start_time DESC LIMIT 0,1";
+$SQL="SELECT operating_id,end_time FROM operatings WHERE asset_id=".(int)$_POST['asset_id'.$i]." AND end_time is null ORDER BY start_time DESC LIMIT 0,1";
 $row=$dba->getRow($SQL);
     if (!empty($row)){
     $SQL="UPDATE operatings SET `end_time`=NOW() WHERE operating_id=".$row['operating_id'];
