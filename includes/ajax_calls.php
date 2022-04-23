@@ -607,23 +607,46 @@ echo "<button type=\"button\" class=\"close\" aria-label=\"Close\" onClick=\"doc
 echo "<span aria-hidden=\"true\">×</span>\n</button>";
         if (isset($_GET["param2"]) && $_GET["param2"]>0){//param2 is the asset "id"
        echo "<div class=\"row\">\n";
-       if ($_GET['param3']=='assets' && isset($_SESSION['SEE_FILE_OF_ASSET']))
+       if ($_GET['param3']=='assets' && isset($_SESSION['SEE_FILE_OF_ASSET'])){
        $SQL="SELECT * FROM assets WHERE asset_id='".(int) $_GET["param2"]."'";
-       else if ($_GET['param3']=='locations' && isset($_SESSION['SEE_FILE_OF_LOCATION']))
+       $col_name="asset_id";
+       $demanded_privilege="DELETE_FILE_OF_ASSET";
+       }
+       else if ($_GET['param3']=='locations' && isset($_SESSION['SEE_FILE_OF_LOCATION'])){
        $SQL="SELECT * FROM locations WHERE location_id='".(int) $_GET["param2"]."'";
-       else if ($_GET['param3']=='products' && isset($_SESSION['SEE_FILE_OF_PRODUCT']))
+       $col_name="location_id";
+       $demanded_privilege="DELETE_FILE_OF_LOCATION";
+       }
+       else if ($_GET['param3']=='products' && isset($_SESSION['SEE_FILE_OF_PRODUCT'])){
        $SQL="SELECT * FROM products WHERE product_id='".(int) $_GET["param2"]."'";
-       else if ($_GET['param3']=='workorders' && isset($_SESSION['SEE_FILE_OF_WORKORDER']))
+       $col_name="product_id";
+       $demanded_privilege="DELETE_FILE_OF_PRODUCT";
+       }
+       else if ($_GET['param3']=='workorders' && isset($_SESSION['SEE_FILE_OF_WORKORDER'])){
        $SQL="SELECT * FROM workorders WHERE workorder_id='".(int) $_GET["param2"]."'";
-       else if ($_GET['param3']=='workrequests' && isset($_SESSION['SEE_FILE_OF_WORKREQUEST']))
+       $col_name="workorder_id";
+       $demanded_privilege="DELETE_FILE_OF_WORKORDER";
+       }
+       else if ($_GET['param3']=='workrequests' && isset($_SESSION['SEE_FILE_OF_WORKREQUEST'])){
        $SQL="SELECT * FROM workrequests WHERE workrequest_id='".(int) $_GET["param2"]."'";
-       else if ($_GET['param3']=='users' && isset($_SESSION['SEE_FILE_OF_USER']))
+       $col_name="workrequest_id";
+       $demanded_privilege="DELETE_FILE_OF_WORKREQUEST";
+       }
+       else if ($_GET['param3']=='users' && isset($_SESSION['SEE_FILE_OF_USER'])){
        $SQL="SELECT * FROM users WHERE user_id='".(int) $_GET["param2"]."'";
-       else if ($_GET['param3']=='stock_movements' && isset($_SESSION['SEE_FILE_OF_PRODUCT_MOVING']))
+       $col_name="user_id";
+       $demanded_privilege="DELETE_FILE_OF_USER";
+       }
+       else if ($_GET['param3']=='stock_movements' && isset($_SESSION['SEE_FILE_OF_PRODUCT_MOVING'])){
        $SQL="SELECT * FROM stock_movements WHERE stock_movement_id='".(int) $_GET["param2"]."'";
-       else if ($_GET['param3']=='pinboard' && isset($_SESSION['SEE_FILE_OF_PIN']))
+       $col_name="stock_movement_id";
+       $demanded_privilege="DELETE_FILE_OF_STOCK_MOVEMENT";
+       }
+       else if ($_GET['param3']=='pinboard' && isset($_SESSION['SEE_FILE_OF_PIN'])){
        $SQL="SELECT * FROM pinboard WHERE pin_id='".(int) $_GET["param2"]."'";
-       
+       $col_name="pin_id";
+       $demanded_privilege="DELETE_FILE_OF_PINBOARD";
+       }
        else
        lm_die(gettext("You have no permission to see files!"));
        if (LM_DEBUG)
@@ -643,8 +666,13 @@ echo "<span aria-hidden=\"true\">×</span>\n</button>";
 		($info['confidential'] && $_GET['param3']=='workrequests' && isset($_SESSION['SEE_CONF_FILE_OF_WORKREQUEST'])) ||
 		($info['confidential'] && $_GET['param3']=='workorders' && isset($_SESSION['SEE_CONF_FILE_OF_WORKORDER'])))
 		{
+		if ($value==(int) $_GET['param5'] && $_GET['param4']=='delete' && isset($_SESSION[$demanded_privilege])){
+		$SQL="UPDATE ".$dba->escapeStr($_GET["param3"])." SET ".$key."=null WHERE ".$col_name."=".(int) $_GET["param2"];
+		if ($dba->Query($SQL))
+		echo gettext("deleted");
+		}
 		
-		if (substr($info["info_file_name"], -3)=="pdf")
+		else if (substr($info["info_file_name"], -3)=="pdf")
         echo " <a href=\"".INFO_LOC.$info["info_file_name"]."\" target=\"_blank\">\n<IMG src=\"".INFO_THUMB_LOC."small_".substr($info["info_file_name"],0,-3)."jpg\">\n</a>\n<br/>\n";
 		else if (exif_imagetype(INFO_PATH.$info["info_file_name"])){
             echo "<a href=\"".INFO_LOC.$info["info_file_name"]."\" data-toggle=\"lightbox\" data-gallery=\"gallery\" >\n";
@@ -669,7 +697,14 @@ echo "<span aria-hidden=\"true\">×</span>\n</button>";
 		echo "<span onClick=\"ajax_call('modify_review_value','".$key."','".$value."','','','".URL."index.php','info_file_review_".$value."')\"";
 		echo ">";
         echo $info["info_file_review_".$lang];
-		echo "</span></div></div>";
+		echo "</span></div>\n";
+		
+		if (isset($_SESSION[$demanded_privilege]))
+		echo "<a href=\"javascript:
+         var a=confirm('".gettext("You are about to delete a file. Are you sure?")."');
+                if (a==true)
+         ajax_call('show_info_files','".$_GET['param2']."','".$_GET['param3']."','delete','".$value."','".URL."index.php','for_ajaxcall')\"><i class=\"fa fa-trash\"></i></a>";
+		echo "</div>\n";
 		}
 		}			
 		}
