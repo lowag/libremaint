@@ -1400,3 +1400,55 @@ $accents = array('Š'=>'S', 'š'=>'s', 'Ž'=>'Z', 'ž'=>'z', 'À'=>'A', 'Á'=>'A
 return strtr( $with_accent, $accents);
 
 }
+
+function restore_stock_movement($stock_movement_id):bool
+{
+global $dba;
+if ($stock_movement_id>0)
+    {
+    $SQL="SELECT from_stock_location_id, to_stock_location_id, from_partner_id, to_partner_id, workorder_id, to_asset_id, from_asset_id, stock_movement_quantity,product_id FROM stock_movements WHERE stock_movement_id='".$stock_movement_id."'";
+    
+    $row=$dba->getRow($SQL);
+    if ($row==null)
+        return false;
+    
+    else {
+        if ($row['from_stock_location_id']>0){
+        $SQL="INSERT INTO stock_movements (to_stock_location_id,from_partner_id, product_id,stock_movement_quantity,workorder_id,from_asset_id,to_asset_id,deleted) VALUES ('".$row['from_stock_location_id']."','".$row['to_partner_id']."','".$row['product_id']."','".$row['stock_movement_quantity']."','".$row['workorder_id']."','".$row['to_asset_id']."','".$row['from_asset_id']."',1)";
+        if ($dba->Query($SQL))
+            {
+            $SQL="UPDATE stock_movements SET deleted=1 where stock_movement_id=".$stock_movement_id;
+            $dba->Query($SQL);
+            $SQL="UPDATE stock SET stock_quantity=stock_quantity+'".$row['stock_movement_quantity']."' WHERE stock_location_id='".$row['from_stock_location_id']."' AND product_id='".$row['product_id']."'";
+             if ($dba->Query($SQL))
+                return true;
+            else
+                lm_die($dba->err_msg." ".$SQL.__LINE__);
+            
+            }else
+            lm_die($dba->err_msg." ".$SQL.__LINE__);
+        }
+        
+        if ($row['to_stock_location_id']>0){
+        $SQL="INSERT INTO stock_movements (from_stock_location_id , to_partner_id,product_id, stock_movement_quantity,workorder_id,from_asset_id,to_asset_id,deleted) VALUES ('".$row['to_stock_location_id']."','".$row['from_partner_id']."','".$row['product_id']."','".$row['stock_movement_quantity']."','".$row['workorder_id']."','".$row['workorder_id']."','".$row['to_asset_id']."','".$row['from_asset_id']."',1";
+        if ($dba->Query($SQL))
+            {
+            $SQL="UPDATE stock_movements SET deleted=1 where stock_movement_id='".$stock_movement_id."'";
+            $dba->Query($SQL);
+            $SQL="UPDATE stock SET stock_quantity=stock_quantity-'".$row['stock_movement_quantity']."' WHERE stock_location_id='".$row['to_stock_location_id']."' AND product_id='".$row['product_id']."'";
+          
+            if ($dba->Query($SQL))
+                return true;
+            else
+                lm_die($dba->err_msg." ".$SQL.__LINE__);
+        }else
+        lm_die($dba->err_msg." ".$SQL.__LINE__);
+    
+    }
+    
+    }
+    }
+    else
+    lm_die('Error: stock_movement_id null!');
+    return false;
+}

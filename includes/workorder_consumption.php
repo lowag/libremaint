@@ -102,12 +102,12 @@ else
 echo gettext("You have no permission!");
 
 if (isset($_SESSION['SEE_PRODUCT_MOVING'])){
-$SQL="SELECT to_partner_id,from_partner_id,from_stock_location_id,to_stock_location_id,stock_movement_quantity,product_id,from_asset_id,to_asset_id,stock_movement_time FROM stock_movements WHERE workorder_id='".$workorder_id."'";
+$SQL="SELECT to_partner_id,from_partner_id,from_stock_location_id,to_stock_location_id,stock_movement_quantity,product_id,from_asset_id,to_asset_id,stock_movement_time,stock_movement_id FROM stock_movements WHERE deleted=0 AND workorder_id='".$workorder_id."' ORDER BY stock_movement_time DESC";
 $result=$dba->Select($SQL);
 echo "<div class=\"card-header\"><strong>".gettext("Materials")."</strong></div>\n";
 if ($dba->affectedRows()>0)
     {
-    
+    $product_ids_from_stock=array(); //only the last case can be restorable
     echo "<table id=\"stock_movement-table\" class=\"table table-striped table-bordered\">\n";
     echo "<thead>\n<tr>\n";
     echo "<th></th><th>".gettext("Date")."</th><th>".gettext("Product")."</th><th>".gettext("Action")."</th>";
@@ -115,8 +115,16 @@ if ($dba->affectedRows()>0)
     echo "<tbody>";
     $i=1;
         foreach($result as $row){
+        
     echo "<tr>\n";
-    echo "<td>".$i++."</td>";
+    echo "<td> ".$i++;
+   
+   if (!in_array($row['product_id'],$product_ids_from_stock))
+        {
+        $product_ids_from_stock[]=$row['product_id'];
+        echo "<a href=\"javascript:ajax_call('show_workorder_detail','".$workorder_id."','back_to_stock','".$row['stock_movement_id']."','','".URL."index.php','for_ajaxcall')\" title=\"".gettext("Back to stock")."\"><i class=\"fa fa-reply\"></i></a> ";
+        }
+    echo "</td>";
     echo "<td>".date($lang_date_format." h:i", strtotime($row['stock_movement_time']))."</td>\n";
     echo "<td>".get_product_name_from_id($row['product_id'],$lang)." <mark>".Luhn($row['product_id'])."</mark></td>\n";
     
