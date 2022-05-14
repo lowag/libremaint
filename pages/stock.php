@@ -1,7 +1,35 @@
 <?php
 
+if ($_POST['real_stock_quantity'] && $_SESSION['STOCK-TAKING'] && is_it_valid_submit()){
 
-if (isset($_POST['modify_min_stock_quantity']) && is_it_valid_submit() && $_POST['stock_id']>0){
+$SQL="SELECT product_id,stock_quantity,stock_location_id FROM stock WHERE stock_id='".(int) $_POST['stock_id']."'";
+$row=$dba->getRow($SQL);
+$SQL="UPDATE stock SET stock_quantity='".floatval($_POST['real_stock_quantity'])."' WHERE stock_id='".(int) $_POST['stock_id']."'";
+if (!$dba->Query($SQL))
+    lm_die("Error: ".$SQL);
+    $diff= $row['stock_quantity']-floatval($_POST['real_stock_quantity']);
+    
+    if ($diff>0){
+    
+    $SQL="INSERT INTO stock_movements (product_id,from_stock_location_id,to_stock_location_id,stock_movement_quantity) ";
+$SQL.="VALUES (".$row['product_id'].",".$row['stock_location_id'].",0,".$diff.")";
+$dba->Query($SQL);
+    echo "kevesebb";
+    
+    
+    }else if ($diff<0){
+    
+    $SQL="INSERT INTO stock_movements (product_id,to_stock_location_id,from_stock_location_id,stock_movement_quantity) ";
+    $SQL.="VALUES (".$row['product_id'].",".$row['stock_location_id'].",0,".abs($diff).")";
+
+    $dba->Query($SQL);
+    
+    }
+$SQL="INSERT INTO stocktaking (user_id,product_id,stock_id,quantity,stocktaking_time) VALUES ('".$_SESSION['user_id']."','".$row['product_id']."','".(int) $_POST['stock_id']."','".floatval($_POST['real_stock_quantity'])."',NOW())";
+ if (!$dba->Query($SQL))
+    lm_die("Error:".$SQL." ".$dba->err_msg);
+ }
+else if (isset($_POST['modify_min_stock_quantity']) && is_it_valid_submit() && $_POST['stock_id']>0){
 
 $SQL="UPDATE stock SET min_stock_quantity=".floatval($_POST['min_stock_quantity'])." WHERE stock_id=".(int) $_POST['stock_id'];
 $result=$dba->Query($SQL);
@@ -10,7 +38,7 @@ $result=$dba->Query($SQL);
 
 
 
-if (isset($_POST['product_moving_from_stock_to_stock']) && is_it_valid_submit()){
+else if (isset($_POST['product_moving_from_stock_to_stock']) && is_it_valid_submit()){
 $sum_quantity=0;
 $mov_category_id=get_category_id_from_id((int) $_POST['product_id']);
 $mov_subcategory_id=get_subcategory_id_from_id((int) $_POST['product_id']);
@@ -458,6 +486,10 @@ foreach ($result as $row)
                               if (isset($_SESSION["TAKE_PRODUCT_FROM_STOCK"])){
                             echo "<a class=\"nav-link\" href=\"javascript:ajax_call('product_moving_from_stock_to_stock',".$row['product_id'].",".$row['stock_location_id'].",'','','".URL."index.php','for_ajaxcall')\"><i class=\"fa fa-user\"></i> ";
                              echo gettext("Product moving")."</a>";
+                             }
+                             if (isset($_SESSION["STOCK-TAKING"])){
+                            echo "<a class=\"nav-link\" href=\"javascript:ajax_call('stocktaking',".$row['stock_id'].",'','','','".URL."index.php','for_ajaxcall')\"><i class=\"fa fa-user\"></i> ";
+                             echo gettext("Stocktaking")."</a>";
                              }
                              echo "</div>";
     echo "</div>";

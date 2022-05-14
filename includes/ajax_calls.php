@@ -1,6 +1,6 @@
 <?php
 if (!isset($_SESSION['logged']))
-header("Location: by.php");
+header("Location: ".PAGES_PATH."bye.php");
 if (isset($_GET['param1']) && $_GET['param1']=="is_it_valid_time_period"){
 $start_time=new DateTime($dba->escapeStr($_GET['param2']));
 $end_time=new DateTime($dba->escapeStr($_GET['param3']));
@@ -1361,6 +1361,18 @@ echo "<span aria-hidden=\"true\">×</span>\n</button>";
 }
 
 else if(isset($_GET['param1']) && $_GET['param1']=="show_workorder_detail"){
+
+if ($_GET['param3']=='back_to_stock' && (int) $_GET['param4']>0)
+    {
+    if (restore_stock_movement($_GET['param4']))
+        lm_info(gettext('The product has backed to stock'));
+    else
+        lm_info(gettext('Failed to back the product to stock'));
+    
+    }
+
+
+
 $SQL="SELECT * FROM workorders WHERE workorder_id='".(int) $_GET['param2']."'";
 $row=$dba->getRow($SQL);
 echo "<button type=\"button\" class=\"close\" aria-label=\"Close\" onClick=\"document.getElementById('for_ajaxcall').innerHTML=''\">";
@@ -1441,15 +1453,16 @@ else if(isset($_GET['param1']) && $_GET['param1']=="show_stock_movements"){
 echo "<button type=\"button\" class=\"close\" aria-label=\"Close\" onClick=\"document.getElementById('for_ajaxcall').innerHTML=''\">\n";
 echo "<span aria-hidden=\"true\">×</span>\n</button>";
 $unit=get_quantity_unit_from_product_id($_GET['param2']);
-    $SQL="SELECT stock_movement_id, to_partner_id,from_partner_id,workorder_id,from_stock_location_id,to_stock_location_id,stock_movement_quantity,product_id,from_asset_id,to_asset_id,stock_movement_time FROM stock_movements WHERE product_id='".(int) $_GET['param2']."'";
+    $SQL="SELECT stock_movement_id, to_partner_id,from_partner_id,workorder_id,from_stock_location_id,to_stock_location_id,stock_movement_quantity,product_id,from_asset_id,to_asset_id,stock_movement_time, deleted FROM stock_movements WHERE product_id='".(int) $_GET['param2']."'";
    $SQL.=" ORDER BY stock_movement_time DESC"; 
     if (LM_DEBUG)
             error_log($SQL,0);
     $result=$dba->Select($SQL);
     echo "<div class=\"card\">\n<div class=\"card-header\">";
     echo "<strong>".get_product_name_from_id($_GET['param2'],$lang)."</strong>\n</div><div class=\"card-body\">";
-    if (!$_SESSION['SEE_PRODUCT_MOVING'])
+    if (!isset($_SESSION['SEE_PRODUCT_MOVING']))
     lm_die(gettext("You have no permission!"));
+    
     if ($dba->affectedRows()>0)
     {
     
@@ -1482,13 +1495,16 @@ $unit=get_quantity_unit_from_product_id($_GET['param2']);
     
     echo "</td>";
     echo "<td>".date($lang_date_format, strtotime($row['stock_movement_time']))."</td>\n";
+    echo "<td>";
+    if ($row['deleted']==1)
+        echo "<span class=\"text-danger\">".gettext("DELETED")."</span> ";
     if ($row['to_partner_id']>0)
-    echo "<td>".gettext("To partner").": ".get_partner_name_from_id($row['to_partner_id'])."</td>\n";
+    echo gettext("To partner").": ".get_partner_name_from_id($row['to_partner_id'])."</td>\n";
     else if ($row['from_partner_id']>0)
-    echo "<td>".gettext("From partner").": ".get_partner_name_from_id($row['from_partner_id'])."</td>\n";
+    echo gettext("From partner").": ".get_partner_name_from_id($row['from_partner_id'])."</td>\n";
     else if ($row['to_asset_id']>0)
         {
-        echo "<td>".gettext("Built to").": ";
+        echo gettext("Built to").": ";
         $k="";
             $n="";
         
@@ -1504,7 +1520,7 @@ $unit=get_quantity_unit_from_product_id($_GET['param2']);
         }
     else if ($row['from_asset_id']>0)
     {
-    echo "<td>".gettext("Take from").": ";
+    echo gettext("Take from").": ";
     $k="";
             $n="";
         
@@ -1520,7 +1536,7 @@ $unit=get_quantity_unit_from_product_id($_GET['param2']);
         }
     else if ($row['workorder_id']>0)
     {
-    echo "<td>".gettext("Built to").": ";
+    echo gettext("Built to").": ";
     $SQL="SELECT product_id_to_refurbish,main_asset_id FROM workorders WHERE workorder_id=".$row['workorder_id'];
     $row1=$dba->getRow($SQL);
    
@@ -1532,9 +1548,16 @@ $unit=get_quantity_unit_from_product_id($_GET['param2']);
     echo "</td>\n";
     }
     else if ($row['from_stock_location_id']>0 && $row['to_stock_location_id']>0)
-    echo "<td>".gettext("Transfer items from")." ".get_location_name_from_id($row['from_stock_location_id'],$lang)." dest.:".get_location_name_from_id($row['to_stock_location_id'],$lang)."</td>";
+    echo gettext("Transfer items from")." ".get_location_name_from_id($row['from_stock_location_id'],$lang)." dest.:".get_location_name_from_id($row['to_stock_location_id'],$lang)."</td>";
+    
+    else if ($row['from_stock_location_id']>0 && $row['to_stock_location_id']==0)
+    echo "<span class=\"text-danger\">".gettext("Lack of inventory:")."</span> ".get_location_name_from_id($row['from_stock_location_id'],$lang)."</td>";
+    
+    else if ($row['from_stock_location_id']==0 && $row['to_stock_location_id']>0)
+    echo "<span class=\"text-danger\">".gettext("Inventory surplus:")."</span> ".get_location_name_from_id($row['to_stock_location_id'],$lang)."</td>";
+    
     else
-    echo "<td></td>";
+    echo "</td>";
     echo "<td>".round($row['stock_movement_quantity'])." ".$unit[0]."</td>\n";
     echo "</tr>\n";
         
@@ -3284,5 +3307,51 @@ else
     echo "</form></div>"; //card
     
     }
+}
+
+else if (isset($_GET['param1']) && $_GET['param1']=="stocktaking"){
+if (!$_SESSION['STOCK-TAKING'])
+    lm_die(gettext("You have no permission to stocktaking!"));
+else{
+$SQL="SELECT product_id, stock_location_id, stock_location_asset_id, stock_quantity, stock_place FROM stock WHERE stock_id='".$_GET['param2']."'";
+
+$row=$dba->getRow($SQL);
+
+
+echo "<button type=\"button\" class=\"close\" aria-label=\"Close\" onClick=\"document.getElementById('for_ajaxcall').innerHTML=''\">\n";
+    echo "<span aria-hidden=\"true\">×</span>\n</button>";
+    echo "<form action=\"index.php\" id=\"stocktaking-form\" method=\"post\" enctype=\"multipart/form-data\" class=\"form-horizontal\">\n";
+    echo "<div class=\"card\"><div class=\"card-header\">\n";
+    echo "<strong>".gettext("Stocktaking").": </strong> ".get_product_name_from_id($row['product_id'],$lang)." ".get_location_name_from_id($row['stock_location_id'],$lang);
+    echo "</div>";
+    echo "<div class=\"card-body card-block\">";
+    
+    echo "<div class=\"row form-group\">\n";
+    echo "<div class=\"col col-md-3\"><label for=\"stock_quantity\" class=\"form-control-label\">".gettext("Stock quantity").":</label></div>\n";
+    
+    echo "<div class=\"col-3 col-md-1\">".floatval($row['stock_quantity'])." ".get_quantity_unit_from_product_id($row['product_id'])[0]."</div></div>\n";
+    
+    echo "<div class=\"row form-group\">\n";
+    echo "<div class=\"col col-md-3\"><label for=\"real_stock_quantity\" class=\"form-control-label\">".gettext("Real stock quantity").":</label></div>\n";
+    echo "<div class=\"col-3 col-md-1\"><input type=\"text\" id=\"real_stock_quantity\" name=\"real_stock_quantity\" class=\"form-control\" value=\"".floatval($row['stock_quantity'])."\" required> </div>".get_quantity_unit_from_product_id($row['product_id'])[0]."</div>\n";
+    
+    
+    echo "<INPUT TYPE='hidden' name='stock_id' id='stock_id' VALUE='".(int) $_GET['param2']."'>";
+    echo "<INPUT TYPE='hidden' name='page' id='page' VALUE='stock'>";
+    echo "<input type=\"hidden\" name=\"valid\" id=\"valid\" value=\"".$_SESSION["tit_id"]."\">";
+    echo "</div>";//card-body
+    
+    
+    echo "<div class=\"card-footer\"><button name='submit' type=\"submit\" class=\"btn btn-primary btn-sm\">\n";
+    echo "<i class=\"fa fa-dot-circle-o\"></i> ".gettext("Record")." </button></div>\n";
+   
+    echo "</form></div>"; //card
+    
+
+
+
+}
+    
+    
 }
 ?>

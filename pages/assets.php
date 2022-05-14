@@ -25,7 +25,6 @@ if ($dba->Query($SQL)){
 
 
 
-
 if (isset($_POST['asset_id']) && (int) $_POST["asset_id"]>0 && isset($_FILES['info_file_name']['tmp_name']) && is_it_valid_submit() && isset($_SESSION['ADD_FILE_TO_ASSET'])){ //it is from the new file form
  
 $table="assets";
