@@ -4,7 +4,7 @@ if ($_POST['real_stock_quantity'] && $_SESSION['STOCK-TAKING'] && is_it_valid_su
 
 $SQL="SELECT product_id,stock_quantity,stock_location_id FROM stock WHERE stock_id='".(int) $_POST['stock_id']."'";
 $row=$dba->getRow($SQL);
-$SQL="UPDATE stock SET stock_quantity='".floatval($_POST['real_stock_quantity'])."', inventory_time=NOW() WHERE stock_id='".(int) $_POST['stock_id']."'";
+$SQL="UPDATE stock SET stock_quantity='".floatval($_POST['real_stock_quantity'])."', inventory_time=NOW(), inventory_user_id='".$_SESSION['user_id']."' WHERE stock_id='".(int) $_POST['stock_id']."'";
 if (!$dba->Query($SQL))
     lm_die("Error: ".$SQL);
     $diff= $row['stock_quantity']-floatval($_POST['real_stock_quantity']);
@@ -405,7 +405,7 @@ $only_in_stock=lm_isset_int('only_in_stock');
 if ($only_in_stock>=0)
 $_SESSION['only_in_stock']=$only_in_stock;
 
-$SQL="SELECT stock_id,stock.product_id,stock_location_id,stock_location_asset_id,stock_location_partner_id,stock_place,stock_quantity,products.info_file_id1,product_stockable,min_stock_quantity, inventory_time FROM stock LEFT JOIN products on products.product_id=stock.product_id WHERE 1=1";
+$SQL="SELECT stock_id,stock.product_id,stock_location_id,stock_location_asset_id,stock_location_partner_id,stock_place,stock_quantity,products.info_file_id1,product_stockable,min_stock_quantity, inventory_time, inventory_user_id FROM stock LEFT JOIN products on products.product_id=stock.product_id WHERE 1=1";
 
 if (isset($_GET['product_id']) && (int)$_GET['product_id']>0){
 $SQL.=" AND stock.product_id=".(int) $_GET['product_id'];
@@ -507,16 +507,16 @@ foreach ($result as $row)
     $red_inventory_day = new DateTime($row['inventory_time']);
     $red_inventory_day->add(new DateInterval('P'.RED_DAYS_AFTER_INVENTORY.'D'));
    
-     
+     echo "<a class=\"nav-link\" href=\"javascript:ajax_call('stocktaking',".$row['stock_id'].",'','','','".URL."index.php','for_ajaxcall')\">";
    
      if (isset($row['inventory_time'])){
         if ($green_inventory_day>$now)
-            echo "<i class=\"fa fa-check\" style=\"color:green\" title=\"".gettext("Last stocktaking:")." ".date($lang_date_format." H:i", strtotime($row['inventory_time']))."\"></i> ";
+            echo "<i class=\"fa fa-check\" style=\"color:green\" title=\"".gettext("Last stocktaking:")." ".date($lang_date_format." H:i", strtotime($row['inventory_time']))." ".get_username_from_id($row['inventory_user_id'])."\"></i> ";
         else if ($red_inventory_day<$now)
-            echo "<i class=\"fa fa-cancel\" style=\"color:red\" title=\"".gettext("Last stocktaking:")." ".date($lang_date_format." H:i", strtotime($row['inventory_time']))."\"></i> ";
+            echo "<i class=\"fa fa-cancel\" style=\"color:red\" title=\"".gettext("Last stocktaking:")." ".date($lang_date_format." H:i", strtotime($row['inventory_time']))." ".get_username_from_id($row['inventory_user_id'])."\"></i> ";
         }else
     echo "<i class=\"fa fa-window-close\" style=\"color:red\" title=\"".gettext("No stocktaking yet")."\"></i> ";
-    
+    echo "</a>";
     echo get_product_name_from_id($row['product_id'],$lang)." <mark>".Luhn($row['product_id'])."</mark></td>\n";
     
    

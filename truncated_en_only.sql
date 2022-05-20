@@ -872,6 +872,7 @@ CREATE TABLE `stock` (
   `item_created` datetime NOT NULL,
   `min_stock_quantity` float(8,2) unsigned DEFAULT '0.00',
   `inventory_time` datetime DEFAULT CURRENT_TIMESTAMP,
+  `inventory_user_id` smallint(3) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`stock_id`),
   UNIQUE KEY `stock_id_UNIQUE` (`stock_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -1378,4 +1379,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-05-15 17:26:42
+-- Dump completed on 2022-05-20 18:23:45
