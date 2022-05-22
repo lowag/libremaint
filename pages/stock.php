@@ -507,7 +507,7 @@ foreach ($result as $row)
     $red_inventory_day = new DateTime($row['inventory_time']);
     $red_inventory_day->add(new DateInterval('P'.RED_DAYS_AFTER_INVENTORY.'D'));
    
-     echo "<a class=\"nav-link\" href=\"javascript:ajax_call('stocktaking',".$row['stock_id'].",'','','','".URL."index.php','for_ajaxcall')\">";
+     echo "<a href=\"javascript:ajax_call('stocktaking',".$row['stock_id'].",'','','','".URL."index.php','for_ajaxcall')\">";
    
      if (isset($row['inventory_time'])){
         if ($green_inventory_day>$now)
