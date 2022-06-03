@@ -506,17 +506,19 @@ foreach ($result as $row)
    
     $red_inventory_day = new DateTime($row['inventory_time']);
     $red_inventory_day->add(new DateInterval('P'.RED_DAYS_AFTER_INVENTORY.'D'));
+   if ($row['stock_location_id']>0){
+         echo "<a href=\"javascript:ajax_call('stocktaking',".$row['stock_id'].",'','','','".URL."index.php','for_ajaxcall')\">";
    
-     echo "<a href=\"javascript:ajax_call('stocktaking',".$row['stock_id'].",'','','','".URL."index.php','for_ajaxcall')\">";
-   
-     if (isset($row['inventory_time'])){
+     if ($row['inventory_user_id']>0){
         if ($green_inventory_day>$now)
             echo "<i class=\"fa fa-check\" style=\"color:green\" title=\"".gettext("Last stocktaking:")." ".date($lang_date_format." H:i", strtotime($row['inventory_time']))." ".get_username_from_id($row['inventory_user_id'])."\"></i> ";
         else if ($red_inventory_day<$now)
             echo "<i class=\"fa fa-cancel\" style=\"color:red\" title=\"".gettext("Last stocktaking:")." ".date($lang_date_format." H:i", strtotime($row['inventory_time']))." ".get_username_from_id($row['inventory_user_id'])."\"></i> ";
         }else
     echo "<i class=\"fa fa-window-close\" style=\"color:red\" title=\"".gettext("No stocktaking yet")."\"></i> ";
-    echo "</a>";
+   
+    echo "</a>";}
+    
     echo get_product_name_from_id($row['product_id'],$lang)." <mark>".Luhn($row['product_id'])."</mark></td>\n";
     
    

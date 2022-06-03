@@ -3313,7 +3313,7 @@ else if (isset($_GET['param1']) && $_GET['param1']=="stocktaking"){
 if (!$_SESSION['STOCK-TAKING'])
     lm_die(gettext("You have no permission to stocktaking!"));
 else{
-$SQL="SELECT product_id, stock_location_id, stock_location_asset_id, stock_quantity, stock_place FROM stock WHERE stock_id='".$_GET['param2']."'";
+$SQL="SELECT product_id, stock_location_id, stock_quantity, stock_place FROM stock WHERE stock_id='".$_GET['param2']."'";
 
 $row=$dba->getRow($SQL);
 
