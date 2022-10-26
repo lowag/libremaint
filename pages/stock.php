@@ -1,6 +1,6 @@
 <?php
 
-if ($_POST['real_stock_quantity'] && $_SESSION['STOCK-TAKING'] && is_it_valid_submit()){
+if (isset($_POST['real_stock_quantity']) && $_SESSION['STOCK-TAKING'] && is_it_valid_submit()){
 
 $SQL="SELECT product_id,stock_quantity,stock_location_id FROM stock WHERE stock_id='".(int) $_POST['stock_id']."'";
 $row=$dba->getRow($SQL);

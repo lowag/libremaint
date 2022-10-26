@@ -758,10 +758,11 @@ $main_asset_id=lm_isset_int('main_asset_id');
     else if(isset($_POST['asset_id'])){
     $_SESSION['main_asset_id']=get_whole_path("asset",$_POST['asset_id'],1)[0];}
    
-}else if (isset($_SESSION['main_asset_id'])){
-unset($_SESSION['main_asset_id']);
-    
 }
+//else if (isset($_SESSION['main_asset_id'])){
+//unset($_SESSION['main_asset_id']);
+    
+//}
 $SQL="SELECT";
 //if (!isset($_SESSION['main_asset_id']))
 $SQL.=" DISTINCT";

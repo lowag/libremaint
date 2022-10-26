@@ -820,7 +820,6 @@ $SQL.=" AND notification_type='".$_SESSION['notification_type']."'";
 if (isset($_SESSION['notification_user_id']) && $_SESSION['notification_user_id']>0)
 $SQL.=" AND user_id='".$_SESSION['notification_user_id']."'";
 $SQL.=" ORDER BY notification_time DESC";
-
 $result_all=$dba->Select($SQL);
 $number_all=$dba->affectedRows();
 $from=($pagenumber-1)*ROWS_PER_PAGE;

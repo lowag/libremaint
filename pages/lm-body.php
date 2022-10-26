@@ -9,13 +9,15 @@ if (lm_isset_str('page')!='pdf_create')
     require_once( INCLUDES_PATH . 'right_panel.php' );
     }
     
-
+ if (isset($req_page)) //$req_page from lm-header.php
+ {
+-    if (S7_SUPPORT && file_exists(USER_PAGES_PATH.$req_page.'.php')) 
+-    {require_once(USER_PAGES_PATH.$req_page.'.php' );$valid_page=true;}
+-    else { 
  
 if (isset($req_page)) //$req_page from lm-header.php
 {
-    if (S7_SUPPORT && file_exists(USER_PAGES_PATH.$req_page.'.php')) 
-    {require_once(USER_PAGES_PATH.$req_page.'.php' );$valid_page=true;}
-    else {
+    
             switch($req_page){
             case "workorders": require_once( PAGES_PATH.'workorders.php' );
             if (!isset($_SESSION['workorder_status']))
@@ -44,7 +46,8 @@ if (isset($req_page)) //$req_page from lm-header.php
             case "notifications":require_once( PAGES_PATH.'notifications.php' );$valid_page=true;break;
             case "pinboard":require_once( PAGES_PATH.'pinboard.php' );$valid_page=true;break;
             default: require_once( PAGES_PATH.'dashboard.php' );
-        }}
+        }
+}
     
 }else
 require_once( PAGES_PATH.'dashboard.php' );

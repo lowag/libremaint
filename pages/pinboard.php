@@ -1,4 +1,5 @@
 <?php 
+
 if (PINBOARD && $_SESSION["SEE_PINBOARD"])
 {
 echo "<div>\n<nav>\n";

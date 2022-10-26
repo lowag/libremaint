@@ -9,4 +9,5 @@
 lm-debug.log
 todo
 /.**
-
+/images/logo.png
+/pages/user_pages/*
