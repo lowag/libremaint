@@ -13,7 +13,6 @@ lm_die("There is no lm-config.php in the ".ABSPATH);
 }
 if ( file_exists( ABSPATH . 'config/lm-settings.php') ) {
 	require_once( ABSPATH . 'config/lm-settings.php' );
-
 } else{
 lm_die("There is no lm-settings.php in the ".ABSPATH);
 
@@ -29,7 +28,7 @@ lm_die("There is no lm-settings.php in the ".ABSPATH);
 	} else {
 		error_reporting( E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_ERROR | E_WARNING | E_PARSE | E_USER_ERROR | E_USER_WARNING | E_RECOVERABLE_ERROR );
 	}
-	
+
 if (!isset($_SESSION["deps_has_checked"]))
     {// we are checking the dependencies 
     $deps="";
@@ -38,8 +37,11 @@ if (!isset($_SESSION["deps_has_checked"]))
        $i=0;
       foreach ($req_extensions as $req_extension){
      if(!extension_loaded($req_extension)){
-     $i++;
-     $deps.=$req_extension;
+
+      if ($i>0)
+         $deps.=", ";
+      $i++;
+      $deps.="\"".$req_extension."\"";
      }}
      if ($i==1)
      $deps.=" php extension is missing. Please install it!"."<br/>";
@@ -50,10 +52,12 @@ if (!isset($_SESSION["deps_has_checked"]))
      $i=0;
      foreach ($req_classes as $req_class){
      if(!class_exists($req_class) ){
-     $i++;
-     $deps.=$req_class;
-     }
-     }
+
+      if ($i>0)
+         $deps.=", ";
+      $i++;
+      $deps.="\"".$req_class."\"";
+     }}
      if ($i==1)
      $deps.=" php class is missing"."<br/>";
      if ($i>1)   
@@ -78,11 +82,13 @@ if (!isset($_SESSION["deps_has_checked"]))
 require(INCLUDES_PATH.SQL_DB."_db_class.php"); 
 
 $dba = new DB();
+
 $dba->set_db_settings(DATABASE, USERNAME, PASSWORD, HOST);
 if (!$dba->connect())
-lm_die($dba->err_msg);
+lm_die("Database error. Does that exist?".$dba->err_msg);
 $sql="SET names utf8";
 $dba->Query($sql);
+
 
 /*
 $last="";
