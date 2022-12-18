@@ -1,4 +1,6 @@
 <?php
+if ($lang!="en")
+echo "<div class='content mt-3'><H2>You are about trying Libremaint. Since the basic database contains English column names please change the language to English. Later you should change the column names.</H2></div>";
 if (PINBOARD && isset($_SESSION["SEE_PINBOARD"]))
 {
 echo "<div>\n<nav>\n";
