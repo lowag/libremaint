@@ -396,6 +396,8 @@ echo $parent;?>" disabled=""><small class="form-text text-muted" ></div>
 echo "<input type='hidden' name='main_asset_category_id' id='main_asset_category_id' value=''>";
 echo "<input type='hidden' name='asset_location' id='asset_location' value=''>";
 }else {
+echo "<input type='hidden' name='parent_id' id='parent_id' value='0'>";
+
 if (isset($_GET["modify"])){
 if ($asset_row["asset_location"]>0)
 $main_location=get_whole_path_ids("location",$asset_row["asset_location"],1);
@@ -497,7 +499,7 @@ echo "</div>\n";
 ?>
 
 <?php
-if ((isset($_GET['new']) && isset($row['asset_parent_id']) && $row['asset_parent_id']==0) || ((isset($_GET['modify']) && isset($asset_row['asset_parent_id']) && $asset_row['asset_parent_id']==0))){
+if ((isset($_GET['new']) && isset($row['asset_parent_id']) && $row['asset_parent_id']==0) || ((isset($_GET['modify']) && isset($asset_row['asset_parent_id']) && $asset_row['asset_parent_id']==0))){//it is at the first level
 ?>
 <div class="row form-group">
 <div class="col col-md-3"><label for="grouped_asset" class="form-control-label"><?php echo gettext("Grouped:");?></label></div>
@@ -505,7 +507,7 @@ if ((isset($_GET['new']) && isset($row['asset_parent_id']) && $row['asset_parent
 <?php echo "<select name=\"grouped_asset\" id=\"grouped_asset\" class=\"form-control\">";
 
 echo "<option value=\"0\"";
-if (isset($_GET['modify']) && $asset_row["grouped_asset"]==0)
+if (isset($_GET['new']) || (isset($_GET['modify']) && $asset_row["grouped_asset"]==0))
 echo " selected";
 echo ">".gettext("No")."</option>\n";
 echo "<option value=\"1\"";
@@ -514,28 +516,37 @@ echo " selected";
 echo ">".gettext("Yes")."</option>\n";
 echo "</select></div>\n</div>\n";
 } else {
-if (isset($row['asset_id'])){
-$asset_path=get_whole_path("asset",$row['asset_id'],1);
-$SQL="SELECT asset_id,asset_name_".$lang." FROM assets WHERE asset_parent_id=".$asset_path[0]." AND grouped_asset=1 ORDER BY asset_name_".$lang;
-$groups=$dba->Select($SQL);
-if ($dba->affectedRows()>0){
-?>
-<div class="row form-group">
-<div class="col col-md-3"><label for="grouped_asset_id" class="form-control-label"><?php echo gettext("Group:");?></label></div>
-<div class="col-12 col-md-4">
-<?php echo "<select name=\"grouped_asset_id\" id=\"grouped_asset_id\" class=\"form-control\">";
+        if (isset($row['asset_id'])){
+        $asset_path=get_whole_path("asset",$row['asset_id'],1);
+        $SQL="SELECT asset_id,asset_name_".$lang." FROM assets WHERE asset_parent_id=".$asset_path[0]." AND grouped_asset=1 ORDER BY asset_name_".$lang;
+        $groups=$dba->Select($SQL);
+        if ($dba->affectedRows()>0){
+        ?>
+            <div class="row form-group">
+            <div class="col col-md-3"><label for="grouped_asset_id" class="form-control-label"><?php echo gettext("Group:");?></label></div>
+            <div class="col-12 col-md-4">
+            <?php echo "<select name=\"grouped_asset_id\" id=\"grouped_asset_id\" class=\"form-control\">";
 
-echo "<option value=\"0\"";
-echo ">".gettext("No groups")."</option>\n";
-foreach ($groups as $group){
-echo "<option value=".$group['asset_id'];
-if (isset($_GET['modify']) && $asset_row["grouped_asset_id"]==$group['asset_id'])
-echo " selected";
-echo ">".$group['asset_name_'.$lang];
-}
-echo "</select></div>\n</div>\n";
-}}else
-echo "<INPUT TYPE='hidden' name='grouped_asset_id' id='grouped_asset_id' value=''>";
+            echo "<option value=\"0\"";
+            echo ">".gettext("No groups")."</option>\n";
+            foreach ($groups as $group){
+            echo "<option value=".$group['asset_id'];
+            if (isset($_GET['modify']) && $asset_row["grouped_asset_id"]==$group['asset_id'])
+            echo " selected";
+            echo ">".$group['asset_name_'.$lang];
+            }
+            echo "</select></div>\n</div>\n";
+        }else
+            echo "<INPUT TYPE='hidden' name='grouped_asset_id' id='grouped_asset_id' value='0'>";
+
+    }else
+    {
+    echo "<INPUT TYPE='hidden' name='grouped_asset_id' id='grouped_asset_id' value='0'>";
+
+
+    }
+      echo "<INPUT TYPE='hidden' name='grouped_asset' id='grouped_asset' value='0'>";
+
 }
 
 ?>
