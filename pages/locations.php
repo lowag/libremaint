@@ -84,6 +84,7 @@ else if (isset($_GET["new"])){
     else
     $SQL.=" location_parent_id=0";
     $SQL.=" ORDER BY location_name_".$lang;
+    if (LM_DEBUG)
     error_log($SQL,0);
     $result=$dba->Select($SQL);
     echo "<option value=\"0\">".gettext("Please select")."</option>\n";
@@ -104,8 +105,7 @@ else if (isset($_GET["new"])){
     }
     }
     echo "</select></div></div>";
-  
-  
+
 echo "<div class=\"row form-group\">";
 echo "<div class=\"col col-md-3\"><label for=\"location_name_en\" class=\"form-control-label\">".gettext("Location name (English):")."</label></div>\n";
 echo "<div class=\"col-12 col-md-9\"><input type=\"text\" id=\"location_name_en\" name=\"location_name_en\" placeholder=\"".gettext("Location name (English)")."\" class=\"form-control\" required><small class=\"form-text text-muted\">".gettext("Location name")."</small></div>\n";
@@ -129,7 +129,9 @@ echo "</div>";
 </button>
 </div>
 <input type="hidden" name="page" id="page" value="locations">
-<input type="hidden" name="parent_id" id="parent_id" value="<?php echo $_GET["parent_id"];?>">
+<input type="hidden" name="parent_id" id="parent_id" value="<?php
+if (isset($_GET["parent_id"]))
+echo $_GET["parent_id"];?>">
 </form>
 </div>
 <?php //card  
