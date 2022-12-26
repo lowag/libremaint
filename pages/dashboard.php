@@ -114,7 +114,7 @@ foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator(INFO_PATH))
     for ($i = 0; $size > $mod; $i++) {
         $size /= $mod;
     }
-echo " (".round($size, 2) . ' ' . $units[$i].")";   
+echo " (".round($size, 2) . ' ' . $units[$i].")";
 echo "</span>";
 ?>
                             

@@ -1,6 +1,7 @@
 <?php
 if (!isset($_SESSION['logged']))
 header("Location: ".PAGES_PATH."bye.php");
+
 if (isset($_GET['param1']) && $_GET['param1']=="is_it_valid_time_period"){
 $start_time=new DateTime($dba->escapeStr($_GET['param2']));
 $end_time=new DateTime($dba->escapeStr($_GET['param3']));
@@ -89,7 +90,7 @@ echo "<div class=\"col col-md-2\">";
     
      if (isset($_GET['param2'])){
      if($_GET["param2"]>0){
-    $SQL="SELECT category_id, category_name, category_name_".$lang." FROM categories WHERE category_parent_id='".(int) $_GET['param2']."'";
+    $SQL="SELECT category_id,category_name_".$lang." FROM categories WHERE category_parent_id='".(int) $_GET['param2']."'";
    $result=$dba->Select($SQL);
    if ($dba->affectedRows()>0){
     echo "<div class=\"col col-md-2\" id=\"subcategory\">";
@@ -2775,6 +2776,7 @@ if ($i%2==0) echo "<br/>";
 
 else if (isset($_GET['param1']) && $_GET['param1']=="show_builtable_products")
 {
+    $i=0;
 echo "<button type=\"button\" class=\"close\" aria-label=\"Close\" onClick=\"document.getElementById('for_ajaxcall').innerHTML=''\">\n";
 echo "<span aria-hidden=\"true\">×</span>\n</button>\n";
 echo "<div class=\"card\"\>\n";

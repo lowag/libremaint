@@ -25,7 +25,7 @@ foreach($row as $key=>$value){
 if ($connection_exist>0)
 echo "<b class='alert-success'>".gettext("Connections:")." ".$connections.'</b>';
 
-$SQL="select ROUND(SUM(TIME_TO_SEC(workorder_worktime)/3600),1) as workhour, username FROM workorder_works_".$lang." LEFT JOIN users ON workorder_works.workorder_user_id=users.user_id WHERE workorder_works.deleted<>1 AND workorder_works.workorder_id=".$workorder_id." GROUP BY workorder_user_id ORDER BY workhour DESC";
+$SQL="select ROUND(SUM(TIME_TO_SEC(workorder_worktime)/3600),1) as workhour, username FROM workorder_works LEFT JOIN users ON workorder_works.workorder_user_id=users.user_id WHERE workorder_works.deleted<>1 AND workorder_works.workorder_id=".$workorder_id." GROUP BY workorder_user_id ORDER BY workhour DESC";
 $result=$dba->Select($SQL);
 if (!empty($result)){
 echo "<table>";

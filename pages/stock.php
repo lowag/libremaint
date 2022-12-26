@@ -137,12 +137,17 @@ else
 lm_info(gettext("Failed to save new manufacturer.")." ".$dba->err_msg);
 }
 
-    $SQL="INSERT INTO products (category_id,subcategory_id,product_type_en,product_type_".$lang.",product_properties_en,product_properties_".$lang." ,manufacturer_id,product_stockable,quantity_unit,display) VALUES (";
+    $SQL="INSERT INTO products (category_id,subcategory_id,";
+    if (LANG2_AS_SECOND_LANG && $_SESSION['CAN_WRITE_LANG2'])
+        $SQL.="product_type_".LANG2.",product_properties_".LANG2.",";
+    $SQL.="product_type_".$lang.", product_properties_".$lang." , manufacturer_id,product_stockable,quantity_unit,display) VALUES (";
     $SQL.=(int) $_POST['modal_category_id'].",";
     $SQL.=(int) $_POST['modal_subcategory_id'].",";
-    $SQL.="'".$dba->escapeStr($_POST['modal_product_type_en'])."',";
+    if (LANG2_AS_SECOND_LANG && $_SESSION['CAN_WRITE_LANG2']){
+        $SQL.="'".$dba->escapeStr($_POST['modal_product_type_'.LANG2])."',";
+        $SQL.="'".$dba->escapeStr($_POST['modal_product_properties_'.LANG2])."',";
+        }
     $SQL.="'".$dba->escapeStr($_POST['modal_product_type_'.$lang])."',";
-    $SQL.="'".$dba->escapeStr($_POST['modal_product_properties_en'])."',";
     $SQL.="'".$dba->escapeStr($_POST['modal_product_properties_'.$lang])."',";
     if (!empty($_POST['modal_new_manufacturer']))
     $SQL.="'".$manufacturer_id."',";
@@ -344,7 +349,7 @@ echo "<th>".gettext("Product");
     {
     $SQL="SELECT distinct(stock.product_subcategory_id) as category_id,category_name_".$lang." FROM stock LEFT JOIN categories on categories.category_id=stock.product_subcategory_id WHERE stock_quantity>0";
     
-    $SQL.=" AND stock.product_category_id='".$_SESSION['category_id']."' ORDER BY category_name_hu";
+    $SQL.=" AND stock.product_category_id='".$_SESSION['category_id']."' ORDER BY category_name_".$lang;
   
     $result=$dba->Select($SQL);
     if (LM_DEBUG)

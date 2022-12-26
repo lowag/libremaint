@@ -534,7 +534,7 @@ if (LM_DEBUG)
     echo "<option value='0'>".gettext("All categories");
     foreach($result as $row){
     echo "<option value='".$row['category_id']."'";
-    if ($row['category_id']==$_SESSION['category_id'])
+    if (isset($_SESSION['category_id']) && $row['category_id']==$_SESSION['category_id'])
     echo " selected";
     echo ">".$row['category_name_'.$lang]."\n";
     }

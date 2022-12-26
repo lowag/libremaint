@@ -98,9 +98,9 @@ echo "</div>\n";
 
 function lm_isset_int($ind) :int{
 if (isset($_GET[$ind]) &&  $_GET[$ind]>0 )
-return $_GET[$ind];
+return (int) $_GET[$ind];
 else if (isset($_POST[$ind]) &&  $_POST[$ind]>0)
-return $_POST[$ind];
+return (int) $_POST[$ind];
 else
 return 0;
 }
@@ -652,10 +652,14 @@ switch ($id){
 function get_employees_from_id($user_id):array{//get all users who can be ordered by user determined by $user_id
 global $dba;
 static $emp=array();
-if (empty($emp))
-    $emp[$user_id]=get_user_full_name_from_id($user_id);
-$SQL="SELECT user_id, surname,firstname FROM users where user_parent_id='".$user_id."'";
-$result=$dba->Select($SQL);
+//if (empty($emp))
+   // $emp[$user_id]=get_user_full_name_from_id($user_id);
+//$SQL="SELECT user_id, surname,firstname FROM users where user_parent_id='".$user_id."'";
+$SQL="SELECT order_level_number, department_id FROM users WHERE user_id=".$user_id;
+$row=$dba->getRow($SQL);
+
+$SQL="SELECT user_id, surname,firstname FROM users where department_id='".$row['department_id']."' AND order_level_number>='".$row['order_level_number']."'";
+    $result=$dba->Select($SQL);
 if (LM_DEBUG)
 error_log($SQL,0);
 if (!empty($result)){
@@ -664,7 +668,7 @@ foreach ($result as $row){
     $emp[$row['user_id']]=$row['surname']." ".$row['firstname'];
     else
     $emp[$row['user_id']]=$row['surname']." ".$row['firstname'];
-    get_employees_from_id($row['user_id']);
+    //get_employees_from_id($row['user_id']);
 }}
 return $emp;
 }

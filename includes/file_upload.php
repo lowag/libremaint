@@ -55,9 +55,14 @@ if (in_array($mime,ACCEPTED_FILE_TYPES)){
       $SQL="SELECT info_file_id FROM info_files WHERE info_file_sha='".$sha."'";
       if (LM_DEBUG)
 error_log($SQL,0);
-if (!empty($sha))
+if (!empty($sha)){
       $row = $dba->getRow($SQL);
+      if (!empty($row))
       $info_file_id=$row['info_file_id'];
+      else
+        $info_file_id=0;
+
+}
       if ($info_file_id>0){
 //there has been added th file earlier, so we have to find the first empty "info_file_id".$i column
 $SQL="SELECT * from ".$table." WHERE ".$id_column."='".$id."'";

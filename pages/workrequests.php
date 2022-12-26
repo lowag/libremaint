@@ -229,15 +229,30 @@ $SQL.=")";
 $SQL.=" VALUES ";
 $SQL.="('". (int) $_POST["asset_id"]."',";
 $SQL.="'".(int) get_whole_path("asset",$_POST['asset_id'],1)[0]."',";
+if (isset($_POST["repetitive"]))
 $SQL.="'".(int) $_POST["repetitive"]."',";
+else
+    $SQL.="'0',";
 if ((int) $_POST["repetitive"]>1)
 $SQL.="3,";
 else
 $SQL.="'".(int) $_POST["priority"]."',";
+if (isset($_POST["service_interval_date"]))
 $SQL.="'".(int) $_POST["service_interval_date"]."',";
+else
+    $SQL.="'0',";
+if (isset($_POST["service_interval_hours"]))
 $SQL.="'".(int) $_POST["service_interval_hours"]."',";
+else
+    $SQL.="'0',";
+if (isset($_POST["counter_id"]))
 $SQL.="'".(int) $_POST['counter_id']."',";
+else
+    $SQL.="'0',";
+if (isset($_POST["service_interval_mileage"]))
 $SQL.="'".(int) $_POST["service_interval_mileage"]."',";
+else
+    $SQL.="'0',";
 if ($_SESSION['CAN_WRITE_LANG1'])
 {
 $SQL.="'".$dba->escapeStr($_POST["workrequest_short_".LANG1])."',";
@@ -246,11 +261,23 @@ $SQL.="'".$dba->escapeStr($_POST["workrequest_".LANG1])."',";
 
 $SQL.="'".$_SESSION["user_id"]."',";
 $SQL.="now(),";
+
+
+if (isset($_POST["for_operators"]))
 $SQL.=(int) $_POST["for_operators"].",";
+else
+$SQL.="'0',";
 $SQL.="'".(int) $_POST["request_type"]."',";
 
+if (isset($_POST["replace_to_product_id"]))
+
 $SQL.="'".(int) $_POST["replace_to_product_id"]."',";
+else
+    $SQL.="'0',";
+if (isset($_POST["product_id_to_refurbish"]))
 $SQL.="'".(int) $_POST["product_id_to_refurbish"]."'";
+else
+    $SQL.="'0',";
 if (LANG2_AS_SECOND_LANG && isset($_SESSION['CAN_WRITE_LANG2']))
 {
 $SQL.=",'".$dba->escapeStr($_POST["workrequest_short_".LANG2])."',";
@@ -555,7 +582,7 @@ echo "<div class=\"row form-group\">";
 
     echo "<div class=\"col col-md-2\">";
     echo "<select name=\"service_interval_date\" id=\"service_interval_date\" class=\"form-control\" required>\n";
-    $SQL="SELECT level_id,level_".$lang." FROM user_levels ORDER BY level_".$lang;
+    $SQL="SELECT user_level_id,user_level_".$lang." FROM user_levels ORDER BY user_level_".$lang;
     if (LM_DEBUG)
     error_log($SQL,0);
     $result=$dba->Select($SQL);
@@ -613,7 +640,7 @@ echo "</select></div>";
 if ($_GET['repetitive']==3 || $_GET['repetitive']==5 )
 echo gettext(" OR");
 echo "</div>";
- 
+
 }else
  echo "<INPUT TYPE=\"hidden\" name=\"service_interval_date\" id=\"service_interval_date\" VALUE=\"0\">";
  

@@ -8,7 +8,8 @@ $SQL.=" surname='".$dba->escapeStr($_POST['surname'])."',";
 $SQL.=" user_phone='".$dba->escapeStr($_POST['user_phone'])."',";
 $SQL.=" user_email='".$dba->escapeStr($_POST['user_email'])."',";
 $SQL.=" user_level=".(int) $_POST['user_level'].",";
-$SQL.=" user_parent_id=".(int) $_POST['user_parent_id'].",";
+$SQL.=" order_level_number=".(int) $_POST['order_level_number'].",";
+$SQL.=" department_id=".(int) $_POST['department_id'].",";
 $SQL.=" lang='".$dba->escapeStr($_POST['user_lang'])."',";
 $SQL.=" user_created=NOW()";
 $SQL.=" WHERE user_id=".$_SESSION['user_id'];
@@ -29,14 +30,15 @@ if (isset($_POST['new']) && isset($_POST['firstname']) && is_it_valid_submit() &
 if (!isset($_SESSION['ADD_USER']))
 lm_die(gettext("You have no permission!"));
 
-$SQL="INSERT INTO users (username,firstname,surname,user_phone,user_email,user_level,user_parent_id,lang,user_created,password,active) VALUES";
+$SQL="INSERT INTO users (username,firstname,surname,user_phone,user_email,user_level,order_level_number,department_id,lang,user_created,password,active) VALUES";
 $SQL.="('".$dba->escapeStr($_POST['username'])."',";
 $SQL.="'".$dba->escapeStr($_POST['firstname'])."',";
 $SQL.="'".$dba->escapeStr($_POST['surname'])."',";
 $SQL.="'".$dba->escapeStr($_POST['user_phone'])."',";
 $SQL.="'".$dba->escapeStr($_POST['user_email'])."',";
 $SQL.=(int) $_POST['user_level'].",";
-$SQL.=(int) $_POST['user_parent_id'].",";
+$SQL.=(int) $_POST['order_level_number'].",";
+$SQL.=(int) $_POST['department_id'].",";
 $SQL.="'".$dba->escapeStr($_POST['lang'])."',";
 $SQL.="NOW(),";
 $SQL.="'".password_hash($_POST['username'],PASSWORD_DEFAULT)."',1)";
@@ -271,32 +273,42 @@ echo gettext("Modify user");
 if (!isset($_SESSION['ADD_USER']) || !isset($_SESSION['MODIFY_USER']))
 lm_die(gettext("You have no permission!"));
     echo "<div class=\"row form-group\">";
-    echo "<div class=\"col col-md-2\"><label for=\"user_parent_id\" class=\" form-control-label\">".gettext("Report to:")."</label></div>";
+    echo "<div class=\"col col-md-2\"><label for=\"order_level_number\" class=\" form-control-label\">".gettext("Order level:")."</label></div>";
 
     echo "<div class=\"col col-md-2\">";
-    echo "<select name=\"user_parent_id\" id=\"user_parent_id\" class=\"form-control\">\n";
-    $SQL="SELECT user_id,firstname,surname FROM users";
-    $SQL.=" ORDER BY surname";
+
+    echo "<select name=\"order_level_number\" id=\"order_level_number\" class=\"form-control\">\n";
+$i=100;
+    echo "<option value=\"100\">".gettext("Please select")."</option>\n";
+    while ($i>0){
+            echo "<option value=\"".$i."\" ";
+                if(isset($_GET["modify"]) && $row_mod['order_level_number']==$i)
+                    echo "selected";
+            echo ">".$i."</option>\n";
+            $i--;
+            }
+
+    echo "</select></div></div>";
+  
+ echo "<div class=\"row form-group\">";
+    echo "<div class=\"col col-md-2\"><label for=\"department\" class=\" form-control-label\">".gettext("Department:")."</label></div>";
+
+    echo "<div class=\"col col-md-2\">";
+    echo "<select name=\"department_id\" id=\"department_id\" class=\"form-control\" required>\n";
+    $SQL="SELECT department_id,department_".$lang." FROM departments ORDER BY department_".$lang;
     if (LM_DEBUG)
     error_log($SQL,0);
     $result=$dba->Select($SQL);
-    echo "<option value=\"0\">".gettext("Please select")."</option>\n";
+    echo "<option value=\"\">".gettext("Please select")."</option>\n";
     foreach ($result as $row){
-            if (FIRSTNAME_IS_FIRST){
-            echo "<option value=\"".$row["user_id"]."\" ";
-                    if(isset($_GET["modify"]) && $row_mod['user_parent_id']==$row['user_id'])
-                        echo "selected";
-            echo ">".$row["firstname"]." ".$row["surname"]."</option>\n";
-            }
-            else{
-            echo "<option value=\"".$row["user_id"]."\" ";
-                if(isset($_GET["modify"]) && $row_mod['user_parent_id']==$row['user_id'])
-                    echo "selected";
-            echo ">".$row["surname"]." ".$row["firstname"]."</option>\n";
-            }
+    echo "<option value=\"".$row["department_id"]."\" ";
+    if (isset($_GET['modify']) && $row_mod['department_id']==$row['department_id'])
+    echo "selected";
+    echo ">".$row["department_".$lang]."</option>\n";
+
     }
     echo "</select></div></div>";
-  
+
 
   echo "<div class=\"row form-group\">";
     echo "<div class=\"col col-md-2\"><label for=\"user_level\" class=\" form-control-label\">".gettext("User level:")."</label></div>";
@@ -420,7 +432,7 @@ $pagenumber=lm_isset_int('pagenumber');
 if ($pagenumber<1)
 $pagenumber=1;
 $from=1;
-$SQL="SELECT user_id,username,firstname,surname,user_phone,user_email,user_level,firstname_is_first FROM users ORDER BY surname";
+$SQL="SELECT user_id,username,firstname,surname,user_phone,user_email,user_level,firstname_is_first,order_level_number FROM users ORDER BY surname";
 $result_all=$dba->Select($SQL);
 $number_all=$dba->affectedRows();
 $from=($pagenumber-1)*ROWS_PER_PAGE;
@@ -437,7 +449,7 @@ error_log("page:".$pagenumber." ".$SQL,0);
 <thead>
 <tr>
 <th></th>
-<?php echo "<th>".gettext("Username")."</th><th>".gettext("Name")."</th><th>".gettext("Email")."</th><th>".gettext("Phone")."</th><th>".gettext("User level")."</th></tr>";
+<?php echo "<th>".gettext("Username")."</th><th>".gettext("Name")."</th><th>".gettext("Email")."</th><th>".gettext("Phone")."</th><th>".gettext("User level")."</th><th>".gettext("Order level number")."</th></tr>\n";
 ?>
 </thead>
 <tbody>
@@ -465,8 +477,9 @@ echo "<td>".$row['surname']." ".$row['firstname']."</td>\n";
 
 echo "<td>".$row['user_email']."</td>\n";
 echo "<td>".$row['user_phone']."</td>\n";
-echo "<td>".get_user_level_from_id($row['user_level'])."</td></tr>\n";
+echo "<td>".get_user_level_from_id($row['user_level'])."</td>\n";
 
+echo "<td>".$row['order_level_number']."</td></tr>\n";
 }
 echo "</tbody></table></div>";
 include(INCLUDES_PATH."pagination.php");
