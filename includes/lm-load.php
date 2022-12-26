@@ -8,13 +8,13 @@ if ( file_exists( ABSPATH . 'config/lm-config.php') ) {
 	require_once( ABSPATH . 'config/lm-config.php' );
 
 } else{
-lm_die("There is no lm-config.php in the ".ABSPATH);
+lm_die("There is no lm-config.php in the ".ABSPATH.'/config/');
 
 }
 if ( file_exists( ABSPATH . 'config/lm-settings.php') ) {
 	require_once( ABSPATH . 'config/lm-settings.php' );
 } else{
-lm_die("There is no lm-settings.php in the ".ABSPATH);
+lm_die("There is no lm-settings.php in the ".ABSPATH.'/config/');
 
 }
 
