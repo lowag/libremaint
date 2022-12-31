@@ -3036,7 +3036,7 @@ if ($_GET['param4']!="modify" && isset($_GET['param3']) && (int) $_GET['param3']
         echo "<script>document.getElementById('workorder_work_start_time').value='".date("H:i", strtotime($row['workorder_work_end_time']))."';</script>";
         else
         {
-        $SQL="SELECT ".date("l", $dba->escapeStr($_GET['param2']))."_start as start FROM users WHERE user_id=".(int) $_GET['param3'];
+        $SQL="SELECT ".date("l", strtotime($dba->escapeStr($_GET['param2'])))."_start as start FROM users WHERE user_id=".(int) $_GET['param3'];
         if (LM_DEBUG)
             error_log($SQL,0);
         $row=$dba->getRow($SQL);

@@ -205,7 +205,9 @@ echo "<div class=\"card-body card-block\">";
     ajax_call('show_worktimebar',document.getElementById('workorder_work_start_date').value,this.value,'','','".URL."index.php','for_ajaxcall');\n
     check_time_period();\n
     \">\n";
-    $SQL="SELECT user_id,firstname,surname FROM users WHERE active=1 AND user_level<4";
+    $SQL="SELECT department_id,order_level_number FROM users WHERE user_id='".$_SESSION['user_id']."'";
+    $row=$dba->getRow($SQL);
+    $SQL="SELECT user_id,firstname,surname FROM users WHERE active=1 AND department_id='".$row['department_id']."' AND order_level_number>'".$row['order_level_number']."'";
     $SQL.=" ORDER BY surname";
     if (LM_DEBUG)
     error_log($SQL,0);
@@ -282,8 +284,9 @@ ajax_call('show_worktimebar',document.getElementById('workorder_work_start_date'
         
         $row=$dba->getRow($SQL);
         if (!empty($row))
-        echo date("H:i", strtotime($row['workorder_work_end_time']));
-       
+            echo date("H:i", strtotime($row['workorder_work_end_time']));
+        else
+            echo date("H:i");
         
         }else
         echo date("H:i");
