@@ -70,9 +70,9 @@ else if (isset($_POST['page']) && (isset($_POST["new_name_".LANG1]) && !empty($_
     if (LM_DEBUG)
         error_log($SQL,0); 
     if ($dba->Query($SQL))
-        echo "<div class=\"card\">".gettext("The product type has been renamed.")."</div>";
+        lm_info(gettext("The product type has been renamed."));
         else
-        echo "<div class=\"card\">".gettext("Failed to rename product ").$dba->err_msg."</div>";
+        lm_error(gettext("Failed to rename product ").$dba->err_msg);
 }
 
 

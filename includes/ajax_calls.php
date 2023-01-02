@@ -165,10 +165,13 @@ else if ($_GET['param3']=='locations')
 $orig_name=get_location_name_from_id($_GET["param2"],LANG1);
 else if ($_GET['param3']=='categories')
 $orig_name=get_category_name_from_id($_GET["param2"],LANG1);
-else if ($_GET['param3']=='products')
-$orig_name=get_product_name_from_id($_GET["param2"],LANG1);;
+else if ($_GET['param3']=='products'){
 
+$SQL="SELECT product_type_".$lang." as product_name FROM products WHERE product_id='".(int) $_GET["param2"]."'";
+$row=$dba->getRow($SQL);
+$orig_name=$row['product_name'];
 
+}
 echo "<div class=\"row form-group\">\n";
 echo "<div class=\"col col-md-2\"><label for=\"new_name\" class=\"form-control-label\">".gettext("New name:")."</label></div>\n";
 echo "<div class=\"col-12 col-md-3\"><input type=\"text\" id=\"new_name_".LANG1."\" name=\"new_name_".LANG1."\" class=\"form-control\" value=\"".$orig_name."\" required></div></div>\n";
@@ -201,13 +204,13 @@ echo "<button type=\"reset\" class=\"btn btn-danger btn-sm\"><i class=\"fa fa-ba
 echo "<input type=\"hidden\" name=\"valid\" id=\"valid\" value=\"".$_SESSION["tit_id"]."\">";
 echo "<input type=\"hidden\" name=\"page\" id=\"page\" value=\"".$_GET['param3']."\">";
 if ($_GET['param3']=='assets')
-echo "<input type=\"hidden\" name=\"asset_id\" id=\"asset_id\" value=\"".$_GET["param2"]."\">";
+echo "<input type=\"hidden\" name=\"asset_id\" id=\"asset_id\" value=\"".(int) $_GET["param2"]."\">";
 else if ($_GET['param3']=='locations')
-echo "<input type=\"hidden\" name=\"location_id\" id=\"location_id\" value=\"".$_GET["param2"]."\">";
+echo "<input type=\"hidden\" name=\"location_id\" id=\"location_id\" value=\"".(int) $_GET["param2"]."\">";
 else if ($_GET['param3']=='categories')
-echo "<input type=\"hidden\" name=\"category_id\" id=\"category_id\" value=\"".$_GET["param2"]."\">";
+echo "<input type=\"hidden\" name=\"category_id\" id=\"category_id\" value=\"".(int) $_GET["param2"]."\">";
 else if ($_GET['param3']=='products')
-echo "<input type=\"hidden\" name=\"product_id\" id=\"product_id\" value=\"".$_GET["param2"]."\">";
+echo "<input type=\"hidden\" name=\"product_id\" id=\"product_id\" value=\"".(int) $_GET["param2"]."\">";
 echo "</form></div>";
 
 echo "<script>\n";
@@ -3329,10 +3332,16 @@ echo "<button type=\"button\" class=\"close\" aria-label=\"Close\" onClick=\"doc
     echo "<div class=\"card-body card-block\">";
     
     echo "<div class=\"row form-group\">\n";
+    echo "<div class=\"col col-md-3\"><label for=\"stock_place\" class=\"form-control-label\">".gettext("Stock place").":</label></div>\n";
+    echo "<div class=\"col-3 col-md-1\"><input type=\"text\" id=\"stock_place\" name=\"stock_place\" class=\"form-control\" value=\"".$row['stock_place']."\"></div></div>\n";
+
+
+    echo "<div class=\"row form-group\">\n";
     echo "<div class=\"col col-md-3\"><label for=\"stock_quantity\" class=\"form-control-label\">".gettext("Stock quantity").":</label></div>\n";
-    
     echo "<div class=\"col-3 col-md-1\">".floatval($row['stock_quantity'])." ".get_quantity_unit_from_product_id($row['product_id'])[0]."</div></div>\n";
-    
+
+
+
     echo "<div class=\"row form-group\">\n";
     echo "<div class=\"col col-md-3\"><label for=\"real_stock_quantity\" class=\"form-control-label\">".gettext("Real stock quantity").":</label></div>\n";
     echo "<div class=\"col-3 col-md-1\"><input type=\"text\" id=\"real_stock_quantity\" name=\"real_stock_quantity\" class=\"form-control\" value=\"".floatval($row['stock_quantity'])."\" required> </div>".get_quantity_unit_from_product_id($row['product_id'])[0]."</div>\n";

@@ -4,7 +4,7 @@ if (isset($_POST['real_stock_quantity']) && $_SESSION['STOCK-TAKING'] && is_it_v
 
 $SQL="SELECT product_id,stock_quantity,stock_location_id FROM stock WHERE stock_id='".(int) $_POST['stock_id']."'";
 $row=$dba->getRow($SQL);
-$SQL="UPDATE stock SET stock_quantity='".floatval($_POST['real_stock_quantity'])."', inventory_time=NOW(), inventory_user_id='".$_SESSION['user_id']."' WHERE stock_id='".(int) $_POST['stock_id']."'";
+$SQL="UPDATE stock SET stock_quantity='".floatval($_POST['real_stock_quantity'])."', inventory_time=NOW(), inventory_user_id='".$_SESSION['user_id']."' ,stock_place='".$dba->escapeStr($_POST['stock_place'])."' WHERE stock_id='".(int) $_POST['stock_id']."'";
 if (!$dba->Query($SQL))
     lm_die("Error: ".$SQL);
     $diff= $row['stock_quantity']-floatval($_POST['real_stock_quantity']);
@@ -14,8 +14,7 @@ if (!$dba->Query($SQL))
     $SQL="INSERT INTO stock_movements (product_id,from_stock_location_id,to_stock_location_id,stock_movement_quantity) ";
 $SQL.="VALUES (".$row['product_id'].",".$row['stock_location_id'].",0,".$diff.")";
 $dba->Query($SQL);
-    echo "kevesebb";
-    
+
     
     }else if ($diff<0){
     
