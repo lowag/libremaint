@@ -151,7 +151,7 @@ else if (isset($_POST['page']) && isset($_POST["new_product"])  && is_it_valid_s
         if ($dba->Query($SQL)){
              if ((int)$_POST['product_stockable']==2){//unique product
             $SQL="INSERT INTO stock (product_id,product_category_id,product_subcategory_id,stock_location_id,stock_location_asset_id,stock_location_partner_id,stock_quantity,item_created) VALUES ";
-            $SQL.="(".$dba->insertedId().",".(int) $_POST['category_id'].",".(int) $_POST['subcategory_id'].",0,0,0,1,now())";
+            $SQL.="(".$dba->insertedId().",".(int) $_POST['category_id'].",".(int) $_POST['subcategory_id'].",".DEFAULT_STOCK_LOCATION_ID.",0,0,1,now())";
             if (LM_DEBUG)
             error_log($SQL,0); 
             $dba->Query($SQL);
@@ -290,7 +290,7 @@ echo "</div>";
 if (LANG2_AS_SECOND_LANG && isset($_SESSION['CAN_WRITE_LANG2']))
 {
 echo "<div class=\"row form-group\">";
-echo "<div class=\"col col-md-2\"><label for=\"product_type_".CAN_WRITE_LANG2."\" class=\"form-control-label\">".gettext("Product type (").LANG2."): </label></div>\n";
+echo "<div class=\"col col-md-2\"><label for=\"product_type_".LANG2."\" class=\"form-control-label\">".gettext("Product type (").LANG2."): </label></div>\n";
 echo "<div class=\"col-12 col-md-10\"><input type=\"text\" id=\"product_type_".LANG2."\" name=\"product_type_".LANG2."\" placeholder=\"".gettext("product type")."\" class=\"form-control\"";
 if (isset($_GET['modify']))
 echo " value='".$row_orig['product_type_'.LANG2]."'";
@@ -611,7 +611,7 @@ foreach ($result as $row)
                                                         
                              
                              }
-                            if ($_SESSION["MODIFY_PRODUCT"])
+                            if (isset($_SESSION["MODIFY_PRODUCT"]))
                               {
                              echo "<a class=\"nav-link\" href=\"javascript:ajax_call('rename','".$row['product_id']."','products','','','".URL."index.php','for_ajaxcall')\"><i class=\"fa fa-user\"></i> ";
                              echo gettext("Rename product")."</a>";

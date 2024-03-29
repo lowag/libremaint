@@ -166,11 +166,11 @@ foreach ($notification_ids as $notification_id)
             
             if ($_SESSION['CAN_WRITE_LANG1']){
             $SQL.="'".$dba->escapeStr($row["notification_short_".LANG1])."',";
-            $SQL.="'".$dba->escapeStr($row["notification_".LANG1])."',";
+            $SQL.="'".$dba->escapeStr($row["notification_".LANG1])."'";
             }
             if (LANG2_AS_SECOND_LANG && $_SESSION['CAN_WRITE_LANG2'])
             {
-            $SQL.="'".$dba->escapeStr($row["notification_short_".LANG2])."',";
+            $SQL.=",'".$dba->escapeStr($row["notification_short_".LANG2])."',";
             $SQL.="'".$dba->escapeStr($row["notification_".LANG2])."'";
             }
             

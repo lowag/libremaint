@@ -1,4 +1,12 @@
 <?php
+if (isset($_POST['product_id']) && $_POST["product_id"]>0 && isset($_FILES['info_file_name']['tmp_name']) ){ //it is from the new file form
+
+$table="products";
+$id=$_POST["product_id"];
+$id_column="product_id";
+    require(INCLUDES_PATH."file_upload.php");
+
+}
 
 if (isset($_POST['real_stock_quantity']) && $_SESSION['STOCK-TAKING'] && is_it_valid_submit()){
 
@@ -473,7 +481,21 @@ foreach ($result as $row)
                              if (isset($_SESSION["SEE_FILE_OF_PRODUCT"]) && $row['info_file_id1']>0){
                             echo "<a class=\"nav-link\" href=\"javascript:ajax_call('show_info_files','".$row['product_id']."','products','','','".URL."index.php','for_ajaxcall')\"><i class=\"fa fa-user\"></i> ";
                              echo gettext("Show files")."</a>";}
-                             if (isset($_SESSION["ADD_PRODUCT_FILE"])){
+	               		
+			if (isset($_SESSION["MODIFY_PRODUCT"]))
+                              {
+                             echo "<a class=\"nav-link\" href=\"javascript:ajax_call('rename','".$row['product_id']."','products','','','".URL."index.php','for_ajaxcall')\"><i class=\"fa fa-user\"></i> ";
+                             echo gettext("Rename product")."</a>";
+
+                              echo "<a href=\"index.php?page=products&modify=1&product_id=".$row['product_id']."\" title=\"".gettext("add new activity")."\"> <i class=\"fa fa-clock-o\" style='color:blue'></i> ";
+                             echo gettext("Modify product")."</a>";
+
+                             echo "<a class=\"nav-link\" href=\"javascript:ajax_call('handle_connection','".$row['product_id']."','products','','','".URL."index.php','for_ajaxcall')\"><i class=\"fa fa-user\"></i> ";
+                             echo gettext("Handle connection")."</a>";
+                             }
+
+
+                             if (isset($_SESSION["ADD_FILE_TO_PRODUCT"])){
                              echo "<a class=\"nav-link\" href=\"javascript:ajax_call('add_file',".$row['product_id'].",'products','stock','','".URL."index.php','for_ajaxcall')\"><i class=\"fa fa-user\"></i> ".gettext("Add file")."</a>";
                              }
                              if (isset($_SESSION['SEE_ASSETS'])){

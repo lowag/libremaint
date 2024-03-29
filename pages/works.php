@@ -1,9 +1,13 @@
 <?php 
 if (isset($_GET['workorder_id'])){
-$SQL="SELECT workorder_status FROM workorders WHERE workorder_id=".(int) $_GET['workorder_id'];
+$SQL="SELECT * FROM workorders WHERE workorder_id=".(int) $_GET['workorder_id'];
 $workorder_row=$dba->getRow($SQL);
-
 }
+else if (isset($_POST['workorder_id'])){
+$SQL="SELECT * FROM workorders WHERE workorder_id=".(int) $_POST['workorder_id'];
+$workorder_row=$dba->getRow($SQL);
+}
+
 ?>
 <script>
 function check_time_period(){
@@ -30,6 +34,7 @@ echo "','".URL."index.php','ajax_button');";
 <div id='for_ajaxcall'>
 </div>
 <?php
+
 if (isset($_GET['delete']) && isset($_SESSION['DELETE_WORK']) && is_it_valid_submit()){
 $SQL="SELECT workorders.workorder_id,workorder_user_id,workrequest_id FROM workorders LEFT JOIN workorder_works ON workorders.workorder_id=workorder_works.workorder_id WHERE workorder_work_id=".(int) $_GET['workorder_work_id'];
 $row=$dba->getRow($SQL);
@@ -44,7 +49,7 @@ if ($row['workorder_user_id']==$_SESSION['user_id'] || $_SESSION['user_level']<3
     if (LM_DEBUG)
         error_log($SQL,0);
     
-    check_workorder_to_close($row['workorder_id']);
+    check_workorder_to_close($row['workorder_id'],0);
     
     if ($row['workrequest_id']>0){
     $SQL="SELECT workorder_user_id,workorder_work_end_time FROM workorder_works WHERE workrequest_id=".$row['workrequest_id']." AND workorder_works.deleted<>1 ORDER BY workorder_work_end_time DESC LIMIT 0,1";
@@ -57,11 +62,12 @@ if ($row['workorder_user_id']==$_SESSION['user_id'] || $_SESSION['user_level']<3
     }
 }
 
-if (isset($_POST['page']) && isset($_POST['modify']) && isset($_POST["workorder_work_".$lang]) && isset($_SESSION['MODIFY_WORK']) && is_it_valid_submit()){// add/modify work form 
+if (isset($_POST['page']) && isset($_POST['modify']) && isset($_POST["workorder_work_".$lang]) && isset($_SESSION['MODIFY_WORK']) &&  is_it_valid_submit()){// add/modify work form
 
 {
-$SQL="SELECT * FROM workorders WHERE workorder_id=".(int) $_POST['workorder_id'];
-$workorder_row=$dba->getRow($SQL);
+if (isset($_POST['stock_location_id']) && $_POST['stock_location_id']>0)
+$SQL.="UPDATE workorders SET orig_stock_location_id=".(int) $_POST['stock_location_id']." WHERE workorder_id='".(int) $_POST['workorder_id']."'";
+$dba->Query($SQL);
 
 
 $SQL="UPDATE workorder_works SET ";
@@ -103,7 +109,7 @@ if ($dba->Query($SQL))
         $dba->Query($SQL);
         lm_info(gettext("The activity has been modified."));
       //      check_workorder_to_close($workorder_row['workorder_id'],$_POST['workorder_work_end_date']." ".$_POST['workorder_work_end_time']);
-                  check_workorder_to_close($workorder_row['workorder_id']);
+                  check_workorder_to_close($workorder_row['workorder_id'],(int) $_POST['stock_location_id']);
 
     
         }
@@ -121,8 +127,7 @@ else if((isset($_GET['new']) && isset($_SESSION['ADD_WORK'])) || (isset($_GET['m
 
 
 if (isset($_GET["workorder_id"]) && $_GET["workorder_id"]>0)
-    $SQL="SELECT workorder_id,asset_id,workrequest_id,work_details_required FROM workorders WHERE workorder_id=".(int) $_GET["workorder_id"];
-$workorder_row=$dba->getRow($SQL);
+
  if (LM_DEBUG)
         error_log($SQL,0); 
 echo "<div class=\"card\">";
@@ -201,14 +206,16 @@ echo "<div class=\"card-body card-block\">";
     echo "<div class=\"col col-md-2\"><label for=\"workorder_user_id\" class=\" form-control-label\">".gettext("Employee:")."</label></div>";
 
     echo "<div class=\"col-12 col-md-3\">";
+    
     echo "<select name=\"workorder_user_id\" id=\"workorder_user_id\" class=\"form-control\" required onChange=\"
     ajax_call('show_worktimebar',document.getElementById('workorder_work_start_date').value,this.value,'','','".URL."index.php','for_ajaxcall');\n
     check_time_period();\n
     \">\n";
     $SQL="SELECT department_id,order_level_number FROM users WHERE user_id='".$_SESSION['user_id']."'";
     $row=$dba->getRow($SQL);
-    $SQL="SELECT user_id,firstname,surname FROM users WHERE active=1 AND department_id='".$row['department_id']."' AND order_level_number>'".$row['order_level_number']."'";
+    $SQL="SELECT user_id,firstname,surname FROM users WHERE active=1 AND department_id='".$row['department_id']."' AND order_level_number>='".$row['order_level_number']."'";
     $SQL.=" ORDER BY surname";
+    
     if (LM_DEBUG)
     error_log($SQL,0);
     $result=$dba->Select($SQL);
@@ -217,13 +224,14 @@ echo "<div class=\"card-body card-block\">";
     if (FIRSTNAME_IS_FIRST)
     {
     echo "<option value=\"".$row["user_id"]."\"";
-    if (isset($_GET['modify']) && $row_mod['workorder_user_id']==$row['user_id'])
+    if ((isset($_GET['modify']) && $row_mod['workorder_user_id']==$row['user_id']) || (!isset($_GET['modify']) && $_SESSION['user_id']==$row['user_id']))
     echo " selected";
+
     echo ">".$row["firstname"]." ".$row["surname"]."</option>\n";
     }
     else{
     echo "<option value=\"".$row["user_id"]."\"";
-    if (isset($_GET['modify']) && $row_mod['workorder_user_id']==$row['user_id'])
+    if ((isset($_GET['modify']) && $row_mod['workorder_user_id']==$row['user_id'])  || (!isset($_GET['modify']) && $_SESSION['user_id']==$row['user_id']))
     echo " selected";
     echo ">".$row["surname"]." ".$row["firstname"]."</option>\n";
     }
@@ -354,7 +362,6 @@ ajax_call('show_worktimebar',document.getElementById('workorder_work_start_date'
         echo "<div class=\"col col-md-2\">\n";
             echo "<label for=\"workorder_status\" class=\" form-control-label\">".gettext("Status:")."</label>";
         echo "</div>\n";
-
     echo "<div class=\"col col-md-3\">\n";
         echo "<select name=\"workorder_status\" id=\"workorder_status\" class=\"form-control\" ";
         echo "onChange=\"var counter_array=[".$counter_array_for_javascript."];var i=0;var n=0;\n";
@@ -364,7 +371,10 @@ ajax_call('show_worktimebar',document.getElementById('workorder_work_start_date'
         echo "else{i++;\n";
         echo "document.getElementById('submit_button').disabled=true;}\n";
         echo "};\n";
-        echo "if (i>0) alert()";
+        echo "if (i>0) alert();\n";
+        if ($workorder_row['product_id_to_refurbish']>0 || $workorder_row['replace_to_product_id']>0){
+        echo "if (this.value==5) document.getElementById('stock_location').style.visibility='visible';\n ";
+        echo "else document.getElementById('stock_location').style.visibility='hidden'";}
         echo "\">\n";
      foreach($workorder_statuses as $id => $status)
      { //$workorder_status from config/lm-settings.php
@@ -381,6 +391,35 @@ ajax_call('show_worktimebar',document.getElementById('workorder_work_start_date'
         
     echo "</div>\n"; //row form-group
     
+    ###stock_location_id, stock_place
+  if ($workorder_row['product_id_to_refurbish']>0 || $workorder_row['replace_to_product_id']>0){
+
+   echo "<div class=\"row form-group\" id=\"stock_location\" style=\"visibility: hidden;\">\n";
+        echo "<div class=\"col col-md-2\">\n";
+        echo "<label for=\"stock_location\" class=\"form-control-label\">".gettext("Destination:")."</label>";
+        echo "</div>\n";
+        echo "<div class=\"col col-md-3\">\n";
+
+        echo "<select name=\"stock_location_id\" id=\"stock_location_id\" class=\"form-control\" ";
+        echo "\">\n";
+        $SQL="SELECT location_name_".$lang.", location_id FROM locations WHERE set_as_stock=1";
+        $results=$dba->Select($SQL);
+        foreach($results as $stock)
+        {
+
+        echo "<option value=\"".$stock['location_id']."\"";
+        if ($workorder_row['orig_stock_location_id']==$stock['location_id'])
+        echo " selected";
+        echo ">".$stock["location_name_".$lang]."</option>\n";
+
+        }
+            echo "</select>\n";
+            echo "</div>\n";
+
+    echo "</div>\n";
+
+  }###stock_location_id, stock_place
+
     if ($_SESSION['CAN_WRITE_LANG1']){
     echo "<div class=\"row form-group\">";
     echo "<div class=\"col col-md-2\"><label for=\"workorder_work_".LANG1."\" class=\" form-control-label\">".gettext("Activity:")." </label></div>";
@@ -415,7 +454,7 @@ ajax_call('show_worktimebar',document.getElementById('workorder_work_start_date'
     echo "</textarea>\n"; 
     echo "</div></div>\n";
     
-    
+
     }
     
     echo "<input type=\"hidden\" name=\"main_asset_id\" id=\"main_asset_id\" value=\"".$asset_path[0]."\">";

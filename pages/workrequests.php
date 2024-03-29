@@ -271,17 +271,17 @@ $SQL.="'".(int) $_POST["request_type"]."',";
 
 if (isset($_POST["replace_to_product_id"]))
 
-$SQL.="'".(int) $_POST["replace_to_product_id"]."',";
+$SQL.="'".(int) $_POST["replace_to_product_id"]."'";
 else
-    $SQL.="'0',";
+    $SQL.="'0'";
 if (isset($_POST["product_id_to_refurbish"]))
-$SQL.="'".(int) $_POST["product_id_to_refurbish"]."'";
+$SQL.=",'".(int) $_POST["product_id_to_refurbish"]."'";
 else
-    $SQL.="'0',";
+    $SQL.=",'0'";
 if (LANG2_AS_SECOND_LANG && isset($_SESSION['CAN_WRITE_LANG2']))
 {
-$SQL.=",'".$dba->escapeStr($_POST["workrequest_short_".LANG2])."',";
-$SQL.="'".$dba->escapeStr($_POST["workrequest_".LANG2])."'";
+$SQL.=",'".$dba->escapeStr($_POST["workrequest_short_".LANG2])."'";
+$SQL.=",'".$dba->escapeStr($_POST["workrequest_".LANG2])."'";
 }
 $SQL.=")";
 if ($dba->Query($SQL))

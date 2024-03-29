@@ -2,7 +2,7 @@
 <?php
 
 //<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-piechart-outlabels"></script>
-echo "<script src=\"".VENDORS_LOC."chartjs-plugin-piechart-outlabels/chartjs-plugin-piechart-outlabels.js\"></script>";
+//echo "<script src=\"".VENDORS_LOC."chartjs-plugin-piechart-outlabels/chartjs-plugin-piechart-outlabels.js\"></script>";
 //echo " <button type=\"button\" id=\"create_task_list_button\" name=\"create_task_list_button\" class=\"btn btn-danger btn-sm\" ";
       //  echo " onClick=\"window.open('index.php?page=pdf_create&title=work_stat_by_assets&period=last','_blank')\"";
         //echo ">".gettext("Last month's works")."</button>";
@@ -140,26 +140,28 @@ echo "<i class=\"fa fa-dot-circle-o\"></i>".gettext("Next")."</button></form>\n"
 ?>
 
 <div class="chart-container" style="position: relative; width:800px">
-<canvas width='250' id="pie-chart1">
-<canvas width='250' id="pie-chart2">
-<canvas width='250' id="pie-chart3">
+<canvas width='100' id="pie-chart1">
+<canvas width='100' id="pie-chart2">
+<canvas width='100' id="pie-chart3">
 </div>
 <script>
 
 
 
 var options={
-                    responsive: false,
-                    zoomOutPercentage: 100, // makes chart 55% smaller (50% by default, if the property is undefined)
+                    
+                    zoomOutPercentage: 50, // makes chart 55% smaller (50% by default, if the preoprty is undefined)
                     plugins: {
                         
                         outlabels: {
                             text: '%l %p',
-                            color: 'black',
+                            color: 'white',
                             stretch: 30,
                             font: {
-                                resizable: false,
-                                size: 12
+                                resizable: true,
+                                size: 15,
+                                minSize: 15,
+                                maxSize: 30
                             }
                         }
                     }

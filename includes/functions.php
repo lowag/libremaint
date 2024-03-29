@@ -55,16 +55,17 @@ return false;
 
 
 function lm_logout():bool{
-if (ini_get("session.use_cookies")) {
-    $params = session_get_cookie_params();
-    setcookie(session_name(), '', time() - 42000,
-        $params["path"], $params["domain"],
-        $params["secure"], $params["httponly"]
-    );
-}
 
+//if (ini_get("session.use_cookies")) {
+//   $params = session_get_cookie_params();
+//    setcookie(session_name(), '', time() - 42000,
+//        $params["path"], $params["domain"],
+  //      $params["secure"], $params["httponly"]
+ // );
+//}
 session_destroy();
-return true;}
+return true;
+}
 
 function lm_die($m):void{
 die($m);
@@ -820,7 +821,7 @@ $string_to_shuffle='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz12345678
 return mb_substr(str_shuffle($string_to_shuffle),1,$length);
 }
 
-function check_workorder_to_close($workorder_id):void
+function check_workorder_to_close($workorder_id, $stock_location_id=0,$stock_place=""):void
 {
 global $dba,$lang;
 $all_employees_have_finished=true;
@@ -1001,39 +1002,39 @@ if ($all_employees_have_finished==true)
         if (LM_DEBUG)
         error_log("workorder_row['product_id_to_refurbish']: ".$workorder_row['product_id_to_refurbish']."\n workorder_partner_id:".$workorder_row['workorder_partner_id'],0);
         
-        
+        //refurbish
         if ($workorder_row['product_id_to_refurbish']>0 &&  $workorder_row['workorder_partner_id']>0){
-        $SQL="SELECT workorder_id FROM stock_movements WHERE to_stock_location_id>0 AND workorder_id=".$workorder_id;
-        
-        $dba->Select($SQL);
-        if (LM_DEBUG)
-        error_log($SQL,0);
-        if ($dba->affectedRows()>0){// if it was a finished work we need to update only
-        $SQL="UPDATE stock_movements SET stock_movement_time='".$latest_activity_time."' WHERE workorder_id=".$workorder_id;
-        $dba->Query($SQL);
-        if (LM_DEBUG)
-        error_log($SQL,0);
-        $SQL="UPDATE stock SET stock_location_partner_id=0,stock_location_id=".(int) $workorder_row['orig_stock_location_id']." WHERE product_id=".$workorder_row['product_id_to_refurbish'];
-        $dba->Query($SQL);
-                    if (LM_DEBUG)
-                        error_log($SQL,0);
-        }else{
-        $SQL="INSERT INTO stock_movements (product_id,stock_movement_quantity,to_stock_location_id,from_partner_id,workorder_id) VALUES (";
-                    $SQL.=$workorder_row['product_id_to_refurbish'].",1,".$workorder_row['orig_stock_location_id'].",".(int) $workorder_row['workorder_partner_id'].",".$workorder_id.")";
-                    if (!$dba->Query($SQL))
-                    lm_die($dba->err_msg." ".$SQL);
-                    if (LM_DEBUG)
-                        error_log($SQL,0);
-                    
-                    $SQL="UPDATE stock SET stock_location_partner_id=0,stock_location_id=".(int) $workorder_row['orig_stock_location_id']." WHERE product_id=".$workorder_row['product_id_to_refurbish'];
-                    if (LM_DEBUG)
-                        error_log($SQL,0);
-                    if (!$dba->Query($SQL))
-                    lm_die($dba->err_msg." ".$SQL);
-                    
-        }
+            $SQL="SELECT workorder_id FROM stock_movements WHERE to_stock_location_id>0 AND workorder_id=".$workorder_id;
+
+            $dba->Select($SQL);
+            if (LM_DEBUG)
+            error_log($SQL,0);
+            if ($dba->affectedRows()>0){// if it was a finished work we need to update only
+            $SQL="UPDATE stock_movements SET stock_movement_time='".$latest_activity_time."' WHERE workorder_id=".$workorder_id;
+            $dba->Query($SQL);
+            if (LM_DEBUG)
+            error_log($SQL,0);
+            $SQL="UPDATE stock SET stock_location_partner_id=0,stock_location_id=".$workorder_row['orig_stock_location_id']." WHERE product_id=".$workorder_row['product_id_to_refurbish'];
+            $dba->Query($SQL);
+                        if (LM_DEBUG)
+                            error_log($SQL,0);
+            }else{
+            $SQL="INSERT INTO stock_movements (product_id,stock_movement_quantity,to_stock_location_id,from_partner_id,workorder_id) VALUES (";
+                        $SQL.=$workorder_row['product_id_to_refurbish'].",1,".$workorder_row['orig_stock_location_id'].",". $workorder_row['workorder_partner_id'].",".$workorder_id.")";
+                        if (!$dba->Query($SQL))
+                        lm_die($dba->err_msg." ".$SQL);
+                        if (LM_DEBUG)
+                            error_log($SQL,0);
+
+                        $SQL="UPDATE stock SET stock_location_partner_id=0,stock_location_id=".$workorder_row['orig_stock_location_id']." WHERE product_id=".$workorder_row['product_id_to_refurbish'];
+                        if (LM_DEBUG)
+                            error_log($SQL,0);
+                        if (!$dba->Query($SQL))
+                        lm_die($dba->err_msg." ".$SQL);
+
+                }
        
-        }
+            }
     }
 else if ($workorder_row['workorder_status']==5) // it was finished, but now it isn't
 

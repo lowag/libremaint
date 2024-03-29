@@ -28,7 +28,6 @@ lm_die("There is no lm-settings.php in the ".ABSPATH.'/config/');
 	} else {
 		error_reporting( E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_ERROR | E_WARNING | E_PARSE | E_USER_ERROR | E_USER_WARNING | E_RECOVERABLE_ERROR );
 	}
-
 if (!isset($_SESSION["deps_has_checked"]))
     {// we are checking the dependencies 
     $deps="";
@@ -114,8 +113,8 @@ $dba->Query($SQL);
 if (LM_DEBUG)
 error_log($SQL,0);
 }
-$SQL="UPDATE users SET `".$p."`=1";
-$res=$dba->Query($SQL);
+//$SQL="UPDATE users SET `".$p."`=1";
+//$res=$dba->Query($SQL);
 }
 //
 //
@@ -123,4 +122,5 @@ $last=$p;
 }
 
 }
+
 */

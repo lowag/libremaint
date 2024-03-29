@@ -3,7 +3,7 @@ $valid_page=false; //see lm-footer.php for make the proper menu item toggled
 
 if ((isset($_POST['username']) && isset($_POST['password']) && lm_auth($_POST['username'],$_POST['password'])) || (isset($_SESSION['logged']) && $_SESSION['logged']==1 && !isset($_GET['logout']))){
 
-        if (lm_isset_str('page')!='pdf_create')
+        if (lm_isset_str('page')!='pdf_create' && lm_isset_str('page')!='csv_create')
             {
             require_once( INCLUDES_PATH . 'left_panel.php' );
             require_once( INCLUDES_PATH . 'right_panel.php' );
@@ -45,7 +45,10 @@ if ((isset($_POST['username']) && isset($_POST['password']) && lm_auth($_POST['u
                     case "connection_types":require_once( PAGES_PATH.'connection_types.php' );$valid_page=true;break;
                     case "notifications":require_once( PAGES_PATH.'notifications.php' );$valid_page=true;break;
                     case "pinboard":require_once( PAGES_PATH.'pinboard.php' );$valid_page=true;break;
-                    default: require_once( PAGES_PATH.'dashboard.php' );
+                    case "csv_create_mysql":require_once( PAGES_PATH.'csv_create_mysql1.php' );$valid_page=true;break;
+                    case "csv_create":require_once( PAGES_PATH.'csv_create.php' );$valid_page=true;break;
+			
+		    default: require_once( PAGES_PATH.'dashboard.php' );
                 }
         }
             
@@ -53,12 +56,13 @@ if ((isset($_POST['username']) && isset($_POST['password']) && lm_auth($_POST['u
 
 }else
 require_once( PAGES_PATH.'dashboard.php' );
-
-if (isset($_GET['logout'])){
-require_once( PAGES_PATH.'bye.php' );
+}
+else if (isset($_GET['logout'])){
+require_once( ABSPATH.'pages/bye.php' );
 require_once( ABSPATH . 'pages/lm-login.php' );
 
-}}
+}
 else
 require_once( ABSPATH . 'pages/lm-login.php' );
+
 

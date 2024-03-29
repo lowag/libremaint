@@ -19,6 +19,8 @@ $SQL="SELECT main_asset_category_".$lang.",main_asset_category_id FROM main_asse
 
 $SQL.= " ORDER BY main_asset_category_".$lang;
 $result=$dba->Select($SQL);
+ if (isset($_SESSION['asset_location_id']) && $_SESSION['asset_location_id']>0)
+$location_ids=get_locations_bellow_id($_SESSION['asset_location_id']);
 
 foreach($result as $row){
 
@@ -28,8 +30,8 @@ echo ">".$row['main_asset_category_'.$lang];
 
 $SQL = "SELECT asset_id FROM assets WHERE main_asset_category_id=".$row['main_asset_category_id'];
 // $SQL = "SELECT asset_id FROM assets WHERE main_asset_category_id=4";
-    if (isset($_SESSION['asset_location_id'])){
-    $location_ids=get_locations_bellow_id($_SESSION['asset_location_id']);
+    if (isset($_SESSION['asset_location_id']) && $_SESSION['asset_location_id']>0){
+    //$location_ids=get_locations_bellow_id($_SESSION['asset_location_id']);
 
     $SQL.=" AND asset_location IN (".implode(",",$location_ids).")";
     

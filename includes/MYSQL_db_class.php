@@ -30,14 +30,15 @@ class DB {
  
  
 function connect():bool {     
-		try {
-        $this->db_connection = new mysqli($this->host, $this->user, $this->pass, $this->db_name, $this->port, $this->socket);
-		return TRUE;
-		} catch (Exception) {
-		lm_die("Database error! Does it exist?");
-		return FALSE;
-		}
 
+        $this->db_connection = new mysqli($this->host, $this->user, $this->pass, $this->db_name, $this->port, $this->socket);
+
+		if (mysqli_connect_errno()) {
+			$this->err_msg = gettext("Failed connecting to database")." (" . mysqli_connect_errno() . ") " . mysqli_connect_error().".";
+			return FALSE;
+		}else{
+            return TRUE;
+        }
 	}
  
  

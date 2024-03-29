@@ -150,13 +150,13 @@ $html.='<td width="60" style="text-align:right">'.round($row['workhour'],1).'</t
 
 if (TAM_TAI && array_key_exists($row['main_asset_id'],$tam)){
 $html.='<td style="text-align:right">'.round($tam[$row['main_asset_id']]/60,1).' '.gettext("hour(s)").'</td>';
-$html.= '<td style="text-align:right"> '.round(100-($tam[$row['main_asset_id']]/($working_days*24*60)*100),1).'% </td>';
+$html.= '<td style="text-align:right"> '.abs(round(100-($tam[$row['main_asset_id']]/($working_days*24*60)*100),1)).'% </td>';
 $html.='<td style="text-align:right">'.round($tamx[$row['main_asset_id']]/60,1).' '.gettext("hour(s)").'</td>';
-$html.= '<td style="text-align:right"> '.round(100-($tamx[$row['main_asset_id']]/($working_days*24*60)*100),1).'% </td>';
+$html.= '<td style="text-align:right"> '.abs(round(100-($tamx[$row['main_asset_id']]/($working_days*24*60)*100),1)).'% </td>';
 }
 
 else if (TAM_TAI && array_key_exists($row['main_asset_id'],$tai)){
-$html.='<td style="text-align:right">'.round($tai[$row['main_asset_id']]/60,1).' '.gettext("hour(s)").'</td>';
+$html.='<td style="text-align:right">'.round($tam[$row['main_asset_id']]/60,1).' '.gettext("hour(s)").'</td>';
 $html.= '<td style="text-align:right"> '.round(100-($tai[$row['main_asset_id']]/($working_days*24*60)*100),1).'% </td>';
 $html.='<td style="text-align:right">'.round($taix[$row['main_asset_id']]/60,1).' '.gettext("hour(s)").'</td>';
 $html.= '<td style="text-align:right"> '.round(100-($taix[$row['main_asset_id']]/($working_days*24*60)*100),1).'% </td>';

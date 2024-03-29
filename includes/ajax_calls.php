@@ -2655,7 +2655,7 @@ echo "<button type='button' onClick='invert_check()' class=\"btn btn-primary btn
 echo "<button type='button' onClick='check_uncheck_all()' class=\"btn btn-primary btn-sm\">".gettext("Check/uncheck all")."</button><br/></br>";
 foreach ($result as $row){
 echo "<INPUT STYLE='margin-left:1em;margin-right:1em;' TYPE='checkbox' name='users_assets[]'";
-            if (in_array($row['asset_id'],$users_assets))
+            if (isset($users_assets) && in_array($row['asset_id'],$users_assets))
             echo " checked value=".$row['asset_id'].">";
             else
             echo " value=".$row['asset_id']."> ";

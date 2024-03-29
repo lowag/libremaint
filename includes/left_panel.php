@@ -39,15 +39,17 @@ if (S7_SUPPORT){
             
             
      $addpages=array(gettext("Machines data"),"machines_data","SEE_MACHINES_DATA",gettext('MD'));
- 
+
     foreach (S7_ASSET_IDS as $s7_asset_id){
-        if (in_array($s7_asset_id,$users_assets)){
+       if (in_array($s7_asset_id,$users_assets)){
+
         $machine_name=get_asset_name_from_id($s7_asset_id,$lang);
         $addpages[]=$machine_name;
         $addpages[]="index.php?page=".strtolower(removing_accents(preg_replace('/\s+/', '_',$machine_name)));
         $addpages[]="SEE_MACHINES_DATA";
         $addpages[]=preg_replace('~\b(\p{L})\p{L}*(\p{P}?)~u', '$1$2',$machine_name);
         
+
         }
     }
    $pages[]=$addpages;
@@ -101,9 +103,48 @@ echo "</a>\n";
     }else
     echo $page[8];
     echo "</a></li>\n";}
-    echo "</ul>\n";
     
-    echo "</li>\n";
+
+      if (isset($page[14]) && isset($_SESSION[$page[14]])){
+    echo "<li><i class=\"fa fa-puzzle-piece\"></i><a href=\"".$page[13]."\">";
+    if ($req_page==$page[1]){
+    echo "<span style=\"color:orange \">";
+    echo $page[12];
+    echo "</span>";
+    }else
+    echo $page[12];
+    echo "</a></li>\n";}
+
+//	echo "</ul>\n";
+    
+  //  echo "</li>\n";
+
+ if (isset($page[18]) && isset($_SESSION[$page[18]])){
+    echo "<li><i class=\"fa fa-puzzle-piece\"></i><a href=\"".$page[17]."\">";
+    if ($req_page==$page[1]){
+    echo "<span style=\"color:orange \">";
+    echo $page[16];
+    echo "</span>";
+    }else
+    echo $page[16];
+    echo "</a></li>\n";}
+
+ if (isset($page[22]) && isset($_SESSION[$page[22]])){
+    echo "<li><i class=\"fa fa-puzzle-piece\"></i><a href=\"".$page[21]."\">";
+    if ($req_page==$page[1]){
+    echo "<span style=\"color:orange \">";
+    echo $page[20];
+    echo "</span>";
+    }else
+    echo $page[20];
+    echo "</a></li>\n";}
+
+ echo "</ul>\n";
+
+echo "</li>\n";
+
+
+
     }//if (isset($_GET["page"]) && $_GET["page"]==$page)
     }//if ($_SESSION['user_level']>$page[1])
 }//foreach

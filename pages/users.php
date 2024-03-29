@@ -66,7 +66,7 @@ $user_id=$dba->insertedId();
          */
          $SQL=" select 1 from information_schema.columns where table_schema = 'libremaint' and table_name='workorders' and column_name='employee_id".$user_id."'";
          $result=$dba->Select($SQL);
-         if ($dba->affectedRows()==0)
+         if (empty($result))
             {
             $SQL="ALTER TABLE workorders add column employee_id".$user_id." tinyint(2) UNSIGNED not null default 0 AFTER employee_id".--$user_id;
             if(!$dba->Query($SQL)) 

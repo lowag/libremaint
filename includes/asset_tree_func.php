@@ -6,11 +6,12 @@ static $resp;
 if ($id>0){
 $resp="";
 
-$sql = "SELECT * FROM assets WHERE asset_id=".$id." OR grouped_asset_id=".$id."  ORDER BY asset_name_".$lang."+0";
+$sql = "SELECT * FROM assets WHERE asset_id=".$id." OR grouped_asset_id=".$id."  ORDER BY asset_name_".$lang;
 //$main_asset_id=0;
+//+0
 }
 else
- $sql = "SELECT * FROM assets WHERE asset_parent_id=".$parent_id." OR grouped_asset_id=".$parent_id."  ORDER BY asset_name_".$lang."+0";
+ $sql = "SELECT * FROM assets WHERE asset_parent_id=".$parent_id." OR grouped_asset_id=".$parent_id."  ORDER BY asset_name_".$lang;
  //else 
   //$sql = "SELECT * FROM assets WHERE asset_parent_id=".$id." ORDER BY asset_name_".$lang;
  $result = $dba->Select($sql);

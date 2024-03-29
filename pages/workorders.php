@@ -20,6 +20,12 @@ function visibility(divClass)
 </div>
 
 <?php
+if (isset($_POST['page']) && isset($_POST["del_workorder_id"]) && (int) $_POST["del_workorder_id"]>0 && is_it_valid_submit()) {
+$SQL="DELETE FROM workorders WHERE workorder_id=".(int) $_POST["del_workorder_id"];
+if ($dba->Query($SQL))
+  lm_info(gettext("The workorder has deleted!"));
+}
+
 if (isset($_POST['page']) && isset($_POST['new']) && isset($_POST["workorder_work_".$lang]) && isset($_SESSION['ADD_WORK']) && is_it_valid_submit()){// add new work form 
 
 $start_time=new DateTime($dba->escapeStr($_POST['workorder_work_start_date'])." ".$dba->escapeStr($_POST['workorder_work_start_time']));
@@ -32,7 +38,10 @@ else if ($_SESSION['user_level']>2)
 
 if ((int) $_POST['workorder_partner_id']>0 || is_it_valid_worktime_period($_POST['workorder_work_start_date']." ".$_POST['workorder_work_start_time'],$_POST['workorder_work_end_date']." ".$_POST['workorder_work_end_time'],$user_id,(int) $_POST['workorder_id']))
 {
-    
+    if (isset($_POST['stock_location_id']) && $_POST['stock_location_id']>0)
+    $SQL="UPDATE workorders SET orig_stock_location_id='".(int) $_POST['stock_location_id']."' WHERE workorder_id='".(int) $_POST['workorder_id']."'";
+    $dba->Query($SQL);
+
     $SQL="SELECT * FROM workorders WHERE workorder_id=".(int) $_POST['workorder_id'];
     $workorder_row=$dba->getRow($SQL);
 if (LM_DEBUG)
@@ -85,12 +94,11 @@ if (LM_DEBUG)
 error_log($SQL,0);
     if ($dba->Query($SQL))
             {
-            $SQL="UPDATE workorders SET workorder_status=".(int) $_POST['workorder_status']." WHERE workorder_id=".$workorder_row['workorder_id'];
-            $dba->Query($SQL);
+             
             lm_info(gettext("The activity has been attached to the workorder."));
                 if (5==(int) $_POST['workorder_status'])//the workorder is ready for this employee we need check the others whether we can close the workorder
                 //check_workorder_to_close($workorder_row['workorder_id'],$_POST['workorder_work_end_date']." ".$_POST['workorder_work_end_time']);
-            check_workorder_to_close($workorder_row['workorder_id']);
+            check_workorder_to_close($workorder_row['workorder_id'],(int) $_POST['stock_location_id']);
             
             }
             else
@@ -186,7 +194,7 @@ if (isset($_POST['page']) && isset($_POST["workorder_".$lang]) && is_it_valid_su
             lm_info(gettext("The new workorder has been modified."));
             else
             lm_error(gettext("Failed to modify workorder ").$SQL." ".$dba->err_msg);
-    check_workorder_to_close((int) $_POST['workorder_id']);
+    check_workorder_to_close((int) $_POST['workorder_id'],(int) $_POST['stock_location_id']);
     if ($_POST['product_id_to_refurbish']>0 && (int) $_POST["workorder_partner_id"]>0)
     {
     $SQL="UPDATE stock_movements SET to_partner_id=".(int) $_POST["workorder_partner_id"]." WHERE workorder_id=".(int) $_POST["workorder_id"];
@@ -355,6 +363,31 @@ echo substr($n,0,-7);
 
 }
 ?></strong>
+<?php
+
+if (isset($_GET['modify']) && isset($_GET['workorder_id']) && $_GET['workorder_id']>0){
+$SQL="SELECT COUNT(workorder_work_id) as c FROM workorder_works WHERE workorder_id='".(int) $_GET["workorder_id"]."' AND deleted<>1";
+
+$row2=$dba->getRow($SQL);
+
+if ($row2['c']>0)
+lm_info(gettext("There is recorded work for this workorder, so you can not delete it"));
+else
+{
+?>
+<form action="index.php" id="workorderdel_form" method="post" enctype="multipart/form-data" class="form-horizontal">
+<?php
+echo "<input type=\"hidden\" name=\"valid\" id=\"valid\" value=\"".$_SESSION["tit_id"]."\">";
+echo "<input type=\"hidden\" name=\"del_workorder_id\" id=\"del_workorder_id\" value=\"".(int) $_GET["workorder_id"]."\">";
+echo ("<INPUT TYPE='hidden' VALUE='workorders' name='page' id='page'>");
+
+echo ("<INPUT TYPE='submit' VALUE='".gettext("Delete this workorder")."'>");
+
+?>
+</form>
+<?php
+}}
+?>
 </div><?php //card header ?>
 <div class="card-body card-block">
 <form action="index.php" id="workorder_form" method="post" enctype="multipart/form-data" class="form-horizontal">
@@ -659,8 +692,7 @@ echo "</textarea></div>\n";
 echo "</div>\n";
 
 }
-//echo "<input type=\"file\" accept=\"image/*\" capture=\"camera\" />";
-
+//echo "<input type=\"file\" accept=\"image/\*\" capture=\"camera\"/>";
 echo "<INPUT TYPE=\"hidden\" name=\"page\" id=\"page\" VALUE=\"workorders\">";
 echo "<input type=\"hidden\" name=\"valid\" id=\"valid\" value=\"".$_SESSION["tit_id"]."\">";
 
