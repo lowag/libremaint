@@ -34,12 +34,12 @@ if (isset($_GET['lang']) && valid($_GET['lang'])) {
  //setlocale(LC_ALL, 'hu_HU.utf8');
  putenv("LC_ALL={$lang}");
 if ($lang=="hu"){
- setlocale(LC_MESSAGES, 'hu_HU.utf8');
+ setlocale(LC_ALL, 'hu_HU.utf8');
 $lang_date_format = 'Y-m-d';
  }
  else{
  $lang_date_format = 'd-m-Y';
-setlocale(LC_MESSAGES, 'en_EN.utf8');
+setlocale(LC_ALL, 'en_EN.utf8');
 }
 //setlocale(LC_ALL, 'hu_HU.UTF-8');
 bindtextdomain('lm-main', ABSPATH.'/locales');
