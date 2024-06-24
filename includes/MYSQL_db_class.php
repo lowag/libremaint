@@ -119,11 +119,10 @@ function select($query) {
 			$this->err_msg = mysqli_error($this->db_connection);
 		return array($this->err_msg);			
 		}else
- 
- 		return $result->fetch_assoc();
-}
- 
- function get_max_fieldlength($table,$field):int{
+  		return $result->fetch_assoc();
+	}
+	
+function get_max_fieldlength($table,$field):int{
  $query="SELECT ".$field." FROM ".$table." limit 0,1";
  $result = mysqli_query($this->db_connection, $query);
  $finfo = $result->fetch_field_direct(0);
