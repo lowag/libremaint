@@ -5,7 +5,7 @@ $lang = 'en';//default language
 //this allows building main database as bilingual (assets,locations,products)
 define('LANG2_AS_SECOND_LANG',0);
 define('LANG1','en');
-//define('LANG2','hu');
+define('LANG2','en');
 
 function valid($locale) {
 global $valid_languages;
